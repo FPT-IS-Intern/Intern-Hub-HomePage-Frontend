@@ -1,0 +1,8 @@
+<div class="weekday-checkin">
+  @for (day of weekdays; track day.name) {
+    <app-weekday-selector 
+      [weekdayName]="day.name" 
+      [hasCheckin]="day.checked">
+    </app-weekday-selector>
+  }
+</div>

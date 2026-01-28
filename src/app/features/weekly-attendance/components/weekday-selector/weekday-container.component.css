@@ -1,0 +1,5 @@
+.weekday-checkin {
+    display: flex;
+    flex-direction: row;
+    gap: 11px
+}
