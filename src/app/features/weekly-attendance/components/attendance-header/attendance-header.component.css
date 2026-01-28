@@ -1,0 +1,52 @@
+.time-card-container {
+    width: 327px;
+    height: 92px;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    background: var(--linearGradient);
+    box-shadow: 2px 3px 10.8px 0px #FFC880A8;
+    border-radius: 20px;
+}
+
+.info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.info-row span {
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: -0.15px;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+}
+
+.location-text {
+    color: #1f2937;
+    font-weight: 500;
+}
+
+.date-text {
+    color: #374151;
+    font-weight: 700;
+}
+
+.time-display {
+    font-weight: 700;
+    font-size: 29px;
+    line-height: 40px;
+    letter-spacing: -0.5px;
+    color: #E18308;
+}

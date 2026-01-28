@@ -1,0 +1,17 @@
+<div class="time-card-container">
+    <div class="info-section">
+        <div class="info-row">
+            <img src="assets/icon/ico_wifi_orange.svg" alt="wifi" class="icon" />
+            <span class="location-text">{{ wifiName }}</span>
+        </div>
+
+        <div class="info-row">
+            <img src="assets/icon/ico_calendar_orange.svg" alt="calendar" class="icon" />
+            <span class="date-text">{{ displayDate() }}</span>
+        </div>
+    </div>
+
+    <div class="time-display">
+        {{ displayTime() }}
+    </div>
+</div>
