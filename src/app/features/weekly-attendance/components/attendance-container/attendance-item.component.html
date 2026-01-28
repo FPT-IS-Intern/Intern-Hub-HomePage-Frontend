@@ -1,0 +1,27 @@
+<div class="attendance-item">
+  <div class="attendance-img">
+    <img [src]="image" [alt]="label" class="attendance-icon" />
+  </div>
+  <div class="action">
+    <div class="response-time-wrapper">
+      <p [style.color]="time ? '#874403' : null">
+        {{ time ?? '--:--' }}
+      </p>
+    </div>
+
+    @if (!statusMessage) {
+    <button class="action-button" (click)="onAction.emit()">
+      <span class="button-text">{{ label }}</span>
+    </button>
+    } @else {
+    <div class="status-container">
+      <img [src]="statusMessage.includes('trễ') || statusMessage.includes('sớm') 
+                ? 'assets/icon/ico_duotone_x_circle_red.svg' 
+                : 'assets/icon/ico_duotone_check_circle_green.svg'" alt="status_icon" class="status-icon" />
+      <span class="status-message" [class.is-late]="statusMessage.includes('trễ')">
+        {{ statusMessage }}
+      </span>
+    </div>
+    }
+  </div>
+</div>

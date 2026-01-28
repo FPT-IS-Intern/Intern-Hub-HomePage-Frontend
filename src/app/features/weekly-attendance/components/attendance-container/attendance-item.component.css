@@ -1,0 +1,81 @@
+.attendance-item .attendance-img {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  background: radial-gradient(circle, #EDCEA7, #EDCEA700);
+  background-color: #FFF6E8;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  height: 104px;
+  width: 162px;
+}
+
+.attendance-item .action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #FFF0DB;
+  padding: 12px 8px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.attendance-item .action p {
+  font-weight: 500;
+  font-size: 14px;
+  color: #2A3034;
+  line-height: 20px;
+  letter-spacing: -0.15px;
+  margin: 0;
+}
+
+.attendance-item .status-message {
+  font-size: 14px;
+  font-weight: 500;
+  color: #874403;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.attendance-item .action-button {
+  width: 146px;
+  height: 36px;
+  background-color: #F5A84A;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.attendance-item .button-text {
+  font-weight: 500;
+  font-size: 14px;
+  color: #FFFFFF;
+  line-height: 20px;
+  letter-spacing: -0.15px;
+}
+
+.attendance-item .status-message {
+  font-size: 10px;
+  font-weight: 400;
+  color: #00652A;
+  line-height: 12px;
+  letter-spacing: -0.15px;
+}
+
+.attendance-item .status-message.is-late {
+  color: #A80A12;
+}
+
+.status-container {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}

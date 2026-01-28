@@ -1,0 +1,19 @@
+<div class="attendance-container">
+  
+  <app-attendance-item
+    [image]="checkInImage"
+    [label]="checkInLabel"
+    [time]="checkInTime"
+    [statusMessage]="checkInMessage"
+    (onAction)="handleCheckIn()">
+  </app-attendance-item>
+
+  <app-attendance-item 
+    [image]="checkOutImage" 
+    [label]="checkOutLabel"
+    [time]="checkOutTime"
+    [statusMessage]="checkOutMessage"
+    (onAction)="handleCheckOut()">
+  </app-attendance-item>
+
+</div>
