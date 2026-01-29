@@ -25,11 +25,18 @@ import {
 import { DEFAULT_BANNER_SLIDER_CONFIG } from './banner-slider.config';
 import { BannerSliderUtils } from './banner-slider.utils';
 import { SizeParserPipe } from './size-parser.pipe';
+import { BannerSliderNavigationComponent } from './banner-slider-navigation.component';
+import { BannerSliderPaginationComponent } from './banner-slider-pagination.component';
 
 @Component({
   selector: 'app-banner-slider',
   standalone: true,
-  imports: [CommonModule, SizeParserPipe], // Thêm pipe vào imports
+  imports: [
+    CommonModule, 
+    SizeParserPipe,
+    BannerSliderNavigationComponent,
+    BannerSliderPaginationComponent
+  ],
   templateUrl: './banner-slider.component.html',
   styleUrls: ['./banner-slider.component.css'],
   encapsulation: ViewEncapsulation.None,
@@ -56,9 +63,6 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
   // View Children
   @ViewChild('container', { static: true }) containerRef!: ElementRef;
   @ViewChild('wrapper', { static: true }) wrapperRef!: ElementRef;
-  @ViewChild('pagination', { static: false }) paginationRef?: ElementRef;
-  @ViewChild('scrollbar', { static: false }) scrollbarRef?: ElementRef;
-  @ViewChild('scrollbarDrag', { static: false }) scrollbarDragRef?: ElementRef;
 
   // Public properties
   currentConfig!: BannerSliderConfig;
@@ -72,7 +76,6 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
   isBeginning: boolean = true;
   isEnd: boolean = false;
 
-  // Thêm các property public để template có thể truy cập
   slidesWithClones: BannerSlide[] = [];
   slideWidth: number = 0;
   slideHeight: number = 0;
