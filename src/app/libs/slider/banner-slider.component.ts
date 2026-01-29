@@ -108,7 +108,6 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
 
   ngOnInit(): void {
     this.initializeSlider();
-    console.log('idex', this.currentIndex)
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -151,23 +150,35 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
 
   slideTo(index: number, speed?: number): void {
     if (this.isDisabled) return;
-    const targetIndex = this.normalizeIndex(index);
+    const totalSlides = this.slidesWithClones.length;
+    const spv = this.currentConfig.slidesPerView || 1;
     const normalizedSpeed = speed ?? (this.currentConfig.speed || 300);
+    const loopEnabled = this.isLoopEnabled();
 
     this.previousIndex = this.currentIndex;
-    this.currentIndex = targetIndex;
-    this.realIndex = this.getRealIndex(targetIndex);
+    this.currentIndex = loopEnabled
+      ? index
+      : this.normalizeIndex(index);
+    this.realIndex = this.getRealIndex(this.currentIndex);
 
     this.isAnimating = true;
     this.transitionStart.emit(this.createEvent());
 
-    this.animateToPosition(this.getTranslateForIndex(targetIndex), normalizedSpeed, () => {
+    this.animateToPosition(this.getTranslateForIndex(this.currentIndex), normalizedSpeed, () => {
+      if (loopEnabled) {
+        if (this.currentIndex >= totalSlides - spv) {
+          this.currentIndex = spv;
+        } else if (this.currentIndex < spv) {
+          this.currentIndex = totalSlides - spv * 2;
+        }
+
+        this.translate = this.getTranslateForIndex(this.currentIndex);
+        this.updateWrapperTransform();
+      }
       this.isAnimating = false;
       this.updateState();
-      this.slideChange.emit(this.createEvent());
-      this.transitionEnd.emit(this.createEvent());
+      this.cdr.detectChanges();
     });
-    this.cdr.detectChanges();
   }
 
   slideNext(speed?: number): void {
@@ -355,15 +366,18 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
   private animateToPosition(position: number, speed: number, onComplete?: Function): void {
+    const wrapper = this.wrapperRef.nativeElement;
+    // animate
     this.translate = position;
     this.updateWrapperTransform();
 
+    // bật transition
     const transition = BannerSliderUtils.getTransition(speed, 'ease');
-    this.renderer.setStyle(this.wrapperRef.nativeElement, 'transition', transition);
+    this.renderer.setStyle(wrapper, 'transition', transition);
 
     clearTimeout(this.animatingTimeout);
     this.animatingTimeout = setTimeout(() => {
-      this.renderer.setStyle(this.wrapperRef.nativeElement, 'transition', '');
+      this.renderer.setStyle(wrapper, 'transition', 'none');
       onComplete?.();
     }, speed);
   }
@@ -427,41 +441,24 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
     return index;
   }
 
+  private isLoopEnabled(): boolean {
+    return typeof this.currentConfig.loop === 'object'
+      ? !!this.currentConfig.loop?.enabled
+      : !!this.currentConfig.loop;
+  }
+
   private updateState(): void {
     const totalSlides = this.slidesWithClones.length;
-    const slidesPerView = this.currentConfig.slidesPerView || 1;
-    const loopEnabled = typeof this.currentConfig.loop === 'object'
-      ? this.currentConfig.loop?.enabled
-      : this.currentConfig.loop;
+    const spv = this.currentConfig.slidesPerView || 1;
+    const loopEnabled = this.isLoopEnabled();
 
-    this.isBeginning = this.currentIndex === 0 && !loopEnabled;
-    this.isEnd = this.currentIndex >= totalSlides - slidesPerView && !loopEnabled;
+    this.isBeginning = this.currentIndex === spv && !loopEnabled;
+    this.isEnd = this.currentIndex === totalSlides - spv * 2 && !loopEnabled;
 
-    // Check for loop transition
-    if (loopEnabled && this.currentIndex === totalSlides - slidesPerView) {
-      setTimeout(() => {
-        this.currentIndex = slidesPerView;
-        this.translate = this.getTranslateForIndex(this.currentIndex);
-        this.updateWrapperTransform();
-        this.cdr.detectChanges();
-      }, this.currentConfig.speed || 300);
-    } else if (loopEnabled && this.currentIndex === 0) {
-      setTimeout(() => {
-        this.currentIndex = totalSlides - slidesPerView * 2;
-        this.translate = this.getTranslateForIndex(this.currentIndex);
-        this.updateWrapperTransform();
-        this.cdr.detectChanges();
-      }, this.currentConfig.speed || 300);
-    }
-
-    if (this.isBeginning) {
-      this.reachBeginning.emit();
-    }
-
-    if (this.isEnd) {
-      this.reachEnd.emit();
-    }
+    if (this.isBeginning) this.reachBeginning.emit();
+    if (this.isEnd) this.reachEnd.emit();
   }
+
 
   private setupAutoplay(): void {
     this.clearAutoplay();
