@@ -1,0 +1,170 @@
+<div 
+  #container
+  class="banner-slider"
+  [ngClass]="currentConfig.containerClass"
+  [style.width]="currentConfig.width ? (currentConfig.width | sizeParser) : '100%'"
+  [style.height]="currentConfig.height ? (currentConfig.height | sizeParser) : 'auto'"
+  [style.cursor]="currentConfig.grabCursor && isDragging ? 'grabbing' : (currentConfig.grabCursor ? 'grab' : 'default')"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()"
+>
+  <div 
+    #wrapper
+    class="banner-slider__wrapper"
+    [ngClass]="currentConfig.wrapperClass"
+    [style.transform]="getWrapperTransform()"
+    [style.transition]="isAnimating ? 'transform ' + (currentConfig.speed || 300) + 'ms ease' : ''"
+  >
+    @for (slide of slidesWithClones; track i; let i = $index) {
+      <div 
+        class="banner-slider__slide"
+        [ngClass]="[
+          currentConfig.slideClass || '',
+          i === currentIndex ? (currentConfig.slideActiveClass || '') : '',
+          i >= currentIndex && i < currentIndex + (currentConfig.slidesPerView || 1) ? (currentConfig.slideVisibleClass || '') : '',
+          slide.isClone ? (currentConfig.slideDuplicateClass || '') : ''
+        ]"
+        [style.width]="currentConfig.direction === 'horizontal' ? slideWidth + 'px' : '100%'"
+        [style.height]="currentConfig.direction === 'vertical' ? slideHeight + 'px' : '100%'"
+        [style.margin-right]="currentConfig.direction === 'horizontal' && currentConfig.spaceBetween ? currentConfig.spaceBetween + 'px' : '0'"
+        [style.margin-bottom]="currentConfig.direction === 'vertical' && currentConfig.spaceBetween ? currentConfig.spaceBetween + 'px' : '0'"
+        (click)="handleSlideClick(slide, i)"
+      >
+        @if (slide.htmlContent) {
+          <div [innerHTML]="slide.htmlContent"></div>
+        } @else {
+          @if (slide.link) {
+            <a 
+              [href]="slide.link"
+              class="banner-slider__slide-link"
+              [attr.aria-label]="slide.alt || slide.title"
+            >
+              <img
+                [src]="slide.imageUrl"
+                [alt]="slide.alt || slide.title"
+                class="banner-slider__slide-image"
+                loading="lazy"
+              />
+              
+              @if (slide.title || slide.subtitle) {
+                <div class="banner-slider__slide-content">
+                  @if (slide.title) { <h3 class="banner-slider__slide-title">{{ slide.title }}</h3> }
+                  @if (slide.subtitle) { <p class="banner-slider__slide-subtitle">{{ slide.subtitle }}</p> }
+                </div>
+              }
+            </a>
+          } @else {
+            <img
+              [src]="slide.imageUrl"
+              [alt]="slide.alt || slide.title"
+              class="banner-slider__slide-image"
+              loading="lazy"
+            />
+            
+            @if (slide.title || slide.subtitle) {
+              <div class="banner-slider__slide-content">
+                @if (slide.title) { <h3 class="banner-slider__slide-title">{{ slide.title }}</h3> }
+                @if (slide.subtitle) { <p class="banner-slider__slide-subtitle">{{ slide.subtitle }}</p> }
+              </div>
+            }
+          }
+        }
+      </div>
+    }
+  </div>
+  
+  @if (currentConfig.navigation && (typeof currentConfig.navigation === 'object' ? currentConfig.navigation.enabled : currentConfig.navigation)) {
+    <button 
+      #prevButton
+      type="button"
+      class="banner-slider__button banner-slider__button--prev"
+      [ngClass]="[
+        typeof currentConfig.navigation === 'object' ? currentConfig.navigation.prevButtonClass : '',
+        isBeginning && !currentConfig.loop ? (typeof currentConfig.navigation === 'object' ? currentConfig.navigation.disabledClass : '') : ''
+      ]"
+      [disabled]="isBeginning && !currentConfig.loop"
+      (click)="slidePrev()"
+      aria-label="Previous slide"
+    >
+      <svg class="banner-slider__button-icon" viewBox="0 0 24 24">
+        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
+      </svg>
+    </button>
+    
+    <button 
+      #nextButton
+      type="button"
+      class="banner-slider__button banner-slider__button--next"
+      [ngClass]="[
+        typeof currentConfig.navigation === 'object' ? currentConfig.navigation.nextButtonClass : '',
+        isEnd && !currentConfig.loop ? (typeof currentConfig.navigation === 'object' ? currentConfig.navigation.disabledClass : '') : ''
+      ]"
+      [disabled]="isEnd && !currentConfig.loop"
+      (click)="slideNext()"
+      ()
+      aria-label="Next slide"
+    >
+      <svg class="banner-slider__button-icon" viewBox="0 0 24 24">
+        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+      </svg>
+    </button>
+  }
+  
+  @if (currentConfig.pagination && (typeof currentConfig.pagination === 'object' ? currentConfig.pagination.enabled : currentConfig.pagination)) {
+    <div 
+      #pagination
+      class="banner-slider__pagination"
+      [ngClass]="{
+        'banner-slider__pagination--bullets': typeof currentConfig.pagination === 'object' && currentConfig.pagination.type === 'bullets',
+        'banner-slider__pagination--fraction': typeof currentConfig.pagination === 'object' && currentConfig.pagination.type === 'fraction',
+        'banner-slider__pagination--progressbar': typeof currentConfig.pagination === 'object' && currentConfig.pagination.type === 'progressbar',
+        'banner-slider__pagination--clickable': typeof currentConfig.pagination === 'object' && currentConfig.pagination.clickable
+      }"
+    >
+      @switch (typeof currentConfig.pagination === 'object' ? currentConfig.pagination.type : 'bullets') {
+        @case ('bullets') {
+          @for (slide of slides; track i; let i = $index) {
+            <span
+              class="banner-slider__pagination-bullet"
+              [ngClass]="[
+                typeof currentConfig.pagination === 'object' ? currentConfig.pagination.bulletClass : '',
+                i === realIndex ? (typeof currentConfig.pagination === 'object' ? currentConfig.pagination.bulletActiveClass : '') : ''
+              ]"
+              [attr.aria-label]="'Go to slide ' + (i + 1)"
+              (click)="typeof currentConfig.pagination === 'object' && currentConfig.pagination.clickable && slideTo(i)"
+              role="button"
+              tabindex="0"
+              (keydown.enter)="typeof currentConfig.pagination === 'object' && currentConfig.pagination.clickable && slideTo(i)"
+            ></span>
+          }
+        }
+        
+        @case ('fraction') {
+          <span class="banner-slider__pagination-current">{{ realIndex + 1 }}</span>
+          <span class="banner-slider__pagination-separator"> / </span>
+          <span class="banner-slider__pagination-total">{{ slides.length }}</span>
+        }
+        
+        @case ('progressbar') {
+          <div class="banner-slider__pagination-progressbar">
+            <div 
+              class="banner-slider__pagination-progressbar-fill"
+              [style.transform]="'translate3d(' + (-100 + ((realIndex + 1) / slides.length) * 100) + '%, 0, 0)'"
+            ></div>
+          </div>
+        }
+      }
+    </div>
+  }
+  
+  @if (currentConfig.scrollbar && (typeof currentConfig.scrollbar === 'object' ? currentConfig.scrollbar.enabled : currentConfig.scrollbar)) {
+    <div #scrollbar class="banner-slider__scrollbar">
+      <div 
+        #scrollbarDrag
+        class="banner-slider__scrollbar-drag"
+        [ngClass]="typeof currentConfig.scrollbar === 'object' ? currentConfig.scrollbar.dragClass : ''"
+        [style.transform]="getScrollbarTransform()"
+      ></div>
+    </div>
+  }
+</div>
