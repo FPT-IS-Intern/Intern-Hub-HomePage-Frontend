@@ -14,6 +14,7 @@ import {
   ChangeDetectorRef,
   Renderer2,
   ViewEncapsulation,
+  TemplateRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -32,7 +33,7 @@ import { BannerSliderPaginationComponent } from './banner-slider-pagination.comp
   selector: 'app-banner-slider',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     SizeParserPipe,
     BannerSliderNavigationComponent,
     BannerSliderPaginationComponent
@@ -42,12 +43,17 @@ import { BannerSliderPaginationComponent } from './banner-slider-pagination.comp
   encapsulation: ViewEncapsulation.None,
 })
 export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
-  // Inputs
+
   @Input() config: Partial<BannerSliderConfig> = {};
   @Input() slides: BannerSlide[] = [];
   @Input() activeIndex: number = 0;
 
-  // Outputs
+  @Input() customNavPrevClass: string = '';
+  @Input() customNavNextClass: string = '';
+  @Input() navPrevIconTemplate: TemplateRef<any> | null = null;
+  @Input() navNextIconTemplate: TemplateRef<any> | null = null;
+  
+
   @Output() slideChange = new EventEmitter<BannerSliderEvent>();
   @Output() transitionStart = new EventEmitter<BannerSliderEvent>();
   @Output() transitionEnd = new EventEmitter<BannerSliderEvent>();

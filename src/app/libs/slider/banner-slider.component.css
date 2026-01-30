@@ -1,12 +1,15 @@
 /* Container chính của Slider */
-.banner-slider {
+
+.banner-container {
   position: relative;
+
+}
+
+.banner-slider {
   overflow: hidden;
   margin: 0 auto;
   padding: 0;
   z-index: 1;
-  width: 100%;
-  height: 100%;
 }
 
 /* Wrapper bao quanh các slide */
@@ -97,7 +100,7 @@
 }
 
 .banner-slider__button:hover:not(:disabled) {
-  background: white;
+  /* background: white; */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
@@ -145,7 +148,7 @@
 }
 
 .banner-slider__pagination--bullets .banner-slider-pagination-bullet-active {
-  background:#FFFFFF
+  background: #FFFFFF
 }
 
 

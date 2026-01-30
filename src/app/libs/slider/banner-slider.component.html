@@ -1,93 +1,65 @@
-<div 
-  #container
-  class="banner-slider"
-  [ngClass]="currentConfig.containerClass"
-  [style.width]="currentConfig.width ? (currentConfig.width | sizeParser) : '100%'"
-  [style.height]="currentConfig.height ? (currentConfig.height | sizeParser) : 'auto'"
-  [style.cursor]="currentConfig.grabCursor && isDragging ? 'grabbing' : (currentConfig.grabCursor ? 'grab' : 'default')"
->
-  <div 
-    #wrapper
-    class="banner-slider__wrapper"
-    [ngClass]="currentConfig.wrapperClass"
-    [style.transform]="getWrapperTransform()"
-    [style.transition]="isAnimating ? 'transform ' + (currentConfig.speed || 300) + 'ms ease' : ''"
-    (mouseenter)="onMouseEnter()"
-    (mouseleave)="onMouseLeave()"
-    >
-    @for (slide of slidesWithClones; track i; let i = $index) {
-      <div 
-        class="banner-slider__slide"
-        [ngClass]="[
+<div class="banner-container">
+  <div #container class="banner-slider" [ngClass]="currentConfig.containerClass"
+    [style.width]="currentConfig.width ? (currentConfig.width | sizeParser) : '100%'"
+    [style.height]="currentConfig.height ? (currentConfig.height | sizeParser) : 'auto'"
+    [style.cursor]="currentConfig.grabCursor && isDragging ? 'grabbing' : (currentConfig.grabCursor ? 'grab' : 'default')">
+    <div #wrapper class="banner-slider__wrapper" [ngClass]="currentConfig.wrapperClass"
+      [style.transform]="getWrapperTransform()"
+      [style.transition]="isAnimating ? 'transform ' + (currentConfig.speed || 300) + 'ms ease' : ''"
+      (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+      @for (slide of slidesWithClones; track i; let i = $index) {
+      <div class="banner-slider__slide" [ngClass]="[
           currentConfig.slideClass || '',
           i === currentIndex ? (currentConfig.slideActiveClass || '') : '',
           i >= currentIndex && i < currentIndex + (currentConfig.slidesPerView || 1) ? (currentConfig.slideVisibleClass || '') : '',
           slide.isClone ? (currentConfig.slideDuplicateClass || '') : ''
-        ]"
-        [style.width]="currentConfig.direction === 'horizontal' ? slideWidth + 'px' : '100%'"
+        ]" [style.width]="currentConfig.direction === 'horizontal' ? slideWidth + 'px' : '100%'"
         [style.height]="currentConfig.direction === 'vertical' ? slideHeight + 'px' : '100%'"
         [style.margin-right]="currentConfig.direction === 'horizontal' && currentConfig.spaceBetween ? currentConfig.spaceBetween + 'px' : '0'"
         [style.margin-bottom]="currentConfig.direction === 'vertical' && currentConfig.spaceBetween ? currentConfig.spaceBetween + 'px' : '0'"
-        (click)="handleSlideClick(slide, i)"
-      >
+        (click)="handleSlideClick(slide, i)">
         @if (slide.htmlContent) {
-          <div [innerHTML]="slide.htmlContent"></div>
+        <div [innerHTML]="slide.htmlContent"></div>
         } @else {
-          @if (slide.link) {
-            <a 
-              [href]="slide.link"
-              class="banner-slider__slide-link"
-              [attr.aria-label]="slide.alt || slide.title"
-            >
-              <img
-                [src]="slide.imageUrl"
-                [alt]="slide.alt || slide.title"
-                class="banner-slider__slide-image"
-                loading="lazy"
-              />
-              
-              @if (slide.title || slide.subtitle) {
-                <div class="banner-slider__slide-content">
-                  @if (slide.title) { <h3 class="banner-slider__slide-title">{{ slide.title }}</h3> }
-                  @if (slide.subtitle) { <p class="banner-slider__slide-subtitle">{{ slide.subtitle }}</p> }
-                </div>
-              }
-            </a>
-          } @else {
-            <img
-              [src]="slide.imageUrl"
-              [alt]="slide.alt || slide.title"
-              class="banner-slider__slide-image"
-              loading="lazy"
-            />
-            
-            @if (slide.title || slide.subtitle) {
-              <div class="banner-slider__slide-content">
-                @if (slide.title) { <h3 class="banner-slider__slide-title">{{ slide.title }}</h3> }
-                @if (slide.subtitle) { <p class="banner-slider__slide-subtitle">{{ slide.subtitle }}</p> }
-              </div>
-            }
+        @if (slide.link) {
+        <a [href]="slide.link" class="banner-slider__slide-link" [attr.aria-label]="slide.alt || slide.title">
+          <img [src]="slide.imageUrl" [alt]="slide.alt || slide.title" class="banner-slider__slide-image"
+            loading="lazy" />
+
+          @if (slide.title || slide.subtitle) {
+          <div class="banner-slider__slide-content">
+            @if (slide.title) { <h3 class="banner-slider__slide-title">{{ slide.title }}</h3> }
+            @if (slide.subtitle) { <p class="banner-slider__slide-subtitle">{{ slide.subtitle }}</p> }
+          </div>
           }
+        </a>
+        } @else {
+        <img [src]="slide.imageUrl" [alt]="slide.alt || slide.title" class="banner-slider__slide-image"
+          loading="lazy" />
+
+        @if (slide.title || slide.subtitle) {
+        <div class="banner-slider__slide-content">
+          @if (slide.title) { <h3 class="banner-slider__slide-title">{{ slide.title }}</h3> }
+          @if (slide.subtitle) { <p class="banner-slider__slide-subtitle">{{ slide.subtitle }}</p> }
+        </div>
+        }
+        }
         }
       </div>
-    }
+      }
+    </div>
+
   </div>
-  
+
   <!-- Navigation component -->
-  <app-banner-slider-navigation
-    [config]="currentConfig"
-    [isBeginning]="isBeginning"
-    [isEnd]="isEnd"
-    (prevClick)="slidePrev()"
-    (nextClick)="slideNext()"
-  ></app-banner-slider-navigation>
-  
+  <app-banner-slider-navigation [config]="currentConfig" [isBeginning]="isBeginning" [isEnd]="isEnd"
+    [customPrevClass]="customNavPrevClass" [customNextClass]="customNavNextClass"
+    [prevIconTemplate]="navPrevIconTemplate" [nextIconTemplate]="navNextIconTemplate" (prevClick)="slidePrev()"
+    (nextClick)="slideNext()"></app-banner-slider-navigation>
+
   <!-- Pagination component -->
-  <app-banner-slider-pagination
-    [config]="currentConfig"
-    [slides]="slides"
-    [realIndex]="realIndex"
-    (slideClick)="slideTo($event)"
-  ></app-banner-slider-pagination>
-  
+  <app-banner-slider-pagination [config]="currentConfig" [slides]="slides" [realIndex]="realIndex"
+    (slideClick)="slideTo($event)"></app-banner-slider-pagination>
+
+
 </div>
