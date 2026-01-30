@@ -52,7 +52,7 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
   @Input() customNavNextClass: string = '';
   @Input() navPrevIconTemplate: TemplateRef<any> | null = null;
   @Input() navNextIconTemplate: TemplateRef<any> | null = null;
-  
+
 
   @Output() slideChange = new EventEmitter<BannerSliderEvent>();
   @Output() transitionStart = new EventEmitter<BannerSliderEvent>();
@@ -158,7 +158,7 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
   slideTo(index: number, speed?: number): void {
-    if (this.isDisabled) return;
+    if (this.isDisabled || this.isAnimating) return;
     const totalSlides = this.slidesWithClones.length;
     const spv = this.currentConfig.slidesPerView || 1;
     const normalizedSpeed = speed ?? (this.currentConfig.speed || 300);
@@ -706,7 +706,6 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
   private handleClick(event: MouseEvent): void {
     const now = Date.now();
     const timeDiff = now - this.lastClickTime;
-
     if (timeDiff < 300) {
       // Double click
       this.doubleTap.emit(this.createEvent());
