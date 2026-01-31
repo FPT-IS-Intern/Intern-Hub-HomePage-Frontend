@@ -27,7 +27,7 @@ import { BannerSliderConfig } from './banner-slider.models';
                   i === realIndex ? (typeof config.pagination === 'object' ? config.pagination.bulletActiveClass : '') : ''
                 ]"
                 [attr.aria-label]="'Go to slide ' + (i + 1)"
-                (click)="typeof config.pagination === 'object' && config.pagination.clickable && onSlideClick(i)"
+                (click)="typeof config.pagination === 'object' && config.pagination.clickable && onSlideClick(i + 1)"
                 role="button"
                 tabindex="0"
                 (keydown.enter)="typeof config.pagination === 'object' && config.pagination.clickable && onSlideClick(i)"
@@ -62,6 +62,7 @@ export class BannerSliderPaginationComponent {
   @Output() slideClick = new EventEmitter<number>();
 
   onSlideClick(index: number): void {
+    console.log(index)
     this.slideClick.emit(index);
   }
 }
