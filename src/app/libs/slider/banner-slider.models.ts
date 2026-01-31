@@ -16,6 +16,13 @@ export interface BannerSliderBreakpoint {
   [key: string]: any;
 }
 
+export interface BannerSliderViewAllButtonConfig {
+  enabled?: boolean;
+  text?: string;
+  link?: string;
+  position?: 'top' | 'bottom' | 'left' | 'right';
+}
+
 export interface BannerSliderConfig {
   // Basic
   slides?: BannerSlide[];
@@ -24,7 +31,7 @@ export interface BannerSliderConfig {
   direction?: 'horizontal' | 'vertical';
   width?: number | string;
   height?: number | string;
-  
+
   // Navigation
   navigation?: boolean | {
     enabled?: boolean;
@@ -33,7 +40,7 @@ export interface BannerSliderConfig {
     hiddenClass?: string;
     disabledClass?: string;
   };
-  
+
   // Pagination
   pagination?: boolean | {
     enabled?: boolean;
@@ -44,7 +51,9 @@ export interface BannerSliderConfig {
     clickable?: boolean;
     renderBullet?: Function;
   };
-  
+
+  viewAllButton?: boolean | BannerSliderViewAllButtonConfig;
+
   // Scrollbar
   scrollbar?: boolean | {
     enabled?: boolean;
@@ -53,7 +62,7 @@ export interface BannerSliderConfig {
     el?: string;
     dragClass?: string;
   };
-  
+
   // Autoplay
   autoplay?: boolean | {
     enabled?: boolean;
@@ -63,13 +72,13 @@ export interface BannerSliderConfig {
     reverseDirection?: boolean;
     stopOnLastSlide?: boolean;
   };
-  
+
   // Loop
   loop?: boolean | {
     enabled?: boolean;
     additionalSlides?: number;
   };
-  
+
   // Speed & Effects
   speed?: number;
   effect?: 'slide' | 'fade' | 'cube' | 'coverflow' | 'flip' | 'creative';
@@ -78,14 +87,14 @@ export interface BannerSliderConfig {
     parallaxBackgroundImage?: string;
     parallaxBackgroundSize?: string;
   };
-  
+
   // Interaction
   grabCursor?: boolean;
   centeredSlides?: boolean;
   freeMode?: boolean;
   resistance?: boolean;
   resistanceRatio?: number;
-  
+
   // Touch
   touchEventsTarget?: 'container' | 'wrapper';
   touchRatio?: number;
@@ -100,7 +109,7 @@ export interface BannerSliderConfig {
   threshold?: number;
   touchStartPreventDefault?: boolean;
   touchMoveStopPropagation?: boolean;
-  
+
   // Mousewheel
   mousewheel?: boolean | {
     enabled?: boolean;
@@ -109,13 +118,13 @@ export interface BannerSliderConfig {
     sensitivity?: number;
     eventsTarget?: string;
   };
-  
+
   // Keyboard
   keyboard?: boolean | {
     enabled?: boolean;
     onlyInViewport?: boolean;
   };
-  
+
   // Lazy loading
   lazy?: boolean | {
     enabled?: boolean;
@@ -123,17 +132,17 @@ export interface BannerSliderConfig {
     loadPrevNextAmount?: number;
     loadOnTransitionStart?: boolean;
   };
-  
+
   // Responsive
   breakpoints?: {
     [key: number]: BannerSliderBreakpoint;
   };
-  
+
   // Events
   on?: {
     [key: string]: Function;
   };
-  
+
   // Classes
   containerClass?: string;
   wrapperClass?: string;
@@ -150,7 +159,7 @@ export interface BannerSliderEvent {
   slides: BannerSlide[];
 }
 
-export type BannerSliderEventType = 
+export type BannerSliderEventType =
   | 'init'
   | 'slideChange'
   | 'transitionStart'

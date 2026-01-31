@@ -59,8 +59,10 @@
 
   <!-- Pagination component -->
   <app-banner-slider-pagination [config]="currentConfig" [slides]="slides" [realIndex]="realIndex"
-    (slideClick)="slideTo($event)"
-    (pointerEvent)="forwardEvent($event)"></app-banner-slider-pagination>
+    (slideClick)="slideTo($event)" (pointerEvent)="forwardEvent($event)"></app-banner-slider-pagination>
 
+  <!-- View all button component -->
+  <app-banner-slider-view-all-button [config]="currentConfig" [buttonText]="getViewAllButtonText()"
+    [viewAllLink]="getViewAllLink()"></app-banner-slider-view-all-button>
 
 </div>

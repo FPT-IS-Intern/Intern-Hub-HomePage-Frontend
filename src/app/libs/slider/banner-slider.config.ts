@@ -7,7 +7,7 @@ export const DEFAULT_BANNER_SLIDER_CONFIG: BannerSliderConfig = {
   direction: 'horizontal',
   width: '100%',
   height: 'auto',
-  
+
   // Navigation
   navigation: {
     enabled: false,
@@ -16,7 +16,7 @@ export const DEFAULT_BANNER_SLIDER_CONFIG: BannerSliderConfig = {
     hiddenClass: 'banner-slider-button-hidden',
     disabledClass: 'banner-slider-button-disabled',
   },
-  
+
   // Pagination
   pagination: {
     enabled: false,
@@ -25,7 +25,13 @@ export const DEFAULT_BANNER_SLIDER_CONFIG: BannerSliderConfig = {
     bulletActiveClass: 'banner-slider-pagination-bullet-active',
     clickable: true,
   },
-  
+
+  viewAllButton: {
+    enabled: false,
+    link: '#',
+    position: 'bottom'
+  },
+
   // Scrollbar
   scrollbar: {
     enabled: false,
@@ -33,7 +39,7 @@ export const DEFAULT_BANNER_SLIDER_CONFIG: BannerSliderConfig = {
     hide: false,
     dragClass: 'banner-slider-scrollbar-drag',
   },
-  
+
   // Autoplay
   autoplay: {
     enabled: false,
@@ -41,25 +47,25 @@ export const DEFAULT_BANNER_SLIDER_CONFIG: BannerSliderConfig = {
     disableOnInteraction: true,
     pauseOnMouseEnter: false,
   },
-  
+
   // Loop
   loop: {
     enabled: false,
     additionalSlides: 0,
   },
-  
+
   // Speed & Effects
   speed: 300,
   effect: 'slide',
   parallax: false,
-  
+
   // Interaction
   grabCursor: false,
   centeredSlides: false,
   freeMode: false,
   resistance: true,
   resistanceRatio: 0.85,
-  
+
   // Touch
   touchEventsTarget: 'container',
   touchRatio: 1,
@@ -74,16 +80,16 @@ export const DEFAULT_BANNER_SLIDER_CONFIG: BannerSliderConfig = {
   threshold: 5,
   touchStartPreventDefault: true,
   touchMoveStopPropagation: false,
-  
+
   // Mousewheel
   mousewheel: false,
-  
+
   // Keyboard
   keyboard: false,
-  
+
   // Lazy loading
   lazy: false,
-  
+
   // Classes
   containerClass: 'banner-slider-container',
   wrapperClass: 'banner-slider-wrapper',
@@ -91,7 +97,7 @@ export const DEFAULT_BANNER_SLIDER_CONFIG: BannerSliderConfig = {
   slideActiveClass: 'banner-slider-slide-active',
   slideVisibleClass: 'banner-slider-slide-visible',
   slideDuplicateClass: 'banner-slider-slide-duplicate',
-  
+
   // Events
   on: {},
 };

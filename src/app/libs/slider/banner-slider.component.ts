@@ -28,6 +28,7 @@ import { BannerSliderUtils } from './banner-slider.utils';
 import { SizeParserPipe } from './size-parser.pipe';
 import { BannerSliderNavigationComponent } from './banner-slider-navigation.component';
 import { BannerSliderPaginationComponent } from './banner-slider-pagination.component';
+import { BannerSliderViewAllButtonComponent } from './banner-slider-view-all-button.component';
 
 @Component({
   selector: 'app-banner-slider',
@@ -36,7 +37,8 @@ import { BannerSliderPaginationComponent } from './banner-slider-pagination.comp
     CommonModule,
     SizeParserPipe,
     BannerSliderNavigationComponent,
-    BannerSliderPaginationComponent
+    BannerSliderPaginationComponent,
+    BannerSliderViewAllButtonComponent
   ],
   templateUrl: './banner-slider.component.html',
   styleUrls: ['./banner-slider.component.css'],
@@ -277,6 +279,21 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
         case 'touchend': this.handleTouchEnd(event); break;
       }
     }
+  }
+
+  // Button view all
+  getViewAllLink(): string {
+    if (typeof this.currentConfig.viewAllButton === 'object') {
+      return this.currentConfig.viewAllButton.link || '#';
+    }
+    return '#';
+  }
+
+  getViewAllButtonText(): string {
+    if (typeof this.currentConfig.viewAllButton === 'object') {
+      return this.currentConfig.viewAllButton.text || 'View all';
+    }
+    return 'View all';
   }
 
   // Private Methods
