@@ -16,6 +16,13 @@ import { BannerSliderConfig } from './banner-slider.models';
           'banner-slider__pagination--progressbar': typeof config.pagination === 'object' && config.pagination.type === 'progressbar',
           'banner-slider__pagination--clickable': typeof config.pagination === 'object' && config.pagination.clickable
         }"
+        (mousedown)="emit($event)"
+        (mousemove)="emit($event)"
+        (mouseup)="emit($event)"
+
+        (touchstart)="emit($event)"
+        (touchmove)="emit($event)"
+        (touchend)="emit($event)"
       >
         @switch (typeof config.pagination === 'object' ? config.pagination.type : 'bullets') {
           @case ('bullets') {
@@ -58,11 +65,15 @@ export class BannerSliderPaginationComponent {
   @Input() config: BannerSliderConfig | null = null;
   @Input() slides: any[] = [];
   @Input() realIndex: number = 0;
-  
+
   @Output() slideClick = new EventEmitter<number>();
+  @Output() pointerEvent = new EventEmitter<MouseEvent | TouchEvent>();
 
   onSlideClick(index: number): void {
-    console.log(index)
     this.slideClick.emit(index);
+  }
+
+  emit(event: MouseEvent | TouchEvent) {
+    this.pointerEvent.emit(event);
   }
 }

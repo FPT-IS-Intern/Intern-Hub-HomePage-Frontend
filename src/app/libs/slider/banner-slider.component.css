@@ -134,6 +134,7 @@
   bottom: 10px;
   left: 0;
   width: 100%;
+  cursor: pointer;
 }
 
 .banner-slider__pagination--bullets .banner-slider__pagination-bullet {

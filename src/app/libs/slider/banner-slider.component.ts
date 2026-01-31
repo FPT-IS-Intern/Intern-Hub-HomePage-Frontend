@@ -260,6 +260,25 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
     }
   }
 
+  forwardEvent(event: MouseEvent | TouchEvent) {
+    if (event instanceof MouseEvent) {
+      switch (event.type) {
+        case 'mousedown': this.handleMouseDown(event); break;
+        case 'mousemove': this.handleMouseMove(event); break;
+        case 'mouseup': this.handleMouseUp(event); break;
+        case 'click': this.handleClick(event); break;
+      }
+    }
+
+    if (event instanceof TouchEvent) {
+      switch (event.type) {
+        case 'touchstart': this.handleTouchStart(event); break;
+        case 'touchmove': this.handleTouchMove(event); break;
+        case 'touchend': this.handleTouchEnd(event); break;
+      }
+    }
+  }
+
   // Private Methods
   private initializeSlider(): void {
     this.mergedConfig = BannerSliderUtils.mergeConfig(

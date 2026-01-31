@@ -59,7 +59,8 @@
 
   <!-- Pagination component -->
   <app-banner-slider-pagination [config]="currentConfig" [slides]="slides" [realIndex]="realIndex"
-    (slideClick)="slideTo($event)"></app-banner-slider-pagination>
+    (slideClick)="slideTo($event)"
+    (pointerEvent)="forwardEvent($event)"></app-banner-slider-pagination>
 
 
 </div>
