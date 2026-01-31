@@ -640,11 +640,12 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
     this.setupAutoplay();
   }
 
+  private isClickPrevented: boolean = false;
   private handleMouseDown(event: MouseEvent): void {
     if (this.isAnimating || this.isDisabled) return;
 
     event.preventDefault();
-
+    this.isClickPrevented = false;
     this.isDragging = true;
     this.startX = event.clientX;
     this.startY = event.clientY;
@@ -656,7 +657,7 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
 
   private handleMouseMove(event: MouseEvent): void {
     if (!this.isDragging || this.isDisabled) return;
-
+    this.isClickPrevented = true;
     this.currentX = event.clientX;
     this.currentY = event.clientY;
 
@@ -714,6 +715,11 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
   private handleClick(event: MouseEvent): void {
+    if (this.isClickPrevented) {
+      event.preventDefault();
+      return;
+    }
+
     const now = Date.now();
     const timeDiff = now - this.lastClickTime;
     if (timeDiff < 300) {
