@@ -169,7 +169,6 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
       ? index
       : this.normalizeIndex(index);
     this.realIndex = this.getRealIndex(this.currentIndex);
-
     this.isAnimating = true;
     this.transitionStart.emit(this.createEvent());
 
@@ -244,7 +243,6 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
   handleSlideClick(slide: BannerSlide, index: number): void {
-    console.log('Slide clicked:', slide, index);
     this.click.emit(this.createEvent());
   }
 
@@ -294,9 +292,7 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
   private prepareSlides(): void {
-    const loopEnabled = typeof this.currentConfig.loop === 'object'
-      ? this.currentConfig.loop?.enabled
-      : this.currentConfig.loop;
+    const loopEnabled = this.isLoopEnabled();
 
     if (loopEnabled && this.slides.length > 0) {
       this.createLoopSlides();
@@ -328,7 +324,6 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
       })),
     ];
 
-    // fix vị trí hiển thị ảnh banner -> do nó luôn hiển thị ảnh cuối cùng trong  slidesWithClones sau khi clone slides
     this.currentIndex = additionalSlides;
     const size = this.currentConfig.direction === 'vertical' ? this.slideHeight : this.slideWidth;
     const gap = this.currentConfig.spaceBetween || 0;
@@ -408,12 +403,11 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
     }
   }
 
+  // tính index của ảnh dùng cho việc prev/next theo kiểu tuyến tính
   private normalizeIndex(index: number): number {
     const totalSlides = this.slidesWithClones.length;
     const slidesPerView = this.currentConfig.slidesPerView || 1;
-    const loopEnabled = typeof this.currentConfig.loop === 'object'
-      ? this.currentConfig.loop?.enabled
-      : this.currentConfig.loop;
+    const loopEnabled = this.isLoopEnabled();
 
     if (loopEnabled) {
       if (index >= totalSlides - slidesPerView) {
@@ -427,9 +421,7 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
   private getRealIndex(index: number): number {
-    const loopEnabled = typeof this.currentConfig.loop === 'object'
-      ? this.currentConfig.loop?.enabled
-      : this.currentConfig.loop;
+    const loopEnabled = this.isLoopEnabled();
 
     if (loopEnabled) {
       const totalRealSlides = this.slides.length;
@@ -494,7 +486,7 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
       this.autoplayInterval = null;
     }
   }
-
+  // touch events mobile
   private setupEventListeners(): void {
     // Touch events
     if (BannerSliderUtils.isTouchDevice()) {
@@ -533,6 +525,7 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
     });
   }
 
+  // mouse event desktop
   private setupMouseEvents(): void {
     const container = this.containerRef.nativeElement;
 
@@ -661,15 +654,14 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
     } else {
       this.translate = this.startTranslate + diffY;
     }
-
     this.translate = BannerSliderUtils.clamp(this.translate, this.minTranslate, this.maxTranslate);
     this.updateWrapperTransform();
-
     // Calculate velocity
     this.calculateVelocity();
   }
 
   private handleMouseUp(event: MouseEvent): void {
+
     if (!this.isDragging) return;
 
     this.isDragging = false;
@@ -680,7 +672,6 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
     const diff = direction === 'horizontal'
       ? this.currentX - this.startX
       : this.currentY - this.startY;
-
     if (Math.abs(diff) > threshold) {
       this.handleSwipe();
     } else {
@@ -735,8 +726,6 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
     const slideSize = direction === 'horizontal' ? this.slideWidth : this.slideHeight;
 
     let targetIndex = Math.round(Math.abs(targetTranslate) / (slideSize + spaceBetween));
-    targetIndex = this.normalizeIndex(targetIndex);
-
     this.slideTo(targetIndex, speed);
   }
 

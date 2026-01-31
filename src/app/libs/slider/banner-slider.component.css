@@ -45,6 +45,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  cursor: pointer;
 }
 
 .banner-slider__slide-link {
