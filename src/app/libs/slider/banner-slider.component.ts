@@ -395,7 +395,11 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
       this.minTranslate = -((totalSlides - slidesPerView) * (this.slideHeight + spaceBetween));
     }
 
-    this.updateWrapperTransform();
+    // tắt translate để khi resize viewport thì banner không bị lệch tức là xuất hiện cái banner kế bên 
+    const newTranslate = this.getTranslateForIndex(this.currentIndex);
+    if (newTranslate !== this.translate) {
+      this.animateToPosition(newTranslate, 0);
+    }
   }
 
   private updateWrapperTransform(): void {
