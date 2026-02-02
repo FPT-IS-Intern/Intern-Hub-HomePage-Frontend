@@ -2,25 +2,28 @@ import { Component, signal, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { DynamicDsService } from 'dynamic-ds';
 import { AttendanceHeaderComponent } from './features/weekly-attendance/components/attendance-header/attendance-header.component';
-import { WeekdaySelectorComponent } from './features/weekly-attendance/components/weekday-selector/weekday-selector.component';
-import { AttendanceCardComponent } from './features/weekly-attendance/components/attendance-container/attendance-card.component';
+import { WeekdayContainerComponent } from './features/weekly-attendance/components/weekday-selector/weekday-container.component';
+import { AttendanceContainerComponent } from './features/weekly-attendance/components/attendance-container/attendance-container.component';
+
+import { HomePageBannerSliderComponent } from './features/slider/slider-banner.component'
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet,
     AttendanceHeaderComponent,
-    WeekdaySelectorComponent,
-    AttendanceCardComponent
+    WeekdayContainerComponent,
+    AttendanceContainerComponent,
+    HomePageBannerSliderComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css' //test
 })
-export class App implements OnInit {
-  private themeService = inject(DynamicDsService);
-  protected readonly title = signal('Homepage-service-fe');
+  export class App implements OnInit {
+    private themeService = inject(DynamicDsService);
+    protected readonly title = signal('Homepage-service-fe');
 
-  ngOnInit() {
-    this.themeService.initializeTheme().subscribe();
+    ngOnInit() {
+      this.themeService.initializeTheme().subscribe();
+    }
+
   }
-
-}
