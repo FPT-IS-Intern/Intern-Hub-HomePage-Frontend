@@ -52,13 +52,8 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css",
-              "node_modules/dynamic-ds/src/lib/styles/system-design.scss"
-            ],
-            "polyfills": [
-              "es-module-shims"
-            ]
+            "styles": ["src/styles.scss"],
+            "polyfills": ["es-module-shims"]
           },
           "configurations": {
             "production": {

@@ -1,8 +1,12 @@
+$padding: 16px 8px;
+
 .main {
     display: flex;
     flex-direction: row;
     gap: 16px;
     min-width: 1071px;
+    max-width: 1290px;
+    padding: $padding;
 }
 
 .main-right {
@@ -16,7 +20,7 @@
 
 
 .menu-list {
-    width: 848px;
+    max-width: 848px;
     height: 200px;
     background: red;
 }
@@ -32,4 +36,10 @@
     align-items: center;
     flex-direction: column;
     gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .menu-list {
+    max-width: 600px;
+  }
 }
