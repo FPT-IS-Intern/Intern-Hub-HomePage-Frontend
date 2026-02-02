@@ -134,6 +134,7 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
   ngAfterViewInit(): void {
     this.setupObservers();
     this.updateSliderDimensions();
+    this.cdr.detectChanges();
     this.init.emit(this.createEvent());
   }
 
@@ -394,11 +395,17 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
       this.maxTranslate = 0;
       this.minTranslate = -((totalSlides - slidesPerView) * (this.slideHeight + spaceBetween));
     }
-
-    // tắt translate để khi resize viewport thì banner không bị lệch tức là xuất hiện cái banner kế bên 
     const newTranslate = this.getTranslateForIndex(this.currentIndex);
-    if (newTranslate !== this.translate) {
-      this.animateToPosition(newTranslate, 0);
+    const translateDiff = Math.abs(newTranslate - this.translate);
+    const threshold = 0.5;
+
+    if (translateDiff > threshold) {
+      this.cdr.detectChanges();
+
+      this.translate = newTranslate;
+      this.updateWrapperTransform();
+
+      this.cdr.markForCheck();
     }
   }
 
@@ -411,6 +418,17 @@ export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, 
 
   private animateToPosition(position: number, speed: number, onComplete?: Function): void {
     const wrapper = this.wrapperRef.nativeElement;
+
+    // FIX: Ngăn cập nhật trong quá trình change detection nếu speed = 0
+    if (speed === 0) {
+      // Đặt trực tiếp giá trị mà không trigger transition
+      this.translate = position;
+      this.updateWrapperTransform();
+      this.renderer.setStyle(wrapper, 'transition', 'none');
+      onComplete?.();
+      return;
+    }
+
     // animate
     this.translate = position;
     this.updateWrapperTransform();
