@@ -1,0 +1,12 @@
+.weekday-attendance {
+    flex-shrink: 0;
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 24px;
+
+    width: 375px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 16px;
+}
