@@ -17,19 +17,19 @@ export class HomePageBannerSliderComponent {
       id: 1,
       imageUrl: 'assets/img/home/BG.png',
       alt: 'Nature Landscape',
-      // link: '/destinations/nature'
+      link: '/destinations/nature'
     },
     {
       id: 2,
       imageUrl: 'assets/img/home/BG1.png',
       alt: 'Mountain Adventure',
-      // link: '/adventures/mountains'
+      link: '/adventures/mountains'
     },
     {
       id: 3,
       imageUrl: 'assets/img/home/BG2.png',
       alt: 'Beach Vacation',
-      // link: '/vacations/beaches'
+      link: '/vacations/beaches'
     }
   ];
 
@@ -40,7 +40,7 @@ export class HomePageBannerSliderComponent {
     },
     autoplay: {
       enabled: true,
-      delay: 1000,
+      delay: 500,
       disableOnInteraction: false,
       pauseOnMouseEnter: true
     },
@@ -48,6 +48,11 @@ export class HomePageBannerSliderComponent {
       enabled: true,
       type: 'bullets',
       clickable: true
+    },
+    viewAllButton: {
+      enabled: true,
+      text: 'Xem tất cả',
+      link: '/news-slide'
     },
     loop: true,
     speed: 600,

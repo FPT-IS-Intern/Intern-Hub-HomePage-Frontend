@@ -1,0 +1,18 @@
+<div class="app-container">
+  <div class="slider-container">
+    <app-banner-slider [slides]="slides" [config]="sliderConfigWithNav" [navPrevIconTemplate]="customPrevIcon"
+      [navNextIconTemplate]="customNextIcon"></app-banner-slider>
+
+    <ng-template #customPrevIcon>
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" viewBox="0 0 12 20" fill="none">
+        <path d="M10 18L2 10L10 2" stroke="#EE8E1B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </ng-template>
+
+    <ng-template #customNextIcon>
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" viewBox="0 0 12 20" fill="none">
+        <path d="M2 18L10 10L2 2" stroke="#EE8E1B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </ng-template>
+  </div>
+</div>
