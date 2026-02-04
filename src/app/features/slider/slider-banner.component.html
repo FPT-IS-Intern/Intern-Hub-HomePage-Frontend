@@ -1,6 +1,6 @@
 <div class="app-container">
   <div class="slider-container">
-    <app-banner-slider [slides]="slides" [config]="sliderConfigWithNav" [navPrevIconTemplate]="customPrevIcon"
+    <app-banner-slider [slides]="slides()" [config]="sliderConfigWithNav" [navPrevIconTemplate]="customPrevIcon"
       [navNextIconTemplate]="customNextIcon"></app-banner-slider>
 
     <ng-template #customPrevIcon>

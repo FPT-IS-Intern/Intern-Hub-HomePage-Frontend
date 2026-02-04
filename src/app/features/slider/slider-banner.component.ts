@@ -1,7 +1,8 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BannerSliderComponent } from '../../libs/slider/banner-slider.component';
 import { BannerSlide, BannerSliderConfig, BannerSliderEvent } from '../../libs/slider/banner-slider.models';
+import { BannerService } from './services/api.slider-banner.service';
 
 @Component({
   selector: 'app-homepage-banner-slider',
@@ -11,42 +12,21 @@ import { BannerSlide, BannerSliderConfig, BannerSliderEvent } from '../../libs/s
   styleUrls: ['./slider-banner.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class HomePageBannerSliderComponent {
-  slides: BannerSlide[] = [
-    {
-      id: 1,
-      imageUrl: 'http://localhost:4200/assets/img/home/BG.png',
-      alt: 'Nature Landscape',
-      link: '/destinations/nature'
-    },
-    {
-      id: 2,
-      imageUrl: 'assets/img/home/BG1.png',
-      alt: 'Mountain Adventure',
-      link: '/adventures/mountains'
-    },
-    {
-      id: 3,
-      imageUrl: 'assets/img/home/BG2.png',
-      alt: 'Beach Vacation',
-      link: '/vacations/beaches'
-    }
-  ];
+export class HomePageBannerSliderComponent implements OnInit {
+  private bannerService = inject(BannerService);
+  protected slides = this.bannerService.slides;
 
-  // Config with navigation and pagination
-  sliderConfigWithNav: BannerSliderConfig = {
+  readonly sliderConfigWithNav: BannerSliderConfig = {
     navigation: {
       enabled: true
     },
     autoplay: {
       enabled: true,
-      delay: 500,
-      disableOnInteraction: false,
+      delay: 1500,
       pauseOnMouseEnter: true
     },
     pagination: {
       enabled: true,
-      type: 'bullets',
       clickable: true
     },
     viewAllButton: {
@@ -59,12 +39,7 @@ export class HomePageBannerSliderComponent {
     effect: 'fade'
   };
 
-  // Thêm event handlers
-  onSlideChange(event: BannerSliderEvent) {
-    console.log('Slide changed:', event);
-  }
-
-  onTransitionEnd(event: BannerSliderEvent) {
-    console.log('Transition ended:', event);
+  ngOnInit(): void {
+    this.bannerService.fetchBanners().subscribe();
   }
 }
