@@ -8,7 +8,7 @@ import { ScheduleApiService } from '../../services/api.schedule.service';
   standalone: true,
   imports: [WeekdaySelectorComponent],
   templateUrl: './weekday-container.component.html',
-  styleUrls: ['./weekday-container.component.css']
+  styleUrls: ['./weekday-container.component.scss']
 })
 export class WeekdayContainerComponent implements OnInit {
   private api = inject(ScheduleApiService);

@@ -1,0 +1,23 @@
+.weekday {
+  height: 60px;
+  width: 60px;
+  border-radius: 12px;
+  padding: 8px 0;
+  background: #FFF0DB;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 2px;
+
+  img {
+    height: 26px;
+    width: 26px;
+  }
+
+  span {
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: -0.15px;
+  }
+}

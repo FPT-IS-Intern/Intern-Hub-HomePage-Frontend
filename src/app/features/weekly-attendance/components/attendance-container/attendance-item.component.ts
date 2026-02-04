@@ -7,7 +7,7 @@ import { AttendanceStatus } from './../../models/attendance.model';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './attendance-item.component.html',
-  styleUrls: ['./attendance-item.component.css']
+  styleUrls: ['./attendance-item.component.scss']
 })
 export class AttendanceItemComponent {
   image = input.required<string>();

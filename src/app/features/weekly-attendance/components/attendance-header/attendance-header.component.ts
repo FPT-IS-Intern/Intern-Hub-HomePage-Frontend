@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './attendance-header.component.html',
-  styleUrls: ['./attendance-header.component.css']
+  styleUrls: ['./attendance-header.component.scss']
 })
 export class AttendanceHeaderComponent implements OnInit, OnDestroy {
   @Input() wifiName : string = 'FIS HCM';

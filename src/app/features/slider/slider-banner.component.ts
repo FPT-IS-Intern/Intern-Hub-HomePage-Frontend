@@ -8,7 +8,7 @@ import { BannerSlide, BannerSliderConfig, BannerSliderEvent } from '../../libs/s
   standalone: true,
   imports: [CommonModule, BannerSliderComponent],
   templateUrl: './slider-banner.component.html',
-  styleUrls: ['./slider-banner.component.css'],
+  styleUrls: ['./slider-banner.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class HomePageBannerSliderComponent {

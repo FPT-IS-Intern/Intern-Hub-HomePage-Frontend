@@ -1,0 +1,65 @@
+app-banner-slider {
+  .banner-slider {
+    border-radius: 24px;
+
+    &__slide-image {
+      height: 345px;
+    }
+
+    &__button {
+      background: linear-gradient(to left, #FED8B399 0%, #FFFFFFE5 58%);
+      backdrop-filter: blur(1px);
+      box-shadow: 2px 1px 10.8px 0px #E18308A8;
+
+      .banner-slider__button-icon {
+        color: #EE8E1B;
+      }
+
+      &--prev {
+        left: -10px;
+      }
+
+      &--next {
+        right: -10px;
+      }
+    }
+  }
+
+  .banner-container {
+    max-width: 848px;
+    min-width: 680px;
+  }
+
+  .banner-slider-container {
+    // Để trống theo code gốc
+  }
+}
+
+app-banner-slider-view-all-button {
+  .banner-slider {
+    &__view-all {
+      bottom: -17px;
+    }
+
+    &__view-all-button {
+      border-radius: 24px;
+      padding: 0 20px;
+      height: 49px;
+      background-color: rgba(var(--primary-100-rgb), 0.8);
+      background: linear-gradient(to bottom,
+          #ffffff 0%,
+          #fed8b3cc 100%);
+      backdrop-filter: blur(1px);
+      -webkit-backdrop-filter: blur(1px);
+      box-shadow: 2px 1px 10.8px 0px #e18308a8;
+
+      span {
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: -0.15px;
+        color: var(--brand-500);
+      }
+    }
+  }
+}

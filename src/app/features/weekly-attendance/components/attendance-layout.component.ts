@@ -13,6 +13,6 @@ import { Weekday } from '../models/weekday.model';
         AttendanceContainerComponent
     ],
     templateUrl: './attendance-layout.component.html',
-    styleUrls: ['./attendance-layout.component.css']
+    styleUrls: ['./attendance-layout.component.scss']
 })
 export class AttendanceLayoutComponent {}

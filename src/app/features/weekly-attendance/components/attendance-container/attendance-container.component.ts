@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [AttendanceItemComponent, CommonModule],
   templateUrl: './attendance-container.component.html',
-  styleUrls: ['./attendance-container.component.css']
+  styleUrls: ['./attendance-container.component.scss']
 })
 export class AttendanceContainerComponent {
   private service = inject(AttendanceService);
