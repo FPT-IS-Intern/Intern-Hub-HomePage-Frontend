@@ -1,16 +1,29 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AttendanceStatus } from './../../models/attendance.model';
 
 @Component({
   selector: 'app-attendance-item',
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './attendance-item.component.html',
   styleUrls: ['./attendance-item.component.css']
 })
 export class AttendanceItemComponent {
-  @Input() image: string = '';
-  @Input() label: string = '';
-  @Input() time: string | null = null;
-  @Input() statusMessage: string | null = null;
+  image = input.required<string>();
+  label = input.required<string>();
+  time = input<string | null>(null);
+  statusMessage = input<string | null>(null);
+  attendanceStatus = input<AttendanceStatus | null>(null);
+  disabled = input<boolean>(false);
   
-  @Output() onAction = new EventEmitter<void>();
+
+  onAction = output<void>();
+
+  isError = computed(() => this.attendanceStatus() === 'WARNING');
+
+  statusIcon = computed(() => this.isError() 
+    ? 'assets/icon/ico_duotone_x_circle_red.svg' 
+    : 'assets/icon/ico_duotone_check_circle_green.svg'
+  );
 }

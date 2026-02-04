@@ -32,6 +32,10 @@
   margin: 0;
 }
 
+.attendance-item .action .time {
+  color: #874403;
+}
+
 .attendance-item .status-message {
   font-size: 14px;
   font-weight: 500;
@@ -70,12 +74,25 @@
   letter-spacing: -0.15px;
 }
 
-.attendance-item .status-message.is-late {
-  color: #A80A12;
-}
-
 .status-container {
   display: flex;
   flex-direction: row;
   gap: 4px;
+}
+
+.text-error {
+  color: #A80A12 !important;
+}
+
+.text-success {
+  color: #00652A !important;
+}
+
+.button-disabled {
+  background-color: #E9EDF1 !important;
+  cursor: not-allowed !important;
+}
+
+.button-disabled span {
+  color: #828F96 !important;
 }
