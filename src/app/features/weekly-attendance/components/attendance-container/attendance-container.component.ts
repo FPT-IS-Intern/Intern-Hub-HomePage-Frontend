@@ -1,38 +1,74 @@
-import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { catchError, of } from 'rxjs';
-import { AttendanceItemComponent } from './attendance-item.component'; // Import con
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { AttendanceService } from '../../services/api.attendance.service';
+import { AttendanceResponseData, AttendanceStatus } from '../../models/attendance.model';
+import { AttendanceItemComponent } from './attendance-item.component'
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-attendance-container',
   standalone: true,
-  imports: [AttendanceItemComponent],
+  imports: [AttendanceItemComponent, CommonModule],
   templateUrl: './attendance-container.component.html',
   styleUrls: ['./attendance-container.component.css']
 })
-
 export class AttendanceContainerComponent {
-  checkInImage = 'assets/img/home/img_checkin.svg';
-  checkOutImage = 'assets/img/home/img_checkout.svg';
-  checkInLabel = 'Check In';
-  checkOutLabel = 'Check Out';
+  private service = inject(AttendanceService);
 
-  // Tách biệt dữ liệu cho 2 nút
-  checkInTime: string | null = null;
-  checkInMessage: string | null = null;
+  // UI State
+  isLoading = signal(false);
+  showPopup = signal(false);
+  remoteRequestPending = signal(false);
 
-  checkOutTime: string | null = null;
-  checkOutMessage: string | null = null;
+  // Data State
+  checkIn = signal<AttendanceResponseData>({ time: null, displayMessage: null, attendanceStatus: null });
+  checkOut = signal<AttendanceResponseData>({ time: null, displayMessage: null, attendanceStatus: null });
 
-  constructor(private http: HttpClient) { }
+  /**
+   * Logic xử lý chung cho cả Checkin và Checkout
+   * @param action 'IN' | 'OUT'
+   */
+  processAttendance(action: 'IN' | 'OUT') {
+    this.isLoading.set(true);
+    this.service.checkNetwork().subscribe({
+      next: (wifi) => {
+        if (!wifi.isCompanyWifi) {
+          this.isLoading.set(false);
+          this.showPopup.set(true);
+          return;
+        }
 
-  handleCheckIn() {
-    // this.checkInMessage = 'Check in thành công (7:45) trước  8:30';
-    this.checkInMessage = 'Check in thành công (10:30) trễ hơn 8:30';
+        // 2. Trong mạng -> Gọi API tương ứng
+        const apiCall = action === 'IN' ? this.service.postCheckIn() : this.service.postCheckOut();
+    
+        apiCall.subscribe({
+          next: (res) => {
+            this.isLoading.set(false);
+            if (action === 'IN') {
+              this.checkIn.set({ time: res.data.time, displayMessage: res.data.displayMessage, attendanceStatus: res.data.attendanceStatus });
+            } else {
+              this.checkOut.set({ time: res.data.time, displayMessage: res.data.displayMessage, attendanceStatus: res.data.attendanceStatus });
+            }
+                console.log('Calling API for action:', res);
+          },
+          error: () => this.isLoading.set(false)
+        });
+      },
+      error: () => this.isLoading.set(false)
+    });
   }
 
-  handleCheckOut() {
-    // this.checkOutMessage = 'Check out thành công (18:05) sau 17:30';
-    this.checkOutMessage = 'Check out thành công (18:05) sau 17:30';
+  createRemoteRequest() {
+    this.showPopup.set(false);
+    this.remoteRequestPending.set(true);
+
+    // Giả lập sau khi gửi phiếu Remote thành công
+    setTimeout(() => {
+      this.remoteRequestPending.set(false);
+      this.checkIn.set({
+        time: '08:00',
+        displayMessage: 'Đã gửi phiếu Remote - Chờ duyệt',
+        attendanceStatus: 'SUCCESS'
+      });
+    }, 2000);
   }
 }
