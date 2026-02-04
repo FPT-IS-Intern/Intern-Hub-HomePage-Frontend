@@ -15,7 +15,7 @@ export class HomePageBannerSliderComponent {
   slides: BannerSlide[] = [
     {
       id: 1,
-      imageUrl: 'assets/img/home/BG.png',
+      imageUrl: 'http://localhost:4200/assets/img/home/BG.png',
       alt: 'Nature Landscape',
       link: '/destinations/nature'
     },

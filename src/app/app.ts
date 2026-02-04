@@ -15,7 +15,7 @@ import { HomePageBannerSliderComponent } from './features/slider/slider-banner.c
   styleUrl: './app.scss'
 })
 export class App implements OnInit {
-  private themeService = inject(DynamicDsService);
+  private readonly themeService = inject(DynamicDsService);
   protected readonly title = signal('Homepage-service-fe');
 
   ngOnInit() {
