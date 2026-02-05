@@ -1,17 +1,16 @@
 <app-approval-list 
-  [rows]="approvalItems()" 
-  headerContentLeft="Applicant" 
-  headerContentRight="Xem tất cả" 
-  width="600px">
-</app-approval-list>
+      [rows]="formattedItems()" 
+      [headerContentLeft]="headerTitle()" 
+      headerContentRight="Xem tất cả">
+    </app-approval-list>
 
-<ng-template #actionsTemplate let-row="row">
-    <div class="action-buttons" style="display: flex; gap: 8px;">
+    <ng-template #actionsTemplate let-row="row">
+      <div class="action-buttons" style="display: flex; gap: 8px;">
         <app-button-container 
           content="Xem chi tiết" 
           color="#EE8E1B" 
           size="xs" 
-          (buttonClick)="approve(row)">
+          (buttonClick)="onApprove.emit(row)">
         </app-button-container>
-    </div>
-</ng-template>
+      </div>
+    </ng-template>

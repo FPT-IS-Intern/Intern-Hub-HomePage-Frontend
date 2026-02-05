@@ -1,52 +1,38 @@
-import { Component, viewChild, TemplateRef, signal, effect } from '@angular/core';
+import { Component, viewChild, TemplateRef, input, output, computed } from '@angular/core';
 import { CommonModule } from "@angular/common";
-import { 
-  ApprovalListComponent, 
-  ApprovalListItemInterface, 
-  ButtonContainerComponent 
+import {
+  ApprovalListComponent,
+  ApprovalListItemInterface,
+  ButtonContainerComponent
 } from "@goat-bravos/intern-hub-layout";
 
 @Component({
   selector: 'app-card-list',
   standalone: true,
   imports: [
-    CommonModule, 
-    ApprovalListComponent, 
+    CommonModule,
+    ApprovalListComponent,
     ButtonContainerComponent
   ],
   templateUrl: './card-list-component.html',
   styleUrls: ['./card-list-component.scss']
 })
 export class CardListComponent {
-  // Cú pháp Signal ViewChild (Read-only & Reactive)
+  headerTitle = input.required<string>();
+  rawData = input.required<any[]>();
+
+  // Output để báo cho cha khi nhấn nút
+  onApprove = output<any>();
+
   readonly actionsTemplate = viewChild.required<TemplateRef<any>>('actionsTemplate');
 
-  // Khởi tạo danh sách bằng Signal
-  approvalItems = signal<ApprovalListItemInterface[]>([]);
-
-  constructor() {
-    // Effect sẽ tự động chạy khi actionsTemplate đã sẵn sàng trong DOM
-    effect(() => {
-      const template = this.actionsTemplate();
-      
-      this.approvalItems.set([
-        {
-          name: "John Doe - Leave Request",
-          date: new Date("2024-01-15"),
-          rightTemplate: template,
-          rightContext: { row: { id: 1, type: "leave" } },
-        },
-        {
-          name: "Jane Smith - Expense Report",
-          date: new Date("2024-01-14"),
-          rightTemplate: template,
-          rightContext: { row: { id: 2, type: "expense" } },
-        },
-      ]);
-    });
-  }
-
-  approve(row: any) {
-    console.log("Approved:", row);
-  }
+  // Computed signal để map template vào data mỗi khi rawData hoặc template thay đổi
+  formattedItems = computed(() => {
+    const template = this.actionsTemplate();
+    return this.rawData().map(item => ({
+      ...item,
+      rightTemplate: template,
+      rightContext: { row: item }
+    }));
+  });
 }
