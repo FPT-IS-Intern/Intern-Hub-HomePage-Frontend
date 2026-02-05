@@ -1,0 +1,108 @@
+.menu-list {
+  background-color: #FFFFFF;
+}
+
+:host ::ng-deep {
+  $border-light: 1px #02305E16 solid;
+
+  .approval-list {
+    background-color: #FFFFFF !important;
+
+    &-header, .approval-item {
+      padding: 0 !important;
+      display: flex;
+    }
+
+    &-header {
+      .approval-list-header-left, > div {
+        flex-basis: 50%;
+        border-bottom: $border-light;
+      }
+
+      .approval-list-header-left {
+        display: inline-block;
+        padding: 12px 12px 11.2px;
+        line-height: 36px;
+        height: 60px;
+        box-sizing: border-box;
+      }
+
+      > div {
+        text-align: end;
+        padding: 16px 12px 15.2px;
+        height: 60px;
+        box-sizing: border-box;
+
+        p {
+          margin: 0;
+          padding: 4px 0;
+          color: #00652A;
+          font-weight: 700;
+          line-height: 20px;
+        }
+      }
+    }
+
+    &-content {
+      .approval-item {
+        &-left, &-right {
+          flex-basis: 50%;
+        }
+
+        &-left {
+          gap: 2px;
+          padding: 12px 12px 11.2px;
+          border-bottom: $border-light;
+          height: 70px;
+          box-sizing: border-box;
+
+          .approval-item-left-name {
+            display: block;
+            color: #2A3034;
+            font-weight: 700;
+            line-height: 20px;
+            padding-top: 4px;
+          }
+
+          .approval-item-left-date {
+            display: block;
+            color: #2A3034;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 16px;
+            padding-bottom: 4px;
+
+            &-title {
+              color: #828F96;
+            }
+          }
+        }
+
+        &-right {
+          .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            padding: 21px 12px 20.2px;
+            border-bottom: $border-light;
+            height: 70px;
+            box-sizing: border-box;
+          }
+        }
+      }
+    }
+  }
+
+  app-button-container {
+    .button-container {
+      background-color: #FFFFFF;
+      height: auto !important;
+      padding: 4px 0;
+      box-sizing: border-box;
+
+      .button-content {
+        font-size: 14px !important;
+        line-height: 20px;
+      }
+    }
+  }
+}
