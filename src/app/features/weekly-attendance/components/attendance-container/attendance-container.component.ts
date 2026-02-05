@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { AttendanceService } from '../../services/api.attendance.service';
-import { AttendanceResponseData, AttendanceStatus } from '../../models/attendance.model';
+import { AttendanceResponseData } from '../../models/attendance.model';
 import { AttendanceItemComponent } from './attendance-item.component'
 import { CommonModule } from '@angular/common';
 
