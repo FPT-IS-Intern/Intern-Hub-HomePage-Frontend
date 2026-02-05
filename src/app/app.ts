@@ -4,12 +4,14 @@ import { DynamicDsService } from 'dynamic-ds';
 
 import { AttendanceLayoutComponent } from './features/weekly-attendance/components/attendance-layout.component';
 import { HomePageBannerSliderComponent } from './features/slider/slider-banner.component'
+import { CardListContainerComponent } from './features/card-list/card-list-container.component';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet,
     HomePageBannerSliderComponent,
-    AttendanceLayoutComponent
+    AttendanceLayoutComponent,
+    CardListContainerComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
