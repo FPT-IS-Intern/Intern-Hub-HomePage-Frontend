@@ -1,0 +1,11 @@
+<div class="container-layout">
+      
+      @for (group of approvalGroups(); track group.title) {
+        <app-card-list 
+          [headerTitle]="group.title" 
+          [rawData]="group.items"
+          (onApprove)="handleApproveEvent($event)">
+        </app-card-list>
+      }
+
+    </div>

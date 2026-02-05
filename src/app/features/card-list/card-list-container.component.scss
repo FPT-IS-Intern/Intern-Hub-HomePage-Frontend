@@ -1,0 +1,8 @@
+.container-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+}
+app-card-list {
+    flex-basis: 50%;
+}
