@@ -5,3 +5,39 @@
   justify-content: center;
   gap: 20px;
 }
+
+:host ::ng-deep .my-custom-modal {
+  padding: 16px;
+  width: 288px;
+
+  .message {
+    margin: 0;
+    padding-bottom: 18.4px;
+    font-size: 12px;
+    font-weight: 400px;
+    line-height: 16px;
+  }
+
+  .actions {
+    height: 36px;
+    margin-top: 16px;
+    gap: 8px;
+
+    .btn {
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+
+    .btn>span {
+      margin: 0 8px;
+    }
+
+    .btn.cancel {
+      border: 1px #E18308 solid !important;
+      background: none;
+      color: #E18308;
+    }
+
+    .btn.confirm {}
+  }
+}
