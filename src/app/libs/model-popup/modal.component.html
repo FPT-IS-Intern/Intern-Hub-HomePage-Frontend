@@ -1,0 +1,23 @@
+@if (visible() && vm(); as c) {
+<div class="overlay">
+    <div class="modal" [class]="c.panelClass || ''">
+
+
+        <p class="message">{{ c.message }}</p>
+
+
+        <div class="actions">
+            <button class="btn cancel" (click)="cancel()">
+                <span>{{ c.cancelText || 'Hủy' }}</span>
+            </button>
+
+
+            <button class="btn confirm" (click)="confirm()">
+                <span>{{ c.confirmText || 'Đồng ý' }}</span>
+            </button>
+        </div>
+
+
+    </div>
+</div>
+}
