@@ -61,6 +61,8 @@
           border-bottom: $border-light;
           height: 70px;
           box-sizing: border-box;
+          white-space: nowrap;
+          overflow: hidden;
 
           .approval-item-left-name {
             display: block;
@@ -68,6 +70,10 @@
             font-weight: 700;
             line-height: 20px;
             padding-top: 4px;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
 
           .approval-item-left-date {
@@ -77,12 +83,9 @@
             font-weight: 700;
             line-height: 16px;
             padding-bottom: 4px;
-
-            min-width: 140px;
-            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            display: block;
+            white-space: nowrap;
 
             &-title {
               color: #828F96;
