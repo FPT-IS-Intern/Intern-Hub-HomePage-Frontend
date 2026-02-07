@@ -5,6 +5,7 @@ import { AttendanceContainerComponent } from '../components/attendance-container
 import { AttendanceHistoryButtonComponent } from './button-action/attendance-history-button.component';
 import { TicketActionButtonComponent } from './button-action/create-ticket-button.component';
 import { MyTicketButtonComponent } from './button-action/my-tickets-button.component';
+import { NotificationTextComponent } from '../../../libs/notification-text/notification-text.component';
 
 @Component({
     selector: 'app-attendance-layout',
@@ -15,7 +16,8 @@ import { MyTicketButtonComponent } from './button-action/my-tickets-button.compo
         AttendanceContainerComponent,
         AttendanceHistoryButtonComponent,
         TicketActionButtonComponent,
-        MyTicketButtonComponent
+        MyTicketButtonComponent,
+        NotificationTextComponent
     ],
     templateUrl: './attendance-layout.component.html',
     styleUrls: ['./attendance-layout.component.scss']
