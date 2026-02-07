@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, viewChild } from '@angular/core';
 import { AttendanceService } from '../../services/api.attendance.service';
 import { AttendanceResponseData } from '../../models/attendance.model';
 import { AttendanceItemComponent } from './attendance-item.component'
@@ -14,7 +14,7 @@ import { ModalComponent } from '../../../../libs/model-popup/modal.component';
 })
 export class AttendanceContainerComponent {
   private service = inject(AttendanceService);
-
+  modal = viewChild<ModalComponent>('modal');
   // UI State
   isLoading = signal(false);
   showPopup = signal(false);
@@ -23,6 +23,10 @@ export class AttendanceContainerComponent {
   // Data State
   checkIn = signal<AttendanceResponseData>({ time: null, displayMessage: null, isCheckTimeValid: false });
   checkOut = signal<AttendanceResponseData>({ time: null, displayMessage: null, isCheckTimeValid: false });
+
+  checkInLabel = computed(() => this.remoteRequestPending() ? 'chờ ghi nhận...' : 'Check In');
+  isCheckOutDisabled = computed(() => !this.checkIn().time || this.remoteRequestPending());
+
 
   ngOnInit() {
     this.isLoading.set(true);
@@ -42,15 +46,16 @@ export class AttendanceContainerComponent {
    * Logic xử lý chung cho cả Checkin và Checkout
    * @param action 'IN' | 'OUT'
    */
-  processAttendance(action: 'IN' | 'OUT', modal?: ModalComponent) {
+  processAttendance(action: 'IN' | 'OUT') {
     this.isLoading.set(true);
-    this.openConfirmPopupRemote(modal);
     this.service.checkNetwork().subscribe({
       next: (wifi) => {
         if (!wifi.isCompanyWifi) {
-          this.isLoading.set(false);
           this.showPopup.set(true);
-
+          const modalRef = this.modal();
+          if (modalRef) {
+            this.openConfirmPopupRemote(modalRef);
+          }
           return;
         }
 

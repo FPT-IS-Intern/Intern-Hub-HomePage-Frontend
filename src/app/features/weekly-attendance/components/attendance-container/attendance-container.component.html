@@ -1,15 +1,22 @@
 <div class="attendance-wrapper">
-
-  <app-attendance-item [image]="'assets/img/home/img_checkin.svg'"
-    [label]="remoteRequestPending() ? 'chờ ghi nhận...' : 'Check In'" [time]="checkIn().time"
-    [statusMessage]="checkIn().displayMessage" [isCheckTimeValid]="checkIn().isCheckTimeValid"
-    [disabled]="showPopup() || isLoading() || remoteRequestPending()" (onAction)="processAttendance('IN',modal)">
+  <app-attendance-item 
+    [image]="'assets/img/home/img_checkin.svg'"
+    [label]="checkInLabel()" 
+    [time]="checkIn().time"
+    [statusMessage]="checkIn().displayMessage" 
+    [isCheckTimeValid]="checkIn().isCheckTimeValid"
+    [disabled]="showPopup() || remoteRequestPending()" 
+    (onAction)="processAttendance('IN')">
   </app-attendance-item>
 
-  <app-attendance-item [image]="'assets/img/home/img_checkout.svg'" [label]="'Check Out'" [time]="checkOut().time"
-    [statusMessage]="checkOut().displayMessage" [isCheckTimeValid]="checkOut().isCheckTimeValid"
-    [disabled]="!checkIn().time || remoteRequestPending()" (onAction)="processAttendance('OUT')">
+  <app-attendance-item 
+    [image]="'assets/img/home/img_checkout.svg'" 
+    [label]="'Check Out'" 
+    [time]="checkOut().time"
+    [statusMessage]="checkOut().displayMessage" 
+    [isCheckTimeValid]="checkOut().isCheckTimeValid"
+    [disabled]="isCheckOutDisabled()" 
+    (onAction)="processAttendance('OUT')">
   </app-attendance-item>
-
-  <app-modal #modal />
 </div>
+<app-modal #modal />

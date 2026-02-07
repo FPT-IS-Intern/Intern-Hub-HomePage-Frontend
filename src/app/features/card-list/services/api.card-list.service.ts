@@ -12,7 +12,8 @@ export class ApprovalService {
             title: "Dự Án",
             items: [
                 { id: 1, name: "EximBank", date: "2024-01-15", type: "leave" },
-                { id: 2, name: "Intern Hub", date: "2024-01-14", type: "expense" }
+                { id: 2, name: "Intern Hub", date: "2024-01-14", type: "expense" },
+                
             ]
         },
         {
