@@ -14,16 +14,16 @@ export class AttendanceItemComponent {
   label = input.required<string>();
   time = input<string | null>(null);
   statusMessage = input<string | null>(null);
-  attendanceStatus = input<AttendanceStatus | null>(null);
+  isCheckTimeValid = input<boolean>(false);
   disabled = input<boolean>(false);
-  
+
 
   onAction = output<void>();
 
-  isError = computed(() => this.attendanceStatus() === 'WARNING');
+  isError = computed(() => this.isCheckTimeValid());
 
-  statusIcon = computed(() => this.isError() 
-    ? 'assets/icon/ico_duotone_x_circle_red.svg' 
+  statusIcon = computed(() => this.isError()
+    ? 'assets/icon/ico_duotone_x_circle_red.svg'
     : 'assets/icon/ico_duotone_check_circle_green.svg'
   );
 }

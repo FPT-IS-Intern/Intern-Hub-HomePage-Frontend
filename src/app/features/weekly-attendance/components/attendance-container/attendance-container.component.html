@@ -2,13 +2,12 @@
 
   <app-attendance-item [image]="'assets/img/home/img_checkin.svg'"
     [label]="remoteRequestPending() ? 'chờ ghi nhận...' : 'Check In'" [time]="checkIn().time"
-    [statusMessage]="checkIn().displayMessage" [attendanceStatus]="checkIn().attendanceStatus" 
-    [disabled]="showPopup() || isLoading() || remoteRequestPending()"
-    (onAction)="processAttendance('IN',modal)">
+    [statusMessage]="checkIn().displayMessage" [isCheckTimeValid]="checkIn().isCheckTimeValid"
+    [disabled]="showPopup() || isLoading() || remoteRequestPending()" (onAction)="processAttendance('IN',modal)">
   </app-attendance-item>
 
   <app-attendance-item [image]="'assets/img/home/img_checkout.svg'" [label]="'Check Out'" [time]="checkOut().time"
-    [statusMessage]="checkOut().displayMessage" [attendanceStatus]="checkOut().attendanceStatus"
+    [statusMessage]="checkOut().displayMessage" [isCheckTimeValid]="checkOut().isCheckTimeValid"
     [disabled]="!checkIn().time || remoteRequestPending()" (onAction)="processAttendance('OUT')">
   </app-attendance-item>
 

@@ -21,8 +21,22 @@ export class AttendanceContainerComponent {
   remoteRequestPending = signal(false);
 
   // Data State
-  checkIn = signal<AttendanceResponseData>({ time: null, displayMessage: null, attendanceStatus: null });
-  checkOut = signal<AttendanceResponseData>({ time: null, displayMessage: null, attendanceStatus: null });
+  checkIn = signal<AttendanceResponseData>({ time: null, displayMessage: null, isCheckTimeValid: false });
+  checkOut = signal<AttendanceResponseData>({ time: null, displayMessage: null, isCheckTimeValid: false });
+
+  ngOnInit() {
+    this.isLoading.set(true);
+    this.service.getAttendanceStatus().subscribe({
+      next: (res) => {
+        if (res.success && res.data) {
+          this.checkIn.set(res.data.checkIn);
+          this.checkOut.set(res.data.checkOut);
+        }
+      },
+      error: (err) => console.error('API Fail', err),
+      complete: () => this.isLoading.set(false)
+    });
+  }
 
   /**
    * Logic xử lý chung cho cả Checkin và Checkout
@@ -46,9 +60,9 @@ export class AttendanceContainerComponent {
           next: (res) => {
             this.isLoading.set(false);
             if (action === 'IN') {
-              this.checkIn.set({ time: res.data.time, displayMessage: res.data.displayMessage, attendanceStatus: res.data.attendanceStatus });
+              this.checkIn.set({ time: res.data.time, displayMessage: res.data.displayMessage, isCheckTimeValid: res.data.isCheckTimeValid });
             } else {
-              this.checkOut.set({ time: res.data.time, displayMessage: res.data.displayMessage, attendanceStatus: res.data.attendanceStatus });
+              this.checkOut.set({ time: res.data.time, displayMessage: res.data.displayMessage, isCheckTimeValid: res.data.isCheckTimeValid });
             }
             console.log('Calling API for action:', res);
           },
@@ -61,15 +75,15 @@ export class AttendanceContainerComponent {
 
   createRemoteRequest() {
     this.showPopup.set(false);
+    // redirect to create remote request page
+    // Giả lập tạo phiếu Remote thành công sau 2s
     this.remoteRequestPending.set(true);
+    // giả lập yêu cầu được phê duyệt sao n(s)
+    // setTimeout(() => {
+    //   this.remoteRequestPending.set(false);
+    // }, 2000);
 
-    setTimeout(() => {
-      this.checkIn.set({
-        time: '08:00',
-        displayMessage: 'Đã gửi phiếu Remote - Chờ duyệt',
-        attendanceStatus: 'SUCCESS'
-      });
-    }, 8000);
+
   }
 
   openConfirmPopupRemote(modal?: ModalComponent) {
