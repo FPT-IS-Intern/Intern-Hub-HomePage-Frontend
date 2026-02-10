@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { App } from './app';
+import { Main } from './features/main/main';
 
 export const routes: Routes = [
   {
     path: '',
-    component: App,
+    component: Main,
   },
 ];

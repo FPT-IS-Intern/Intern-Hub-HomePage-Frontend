@@ -1,0 +1,33 @@
+.main-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  min-width: 1071px;
+  max-width: 1239px;
+
+  .main-right {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    width: 100%;
+    flex: 1;
+    min-width: 0;
+
+    .banner {
+      // Styles cho banner nếu cần
+    }
+
+    .menu-list {
+      // Styles cho menu-list nếu cần
+    }
+  }
+
+  .weekday-attendance-wrapper {
+    flex-shrink: 0;
+  }
+}

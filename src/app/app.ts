@@ -2,26 +2,16 @@ import { Component, signal, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { DynamicDsService } from 'dynamic-ds';
 
-import { AttendanceLayoutComponent } from './features/weekly-attendance/components/attendance-layout.component';
-import { HomePageBannerSliderComponent } from './features/slider/slider-banner.component'
-import { CardListContainerComponent } from './features/card-list/card-list-container.component';
-
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,
-    HomePageBannerSliderComponent,
-    AttendanceLayoutComponent,
-    CardListContainerComponent
-  ],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+  imports: [RouterOutlet],
+  template: `<router-outlet></router-outlet>`,
 })
 export class App implements OnInit {
-  private readonly themeService = inject(DynamicDsService);
   protected readonly title = signal('Homepage-service-fe');
+  private themeService = inject(DynamicDsService);
 
   ngOnInit() {
     this.themeService.initializeTheme().subscribe();
   }
-
 }
