@@ -1,9 +1,11 @@
+@use 'variables' as *;
+
 .weekday {
   height: 60px;
   width: 60px;
-  border-radius: 12px;
+  border-radius: $radius-sm;
   padding: 8px 0;
-  background: #FFF0DB;
+  background: $bg-weekday;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -15,9 +17,10 @@
   }
 
   span {
-    font-weight: 700;
-    font-size: 12px;
-    line-height: 16px;
+    color: $text-sub;
+    font-weight: $font-weight-bold;
+    font-size: $font-size-xs;
+    line-height: $line-height-xs;
     letter-spacing: -0.15px;
   }
 }

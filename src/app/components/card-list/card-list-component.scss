@@ -1,12 +1,14 @@
+@use 'variables' as *;
+
 .menu-list {
-  background-color: #FFFFFF;
+  background-color: $color-white;
 }
 
 :host ::ng-deep {
-  $border-light: 1px #02305E16 solid;
+  $border-light: 1px $color-underline solid;
 
   .approval-list {
-    background-color: #FFFFFF !important;
+    background-color: $color-white !important;
 
     &-header,
     .approval-item {
@@ -26,7 +28,7 @@
       .approval-list-header-left {
         display: inline-block;
         padding: 12px 12px 11.2px;
-        line-height: 36px;
+        line-height: $line-height-md;
         height: 60px;
         box-sizing: border-box;
       }
@@ -40,15 +42,19 @@
         p {
           margin: 0;
           padding: 4px 0;
-          color: #00652A;
-          font-weight: 700;
-          line-height: 20px;
+          color: $success-text;
+          font-weight: $font-weight-bold;
+          line-height: $line-height-sm;
         }
       }
     }
 
     &-content {
       .approval-item {
+
+        &:last-child {
+          border-bottom: none;
+        }
 
         &-left,
         &-right {
@@ -66,9 +72,8 @@
 
           .approval-item-left-name {
             display: block;
-            color: #2A3034;
-            font-weight: 700;
-            line-height: 20px;
+            font-weight: $font-weight-bold;
+            line-height: $line-height-sm;
             padding-top: 4px;
 
             overflow: hidden;
@@ -78,18 +83,17 @@
 
           .approval-item-left-date {
             display: block;
-            color: #2A3034;
-            font-size: 12px;
-            font-weight: 700;
-            line-height: 16px;
+            font-size: $font-size-xs;
+            font-weight: $font-weight-bold;
+            line-height: $line-height-xs;
             padding-bottom: 4px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
 
             &-title {
-              color: #828F96;
-              font-size: 12px;
+              color: $text-muted;
+              font-size: $font-size-xs;
             }
           }
         }
@@ -110,14 +114,14 @@
 
   app-button-container {
     .button-container {
-      background-color: #FFFFFF;
-      height: auto !important;  
+      background-color: $color-white;
+      height: auto !important;
       padding: 4px 0;
       box-sizing: border-box;
 
       .button-content {
-        font-size: 14px !important;
-        line-height: 20px;
+        font-size: $font-size-sm !important;
+        line-height: $line-height-sm;
       }
     }
   }

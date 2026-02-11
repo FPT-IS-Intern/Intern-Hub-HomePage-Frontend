@@ -20,7 +20,13 @@
             "styles": [
               "node_modules/dynamic-ds/styles/system-design.scss",
               "src/styles.scss"
-            ]
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/app/styles",
+                "src/styles"
+              ]
+            }
           },
           "configurations": {
             "production": {
@@ -51,14 +57,24 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/app/styles"
+              ]
+            },
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"],
-            "polyfills": ["es-module-shims"]
+            "styles": [
+              "src/styles.scss"
+            ],
+            "polyfills": [
+              "es-module-shims"
+            ]
           },
           "configurations": {
             "production": {

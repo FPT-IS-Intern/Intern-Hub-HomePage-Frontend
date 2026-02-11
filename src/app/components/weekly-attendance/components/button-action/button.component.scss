@@ -1,3 +1,5 @@
+@use 'variables' as *;
+
 :host ::ng-deep .button-container {
     gap: 2px !important;
     height: 44px !important;
@@ -8,5 +10,5 @@
     padding: 0 8px;
     white-space: nowrap;
     text-align: center;
-    line-height: 20px;
+    line-height: $line-height-sm;
 }

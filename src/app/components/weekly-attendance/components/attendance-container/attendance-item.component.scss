@@ -1,18 +1,19 @@
+@use 'variables' as *;
+
 .attendance-item {
   .attendance-img {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    background: radial-gradient(circle, #EDCEA7, #EDCEA700);
-    background-color: #FFF6E8;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
+    background: radial-gradient(circle, $bg-radial-start, $color-radial-end);
+    background-color: $bg-checkin-top;
+    border-top-left-radius: $radius-md;
+    border-top-right-radius: $radius-md;
     height: 104px;
     width: 162px;
 
-    .attendance-icon {
-    }
+    .attendance-icon {}
   }
 
   .action {
@@ -21,22 +22,21 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
-    background: #FFF0DB;
+    background: $bg-checkin-btm;
     padding: 12px 8px;
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
+    border-bottom-left-radius: $radius-sm;
+    border-bottom-right-radius: $radius-sm;
 
     .response-time-wrapper {
       p {
-        font-weight: 500;
-        font-size: 14px;
-        color: #2A3034;
-        line-height: 20px;
+        font-weight: $font-weight-medium;
+        font-size: $font-size-sm;
+        line-height: $line-height-sm;
         letter-spacing: -0.15px;
         margin: 0;
 
         &.time {
-          color: #874403;
+          color: $text-time;
         }
       }
     }
@@ -44,8 +44,8 @@
     .action-button {
       width: 146px;
       height: 36px;
-      background-color: #F5A84A;
-      border-radius: 8px;
+      background-color: $accent-orange;
+      border-radius: $radius-xs;
       border: none;
       cursor: pointer;
       display: flex;
@@ -53,19 +53,19 @@
       justify-content: center;
 
       .button-text {
-        font-weight: 500;
-        font-size: 14px;
-        color: #FFFFFF;
-        line-height: 20px;
+        font-weight: $font-weight-medium;
+        font-size: $font-size-sm;
+        color: $color-white;
+        line-height: $line-height-sm;
         letter-spacing: -0.15px;
       }
 
       &.button-disabled {
-        background-color: #E9EDF1 !important;
+        background-color: $bg-disable !important;
         cursor: not-allowed !important;
 
         .button-text {
-          color: #828F96 !important;
+          color: $text-muted !important;
         }
       }
     }
@@ -76,27 +76,26 @@
       gap: 4px;
       align-items: center;
 
-      .status-icon {
-      }
+      .status-icon {}
 
       .status-message {
         display: flex;
         align-items: center;
         text-align: center;
         height: 36px;
-        
-        font-size: 10px;
-        font-weight: 400;
-        line-height: 12px;
-        letter-spacing: -0.15px;
-        color: #00652A; 
+
+        font-size: $font-size-2xs;
+        font-weight: $font-weight-regular;
+        line-height: $line-height-2xs;
+        letter-spacing: $letter-spacing-normal;
+        color: $success-text;
 
         &.text-error {
-          color: #A80A12 !important;
+          color: $error-text !important;
         }
 
         &.text-success {
-          color: #00652A !important;
+          color: $success-text !important;
         }
       }
     }

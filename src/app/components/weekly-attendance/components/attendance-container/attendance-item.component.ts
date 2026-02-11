@@ -23,7 +23,7 @@ export class AttendanceItemComponent {
   isError = computed(() => this.isCheckTimeValid());
 
   statusIcon = computed(() => this.isError()
-    ? 'assets/icon/ico_duotone_x_circle_red.svg'
-    : 'assets/icon/ico_duotone_check_circle_green.svg'
+    ? 'x-circle'
+    : 'check-circle'
   );
 }

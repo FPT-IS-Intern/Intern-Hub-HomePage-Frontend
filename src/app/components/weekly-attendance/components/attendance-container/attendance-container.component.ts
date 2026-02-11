@@ -4,6 +4,7 @@ import { AttendanceResponseData } from '../../models/attendance.model';
 import { AttendanceItemComponent } from './attendance-item.component'
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../../../../libs/model-popup/modal.component';
+import { NotificationService } from '../../../../libs/notification-text/notification-bridge.service';
 
 @Component({
   selector: 'app-attendance-container',
@@ -14,6 +15,7 @@ import { ModalComponent } from '../../../../libs/model-popup/modal.component';
 })
 export class AttendanceContainerComponent {
   private service = inject(AttendanceService);
+  private bridge = inject(NotificationService);
   modal = viewChild<ModalComponent>('modal');
   // UI State
   isLoading = signal(false);
@@ -81,12 +83,15 @@ export class AttendanceContainerComponent {
   createRemoteRequest() {
     this.showPopup.set(false);
     // redirect to create remote request page
-    // Giả lập tạo phiếu Remote thành công sau 2s
+    
+    this.bridge.show('Check in của bạn sẽ được ghi nhận sau khi phiếu yêu cầu  được duyệt.');
     this.remoteRequestPending.set(true);
+
     // giả lập yêu cầu được phê duyệt sao n(s)
-    // setTimeout(() => {
-    //   this.remoteRequestPending.set(false);
-    // }, 2000);
+    setTimeout(() => {
+      this.remoteRequestPending.set(false);
+      this.bridge.clear();
+    }, 2000);
 
 
   }

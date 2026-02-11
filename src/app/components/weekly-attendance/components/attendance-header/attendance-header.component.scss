@@ -1,3 +1,5 @@
+@use 'variables' as *;
+
 .time-card-container {
   width: 327px;
   height: 92px;
@@ -5,9 +7,9 @@
   display: flex;
   flex-direction: row;
   gap: 30px;
-  background: linear-gradient(to bottom, #FFFFFF80 16%, #FED8B34D 100%);
-  box-shadow: 2px 3px 10.8px 0px #FFC880A8;
-  border-radius: 20px;
+  background: linear-gradient(to bottom, rgba($color-white, 0.5) 16%, rgba($light-orange, 0.3) 100%);
+  box-shadow: $shadow-primary-light;
+  border-radius: $radius-md;
 
   .info-section {
     display: flex;
@@ -25,29 +27,29 @@
       }
 
       span {
-        font-size: 12px;
-        line-height: 16px;
+        font-size: $font-size-xs;
+        line-height: $line-height-xs;
         letter-spacing: -0.15px;
       }
 
       .location-text {
-        color: #505A5F;
-        font-weight: 500;
+        color: $text-sub;
+        font-weight: $font-weight-medium;
       }
 
       .date-text {
-        color: #505A5F;
-        font-weight: 700;
+        color: $text-sub;
+        font-weight: $font-weight-bold;
         white-space: nowrap;
       }
     }
   }
 
   .time-display {
-    font-weight: 700;
-    font-size: 29px;
-    line-height: 40px;
-    letter-spacing: -0.5px;
-    color: var(--brand-600);
+    font-weight: $font-weight-bold;
+    font-size: $font-size-lg;
+    line-height: $line-height-lg;
+    letter-spacing: $letter-spacing-tight;
+    color: $primary-orange;
   }
 }

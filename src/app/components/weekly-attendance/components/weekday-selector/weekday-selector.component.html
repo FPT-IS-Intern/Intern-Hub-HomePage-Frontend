@@ -1,6 +1,7 @@
 <div class="weekday">
     <span>{{ weekdayName }}</span>
-    <img [src]="hasCheckin 
-    ? 'assets/icon/ico_duoton_check_circle_orange.svg' 
-    : 'assets/icon/ico_line_minus_circle_orange.svg'" alt="checkin-status" />
+   <i class="ico-base" 
+       [class.check-circle]="hasCheckin"
+       [class.minus-circle]="!hasCheckin"
+       alt="checkin-status"></i>
 </div>

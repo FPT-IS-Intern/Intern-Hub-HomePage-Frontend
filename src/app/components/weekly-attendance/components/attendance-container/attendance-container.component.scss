@@ -1,3 +1,5 @@
+@use 'variables' as *;
+
 .attendance-wrapper {
   display: flex;
   flex-direction: row;
@@ -13,9 +15,9 @@
   .message {
     margin: 0;
     padding-bottom: 18.4px;
-    font-size: 12px;
-    font-weight: 400px;
-    line-height: 16px;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-regular;
+    line-height: $line-height-xs;
   }
 
   .actions {
@@ -25,7 +27,7 @@
 
     .btn {
       padding: 8px 12px;
-      font-size: 14px;
+      font-size: $font-size-sm;
     }
 
     .btn>span {
@@ -33,9 +35,9 @@
     }
 
     .btn.cancel {
-      border: 1px #E18308 solid !important;
+      border: 1px $primary-orange solid !important;
       background: none;
-      color: #E18308;
+      color: $primary-orange;
     }
 
     .btn.confirm {}

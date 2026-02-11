@@ -1,18 +1,20 @@
+@use 'variables' as *;
+
 app-banner-slider {
   .banner-slider {
-    border-radius: 24px;
+    border-radius: $radius-lg;
 
     &__slide-image {
       height: 345px;
     }
 
     &__button {
-      background: linear-gradient(to left, #FED8B399 0%, #FFFFFFE5 58%);
+      background: linear-gradient(to left, rgba($light-orange, 0.6) 0%, rgba($color-white, 0.9) 58%);
       backdrop-filter: blur(1px);
-      box-shadow: 2px 1px 10.8px 0px #E18308A8;
+      box-shadow: $shadow-primary-dark;
 
       .banner-slider__button-icon {
-        color: #EE8E1B;
+        color: $primary-orange;
       }
 
       &--prev {
@@ -42,23 +44,22 @@ app-banner-slider-view-all-button {
     }
 
     &__view-all-button {
-      border-radius: 24px;
+      border-radius: $radius-lg;
       padding: 0 20px;
       height: 49px;
-      background-color: rgba(var(--primary-100-rgb), 0.8);
       background: linear-gradient(to bottom,
-          #ffffff 0%,
-          #fed8b3cc 100%);
+          $color-white 0%,
+          rgba($light-orange, 0.8) 100%);
       backdrop-filter: blur(1px);
       -webkit-backdrop-filter: blur(1px);
-      box-shadow: 2px 1px 10.8px 0px #e18308a8;
+      box-shadow: $shadow-primary-dark !important;
 
       span {
-        font-weight: 700;
-        font-size: 14px;
-        line-height: 20px;
+        font-weight: $font-weight-bold;
+        font-size: $font-size-sm;
+        line-height: $line-height-sm;
         letter-spacing: -0.15px;
-        color: var(--brand-500);
+        color: $primary-orange;
       }
     }
   }
