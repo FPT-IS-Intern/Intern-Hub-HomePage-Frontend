@@ -1,0 +1,54 @@
+// gobal
+$text-main: rgb(42, 48, 52);
+
+//>>>>>>>>>>>>>>>>
+$color-white: rgb(255, 255, 255);
+$color-underline: rgba(2, 48, 94, 0.08);
+$color-radial-end: rgba(237, 206, 167, 0);
+
+$primary-orange: rgb(225, 131, 8);
+$light-orange: rgb(254, 216, 179);
+$accent-orange: rgb(245, 168, 74);
+
+$bg-radial-start: rgb(237, 206, 167);
+$bg-checkin-top: rgb(255, 246, 232);
+$bg-checkin-btm: rgb(252, 236, 205);
+$bg-disable: rgb(233, 237, 241);
+$bg-weekday: rgb(255, 240, 219);
+
+$text-time: rgb(135, 68, 3);
+$text-sub: rgb(80, 90, 95);
+$text-muted: rgb(130, 143, 150);
+$text-error: rgb(168, 10, 18);
+$text-success: rgb(0, 101, 42);
+$ico-error: rgb(208, 18, 28);
+$ico-success: rgb(0, 125, 53);
+
+$font-size-2xs: 10px;
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-lg: 24px;
+
+$line-height-2xs: 10px;
+$line-height-xs: 16px;
+$line-height-sm: 20px;
+$line-height-md: 28px;
+$line-height-lg: 32px;
+
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+$letter-spacing-tight: -0.5px;
+$letter-spacing-normal: -0.15px;
+
+$radius-xs: 8px;
+$radius-sm: 12px;
+$radius-md: 20px;
+$radius-lg: 24px;
+
+$color-primary-rgb: rgba(225, 131, 8, 0.66);
+$color-primary-light-rgb: rgba(225, 200, 128, 0.66);
+
+$shadow-primary-dark: 2px 1px 10.8px 0px $color-primary-rgb;
+$shadow-primary-light: 2px 3px 10.8px 0px $color-primary-light-rgb;

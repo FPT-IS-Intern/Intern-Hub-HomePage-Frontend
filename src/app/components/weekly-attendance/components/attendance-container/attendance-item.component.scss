@@ -88,14 +88,14 @@
         font-weight: $font-weight-regular;
         line-height: $line-height-2xs;
         letter-spacing: $letter-spacing-normal;
-        color: $success-text;
+        color: $text-success;
 
         &.text-error {
-          color: $error-text !important;
+          color: $text-error !important;
         }
 
         &.text-success {
-          color: $success-text !important;
+          color: $text-success !important;
         }
       }
     }
