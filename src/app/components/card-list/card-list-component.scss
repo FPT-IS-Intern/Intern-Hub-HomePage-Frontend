@@ -22,7 +22,6 @@
       .approval-list-header-left,
       >div {
         flex-basis: 50%;
-        border-bottom: $border-light;
       }
 
       .approval-list-header-left {
@@ -52,19 +51,16 @@
     &-content {
       .approval-item {
 
-        &:last-child {
-          border-bottom: none;
-        }
-
         &-left,
         &-right {
           flex-basis: 50%;
+
         }
 
         &-left {
           gap: 2px;
           padding: 12px 12px 11.2px;
-          border-bottom: $border-light;
+          border-top: $border-light;
           height: 70px;
           box-sizing: border-box;
           white-space: nowrap;
@@ -99,11 +95,12 @@
         }
 
         &-right {
+          border-top: $border-light;
+
           .action-buttons {
             display: flex;
             justify-content: flex-end;
             padding: 21px 12px 20.2px;
-            border-bottom: $border-light;
             height: 70px;
             box-sizing: border-box;
           }
