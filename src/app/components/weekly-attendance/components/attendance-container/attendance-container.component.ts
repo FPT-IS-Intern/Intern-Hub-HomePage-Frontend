@@ -35,7 +35,7 @@ export class AttendanceContainerComponent {
     this.isLoading.set(true);
     this.service.getAttendanceStatus().subscribe({
       next: (res) => {
-        if (res.success && res.data) {
+        if (res.data) {
           this.checkIn.set(res.data.checkIn);
           this.checkOut.set(res.data.checkOut);
         }
