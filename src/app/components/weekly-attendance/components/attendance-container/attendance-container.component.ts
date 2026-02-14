@@ -27,7 +27,8 @@ export class AttendanceContainerComponent {
   checkOut = signal<AttendanceResponseData>({ time: null, displayMessage: null, isCheckTimeValid: false });
 
   checkInLabel = computed(() => this.remoteRequestPending() ? 'chờ ghi nhận...' : 'Check In');
-  isCheckOutDisabled = computed(() => !this.checkIn().time || this.remoteRequestPending());
+  isCheckInDisabled = computed(() => this.showPopup() || this.remoteRequestPending() || !!this.checkIn().time);
+  isCheckOutDisabled = computed(() => !this.checkIn().time || this.remoteRequestPending() || !!this.checkOut().time);
 
 
   ngOnInit() {
@@ -52,7 +53,9 @@ export class AttendanceContainerComponent {
     this.isLoading.set(true);
     this.service.checkNetwork().subscribe({
       next: (wifi) => {
-        if (!wifi.isCompanyWifi) {
+        console.log('Network check result:', wifi);
+        if (!wifi.companyWifi) {
+          this.isLoading.set(false); // Fix: Stop loading before showing popup
           this.showPopup.set(true);
           const modalRef = this.modal();
           if (modalRef) {
@@ -73,17 +76,23 @@ export class AttendanceContainerComponent {
             }
             console.log('Calling API for action:', res);
           },
-          error: () => this.isLoading.set(false)
+          error: (err) => {
+            console.error('CheckIn/Out success but with error response or HTTP error:', err);
+            this.isLoading.set(false);
+          }
         });
       },
-      error: () => this.isLoading.set(false)
+      error: (err) => {
+        console.error('Network check failed:', err);
+        this.isLoading.set(false);
+      }
     });
   }
 
   createRemoteRequest() {
     this.showPopup.set(false);
     // redirect to create remote request page
-    
+
     this.bridge.show('Check in của bạn sẽ được ghi nhận sau khi phiếu yêu cầu  được duyệt.');
     this.remoteRequestPending.set(true);
 

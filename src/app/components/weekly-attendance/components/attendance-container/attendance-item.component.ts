@@ -1,6 +1,6 @@
 import { Component, input, output, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AttendanceStatus } from './../../models/attendance.model';
+
 
 @Component({
   selector: 'app-attendance-item',

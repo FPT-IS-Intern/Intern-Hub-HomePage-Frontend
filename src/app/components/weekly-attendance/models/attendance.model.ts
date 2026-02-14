@@ -1,5 +1,3 @@
-export type AttendanceStatus = 'SUCCESS' | 'WARNING';
-
 export interface AttendanceResponseData {
   time: string | null;
   displayMessage: string | null;
@@ -16,7 +14,7 @@ export interface ApiResponse<T> {
 
 export interface WiFiInfo {
   wifiName: string;
-  isCompanyWifi: boolean;
+  companyWifi: boolean;
 }
 
 export interface AttendanceStatusSummary {
