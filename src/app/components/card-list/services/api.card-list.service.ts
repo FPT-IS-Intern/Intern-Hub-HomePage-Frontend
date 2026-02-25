@@ -2,10 +2,12 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, delay } from 'rxjs';
 import { ApprovalGroup } from '../model/card-list.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ApprovalService {
     private http = inject(HttpClient);
+    private readonly API_BASE_URL = `${environment.services.hrm}/approvals`;
 
     private mockData: ApprovalGroup[] = [
         {
@@ -13,7 +15,7 @@ export class ApprovalService {
             items: [
                 { id: 1, name: "EximBank", date: "2024-01-15", type: "leave" },
                 { id: 2, name: "Intern Hub", date: "2024-01-14", type: "expense" },
-                
+
             ]
         },
         {

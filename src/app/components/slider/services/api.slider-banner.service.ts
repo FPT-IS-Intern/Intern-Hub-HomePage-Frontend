@@ -3,17 +3,19 @@ import { HttpClient } from '@angular/common/http';
 import { of, Observable } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 import { BannerApiResponse, BannerRawData, BannerSlide, MOCK_BANNER_DATA } from './../model/banner.models';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class BannerService {
   private http = inject(HttpClient);
+  private readonly API_BASE_URL = `${environment.services.banner}/admin/banners`;
   private bannerRawState = signal<BannerRawData[]>([]);
 
   public readonly slides = computed<BannerSlide[]>(() => {
     const rawData = this.bannerRawState();
-    
+
     return [...rawData]
-      .sort((a, b) => a.displayOrder - b.displayOrder) 
+      .sort((a, b) => a.displayOrder - b.displayOrder)
       .map(item => ({
         id: item.id,
         imageUrl: item.images.desktop,
