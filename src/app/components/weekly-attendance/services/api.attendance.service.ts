@@ -10,7 +10,7 @@ export class AttendanceService {
     // Adjust this if your backend runs on a different port/path
     private readonly API_BASE_URL = `${environment.services.hrm}/attendance`;
     // Hardcoded user ID as placeholder until auth is implemented
-    private readonly USER_ID = 1;
+    private readonly USER_ID = 9155938493849600;
 
     checkNetwork(): Observable<WiFiInfo> {
         return this.http.get<ApiResponse<WiFiInfo>>(`${this.API_BASE_URL}/network-check`)
@@ -73,7 +73,7 @@ export class AttendanceService {
                         data: {
                             time: timeStr,
                             displayMessage: data.message,
-                            isCheckTimeValid: data.checkInValid // Map from backend field
+                            isCheckTimeValid: data.checkInValid
                         }
                     };
                 })
