@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal, computed, viewChild } from '@angular/core';
-import { AttendanceService } from '../../services/api.attendance.service';
+import { AttendanceService } from '../../../../services/api.attendance.service';
 import { AttendanceResponseData } from '../../models/attendance.model';
-import { AttendanceItemComponent } from './attendance-item.component'
+import { AttendanceItemComponent } from './attendance-item.component';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../../../../libs/model-popup/modal.component';
 import { NotificationService } from '../../../../libs/notification-text/notification-bridge.service';
@@ -11,7 +11,7 @@ import { NotificationService } from '../../../../libs/notification-text/notifica
   standalone: true,
   imports: [AttendanceItemComponent, CommonModule, ModalComponent],
   templateUrl: './attendance-container.component.html',
-  styleUrls: ['./attendance-container.component.scss']
+  styleUrls: ['./attendance-container.component.scss'],
 })
 export class AttendanceContainerComponent {
   private service = inject(AttendanceService);
@@ -23,13 +23,24 @@ export class AttendanceContainerComponent {
   remoteRequestPending = signal(false);
 
   // Data State
-  checkIn = signal<AttendanceResponseData>({ time: null, displayMessage: null, isCheckTimeValid: false });
-  checkOut = signal<AttendanceResponseData>({ time: null, displayMessage: null, isCheckTimeValid: false });
+  checkIn = signal<AttendanceResponseData>({
+    time: null,
+    displayMessage: null,
+    isCheckTimeValid: false,
+  });
+  checkOut = signal<AttendanceResponseData>({
+    time: null,
+    displayMessage: null,
+    isCheckTimeValid: false,
+  });
 
-  checkInLabel = computed(() => this.remoteRequestPending() ? 'chờ ghi nhận...' : 'Check In');
-  isCheckInDisabled = computed(() => this.showPopup() || this.remoteRequestPending() || !!this.checkIn().time);
-  isCheckOutDisabled = computed(() => !this.checkIn().time || this.remoteRequestPending() || !!this.checkOut().time);
-
+  checkInLabel = computed(() => (this.remoteRequestPending() ? 'chờ ghi nhận...' : 'Check In'));
+  isCheckInDisabled = computed(
+    () => this.showPopup() || this.remoteRequestPending() || !!this.checkIn().time,
+  );
+  isCheckOutDisabled = computed(
+    () => !this.checkIn().time || this.remoteRequestPending() || !!this.checkOut().time,
+  );
 
   ngOnInit() {
     this.isLoading.set(true);
@@ -41,7 +52,7 @@ export class AttendanceContainerComponent {
         }
       },
       error: (err) => console.error('API Fail', err),
-      complete: () => this.isLoading.set(false)
+      complete: () => this.isLoading.set(false),
     });
   }
 
@@ -70,22 +81,30 @@ export class AttendanceContainerComponent {
           next: (res) => {
             this.isLoading.set(false);
             if (action === 'IN') {
-              this.checkIn.set({ time: res.data.time, displayMessage: res.data.displayMessage, isCheckTimeValid: res.data.isCheckTimeValid });
+              this.checkIn.set({
+                time: res.data.time,
+                displayMessage: res.data.displayMessage,
+                isCheckTimeValid: res.data.isCheckTimeValid,
+              });
             } else {
-              this.checkOut.set({ time: res.data.time, displayMessage: res.data.displayMessage, isCheckTimeValid: res.data.isCheckTimeValid });
+              this.checkOut.set({
+                time: res.data.time,
+                displayMessage: res.data.displayMessage,
+                isCheckTimeValid: res.data.isCheckTimeValid,
+              });
             }
             console.log('Calling API for action:', res);
           },
           error: (err) => {
             console.error('CheckIn/Out success but with error response or HTTP error:', err);
             this.isLoading.set(false);
-          }
+          },
         });
       },
       error: (err) => {
         console.error('Network check failed:', err);
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -101,13 +120,12 @@ export class AttendanceContainerComponent {
       this.remoteRequestPending.set(false);
       this.bridge.clear();
     }, 2000);
-
-
   }
 
   openConfirmPopupRemote(modal?: ModalComponent) {
     modal?.open({
-      message: 'Hệ thống đang ghi nhận vị trí của bạn sai (hoặc ngoài bán kính cho phép) hoặc chưa có phiếu làm Remote. Vui lòng tạo phiếu',
+      message:
+        'Hệ thống đang ghi nhận vị trí của bạn sai (hoặc ngoài bán kính cho phép) hoặc chưa có phiếu làm Remote. Vui lòng tạo phiếu',
       cancelText: 'Hủy',
       confirmText: 'Tạo phiếu',
       panelClass: 'my-custom-modal',

@@ -1,8 +1,12 @@
 import { Component, ViewEncapsulation, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BannerSliderComponent } from '../../libs/slider/banner-slider.component';
-import { BannerSlide, BannerSliderConfig, BannerSliderEvent } from '../../libs/slider/banner-slider.models';
-import { BannerService } from './services/api.slider-banner.service';
+import {
+  BannerSlide,
+  BannerSliderConfig,
+  BannerSliderEvent,
+} from '../../libs/slider/banner-slider.models';
+import { BannerService } from '../../services/api.slider-banner.service';
 
 @Component({
   selector: 'app-homepage-banner-slider',
@@ -18,25 +22,25 @@ export class HomePageBannerSliderComponent implements OnInit {
 
   readonly sliderConfigWithNav: BannerSliderConfig = {
     navigation: {
-      enabled: true
+      enabled: true,
     },
     autoplay: {
       enabled: true,
       delay: 1500,
-      pauseOnMouseEnter: true
+      pauseOnMouseEnter: true,
     },
     pagination: {
       enabled: true,
-      clickable: true
+      clickable: true,
     },
     viewAllButton: {
       enabled: true,
       text: 'Xem tất cả',
-      link: '/news-slide'
+      link: '/news-slide',
     },
     loop: true,
     speed: 600,
-    effect: 'fade'
+    effect: 'fade',
   };
 
   ngOnInit(): void {
