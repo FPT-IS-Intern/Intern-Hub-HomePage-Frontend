@@ -14,6 +14,7 @@ export const appConfig: ApplicationConfig = {
         secondary: '#9F5100',
         functional: '#006BDF',
         utility: '#CF0026',
+        
       },
     },
   ]
