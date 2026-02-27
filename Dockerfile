@@ -1,6 +1,3 @@
-# ==========================================
-# STAGE 1: Build 
-# ==========================================
 FROM node:22-alpine AS build-stage
 WORKDIR /app
 
@@ -10,9 +7,6 @@ RUN npm install --legacy-peer-deps
 COPY . .
 RUN npm run build -- --configuration=production
 
-# ==========================================
-# STAGE 2: Production 
-# ==========================================
 FROM nginx:stable-alpine
 
 
