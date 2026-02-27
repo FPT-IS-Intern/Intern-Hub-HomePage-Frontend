@@ -2,10 +2,11 @@ FROM node:22-alpine AS build-stage
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --legacy-peer-deps
+RUN npm install --legacy-peer-deps \
+	&& find node_modules/dynamic-ds -type f -name "*.scss" -exec sed -i 's#\\\\/#\\/#g' {} +
 
 COPY . .
-RUN npm run build -- --configuration=production
+RUN npm run build
 
 FROM nginx:stable-alpine
 
