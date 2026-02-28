@@ -18,7 +18,7 @@ export class AttendanceService {
   private readonly USER_ID = 9155938493849600;
 
   checkNetwork(): Observable<WiFiInfo> {
-    return this.http.get<ApiResponse<WiFiInfo>>(`${this.API_BASE_URL}/network-check`).pipe(
+    return this.http.get<ApiResponse<WiFiInfo>>(`${this.API_BASE_URL}/check-point`).pipe(
       map((res) => {
         console.log('Raw network check response:', res);
         return {
