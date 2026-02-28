@@ -13,7 +13,7 @@ import { getBaseUrl } from '../core/config/app-config';
 @Injectable({ providedIn: 'root' })
 export class BannerService {
   private http = inject(HttpClient);
-  private readonly API_BASE_URL = `${getBaseUrl()}/banner/admin/banners`;
+  private readonly API_BASE_URL = `/banner/admin/banners`;
   private bannerRawState = signal<BannerRawData[]>([]);
 
   public readonly slides = computed<BannerSlide[]>(() => {
