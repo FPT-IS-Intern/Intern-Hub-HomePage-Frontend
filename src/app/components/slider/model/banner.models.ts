@@ -35,29 +35,12 @@ export interface BannerSlide {
 }
 
 /**
- * Resolve base URL cho static assets của HomePage micro-frontend.
- * Khi chạy trong Shell App, đường dẫn `/mock/...` sẽ trỏ về domain Shell
- * thay vì domain HomePage. Hàm này lấy đúng origin từ importmap.
+ * Resolve base path cho static assets của HomePage micro-frontend.
+ * Khi chạy trong Shell App, `import.meta.url` trỏ về origin của HomePage remote
+ * (ví dụ: http://localhost:4207/chunk-XXX.js), nên resolve '/mock' từ đó sẽ đúng.
+ * Khi chạy standalone cũng hoạt động bình thường.
  */
-function getHomepageBaseUrl(): string {
-  try {
-    const scripts = document.querySelectorAll(
-      'script[type="importmap-shim"], script[type="importmap"]',
-    );
-    for (const script of Array.from(scripts)) {
-      const map = JSON.parse(script.textContent || '{}');
-      const homePageEntry: string = map?.imports?.['homePage'] || '';
-      if (homePageEntry) {
-        return homePageEntry.substring(0, homePageEntry.lastIndexOf('/'));
-      }
-    }
-  } catch {
-    // Ignore parse errors
-  }
-  return ''; // Fallback khi chạy standalone
-}
-
-const MOCK_BANNER_BASE_PATH = `${getHomepageBaseUrl()}/mock`;
+const MOCK_BANNER_BASE_PATH = new URL('/mock', import.meta.url).href;
 
 // Định nghĩa dữ liệu Mock để test
 export const MOCK_BANNER_DATA: BannerApiResponse = {
