@@ -34,22 +34,25 @@ export interface BannerSlide {
   description?: string;
 }
 
+/**
+ * Resolve base URL cho static assets của HomePage micro-frontend.
+ * Khi chạy trong Shell App, đường dẫn `/mock/...` sẽ trỏ về domain Shell
+ * thay vì domain HomePage. Hàm này lấy đúng origin từ importmap.
+ */
 function getHomepageBaseUrl(): string {
   try {
-    // Lấy base URL từ federation manifest để trỏ đúng về remote HomePage
-    const importMap = document.querySelector(
+    const scripts = document.querySelectorAll(
       'script[type="importmap-shim"], script[type="importmap"]',
     );
-    if (importMap) {
-      const map = JSON.parse(importMap.textContent || '{}');
-      const homePageEntry = map.imports?.['homePage'] || '';
+    for (const script of Array.from(scripts)) {
+      const map = JSON.parse(script.textContent || '{}');
+      const homePageEntry: string = map?.imports?.['homePage'] || '';
       if (homePageEntry) {
-        // Lấy base path từ remoteEntry URL (ví dụ: http://localhost:4207/remoteEntry.json -> http://localhost:4207)
         return homePageEntry.substring(0, homePageEntry.lastIndexOf('/'));
       }
     }
-  } catch (e) {
-    console.warn('Could not resolve HomePage base URL from importmap, using fallback');
+  } catch {
+    // Ignore parse errors
   }
   return ''; // Fallback khi chạy standalone
 }
