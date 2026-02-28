@@ -17,8 +17,12 @@ export class AttendanceService {
   // Hardcoded user ID as placeholder until auth is implemented
   private readonly USER_ID = 9155938493849600;
 
-  checkNetwork(): Observable<WiFiInfo> {
-    return this.http.get<ApiResponse<WiFiInfo>>(`${this.API_BASE_URL}/check-point`).pipe(
+  checkNetwork(latitude?: number, longitude?: number): Observable<WiFiInfo> {
+    let params = new HttpParams();
+    if (latitude != null && longitude != null) {
+      params = params.set('latitude', latitude).set('longitude', longitude);
+    }
+    return this.http.get<ApiResponse<WiFiInfo>>(`${this.API_BASE_URL}/check-point`, { params }).pipe(
       map((res) => {
         console.log('Raw network check response:', res);
         return {
@@ -62,8 +66,11 @@ export class AttendanceService {
     );
   }
 
-  postCheckIn(): Observable<ApiResponse<AttendanceResponseData>> {
-    const params = new HttpParams().set('userId', this.USER_ID);
+  postCheckIn(latitude?: number, longitude?: number): Observable<ApiResponse<AttendanceResponseData>> {
+    let params = new HttpParams().set('userId', this.USER_ID);
+    if (latitude != null && longitude != null) {
+      params = params.set('latitude', latitude).set('longitude', longitude);
+    }
     return this.http.post<ApiResponse<any>>(`${this.API_BASE_URL}/check-in`, null, { params }).pipe(
       map((res) => {
         const data = res.data;

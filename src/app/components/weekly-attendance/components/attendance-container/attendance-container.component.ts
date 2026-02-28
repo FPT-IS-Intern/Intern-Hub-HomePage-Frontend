@@ -62,50 +62,68 @@ export class AttendanceContainerComponent {
    */
   processAttendance(action: 'IN' | 'OUT') {
     this.isLoading.set(true);
-    this.service.checkNetwork().subscribe({
-      next: (wifi) => {
-        console.log('Network check result:', wifi);
-        if (!wifi.companyWifi) {
-          this.isLoading.set(false); // Fix: Stop loading before showing popup
-          this.showPopup.set(true);
-          const modalRef = this.modal();
-          if (modalRef) {
-            this.openConfirmPopupRemote(modalRef);
-          }
-          return;
-        }
 
-        const apiCall = action === 'IN' ? this.service.postCheckIn() : this.service.postCheckOut();
-
-        apiCall.subscribe({
-          next: (res) => {
-            this.isLoading.set(false);
-            if (action === 'IN') {
-              this.checkIn.set({
-                time: res.data.time,
-                displayMessage: res.data.displayMessage,
-                isCheckTimeValid: res.data.isCheckTimeValid,
-              });
-            } else {
-              this.checkOut.set({
-                time: res.data.time,
-                displayMessage: res.data.displayMessage,
-                isCheckTimeValid: res.data.isCheckTimeValid,
-              });
+    const executeAttendance = (lat?: number, lon?: number) => {
+      this.service.checkNetwork(lat, lon).subscribe({
+        next: (wifi) => {
+          console.log('Network check result:', wifi);
+          if (!wifi.companyWifi) {
+            this.isLoading.set(false); // Fix: Stop loading before showing popup
+            this.showPopup.set(true);
+            const modalRef = this.modal();
+            if (modalRef) {
+              this.openConfirmPopupRemote(modalRef);
             }
-            console.log('Calling API for action:', res);
-          },
-          error: (err) => {
-            console.error('CheckIn/Out success but with error response or HTTP error:', err);
-            this.isLoading.set(false);
-          },
-        });
-      },
-      error: (err) => {
-        console.error('Network check failed:', err);
-        this.isLoading.set(false);
-      },
-    });
+            return;
+          }
+
+          const apiCall = action === 'IN' ? this.service.postCheckIn(lat, lon) : this.service.postCheckOut();
+
+          apiCall.subscribe({
+            next: (res) => {
+              this.isLoading.set(false);
+              if (action === 'IN') {
+                this.checkIn.set({
+                  time: res.data.time,
+                  displayMessage: res.data.displayMessage,
+                  isCheckTimeValid: res.data.isCheckTimeValid,
+                });
+              } else {
+                this.checkOut.set({
+                  time: res.data.time,
+                  displayMessage: res.data.displayMessage,
+                  isCheckTimeValid: res.data.isCheckTimeValid,
+                });
+              }
+              console.log('Calling API for action:', res);
+            },
+            error: (err) => {
+              console.error('CheckIn/Out success but with error response or HTTP error:', err);
+              this.isLoading.set(false);
+            },
+          });
+        },
+        error: (err) => {
+          console.error('Network check failed:', err);
+          this.isLoading.set(false);
+        },
+      });
+    };
+
+    if (navigator.geolocation && action === 'IN') {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          executeAttendance(position.coords.latitude, position.coords.longitude);
+        },
+        (error) => {
+          console.warn('Geolocation failed or denied, falling back to IP only:', error);
+          executeAttendance(); // proceed without coordinates
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+      );
+    } else {
+      executeAttendance();
+    }
   }
 
   createRemoteRequest() {
