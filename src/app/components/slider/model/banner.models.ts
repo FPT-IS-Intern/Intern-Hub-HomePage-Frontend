@@ -34,6 +34,8 @@ export interface BannerSlide {
     description?: string;
 }
 
+const MOCK_BANNER_BASE_PATH = '/mock';
+
 // Định nghĩa dữ liệu Mock để test
 export const MOCK_BANNER_DATA: BannerApiResponse = {
     status: "success",
@@ -43,8 +45,8 @@ export const MOCK_BANNER_DATA: BannerApiResponse = {
             title: "",
             description: "Giảm giá lên đến 50% cho tất cả các mặt hàng điện tử.",
             images: {
-                desktop: 'http://localhost:4200/assets/img/home/BG.png',
-                mobile: "http://localhost:4200/assets/img/home/BG_mobile.png",
+                desktop: `${MOCK_BANNER_BASE_PATH}/BG.png`,
+                mobile: `${MOCK_BANNER_BASE_PATH}/BG.png`,
                 alt: "Banner khuyến mãi mùa hè"
             },
             action: { type: "LINK", target: "/news", openInNewTab: true },
@@ -55,8 +57,8 @@ export const MOCK_BANNER_DATA: BannerApiResponse = {
             title: "",
             description: "Giảm giá lên đến 50% cho tất cả các mặt hàng điện tử.",
             images: {
-                desktop: 'http://localhost:4200/assets/img/home/BG1.png',
-                mobile: "http://localhost:4200/assets/img/home/BG1_mobile.png",
+                desktop: `${MOCK_BANNER_BASE_PATH}/BG1.png`,
+                mobile: `${MOCK_BANNER_BASE_PATH}/BG1.png`,
                 alt: "Banner khuyến mãi mùa hè"
             },
             action: { type: "LINK", target: "/news", openInNewTab: true },
@@ -67,8 +69,8 @@ export const MOCK_BANNER_DATA: BannerApiResponse = {
             title: "",
             description: "Giảm giá lên đến 50% cho tất cả các mặt hàng điện tử.",
             images: {
-                desktop: 'http://localhost:4200/assets/img/home/BG2.png',
-                mobile: "http://localhost:4200/assets/img/home/BG2_mobile.png",
+                desktop: `${MOCK_BANNER_BASE_PATH}/BG2.png`,
+                mobile: `${MOCK_BANNER_BASE_PATH}/BG2.png`,
                 alt: "Banner khuyến mãi mùa hè"
             },
             action: { type: "LINK", target: "/news", openInNewTab: true },
