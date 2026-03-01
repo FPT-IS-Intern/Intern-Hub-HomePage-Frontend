@@ -3,7 +3,7 @@
 :host ::ng-deep .button-container {
     gap: 2px !important;
     height: 44px !important;
-
+    transition: background-color 0.3s ease;
 }
 
 :host ::ng-deep .button-container span {
@@ -12,4 +12,13 @@
     text-align: center;
     line-height: $line-height-sm;
     font-weight: $font-weight-bold;
+    transition: color 0.3s ease !important;
+}
+
+:host ::ng-deep .button-container:hover {
+    background-color: $primary-orange !important;
+}
+
+:host ::ng-deep .button-container:hover span {
+    color: $color-white !important;
 }
