@@ -11,11 +11,6 @@
   flex-direction: column;
   gap: 2px;
 
-  img {
-    height: 26px;
-    width: 26px;
-  }
-
   span {
     color: $text-sub;
     font-weight: $font-weight-bold;
@@ -23,4 +18,27 @@
     line-height: $line-height-xs;
     letter-spacing: -0.15px;
   }
+
+  .ico-base {
+    height: 26px;
+    width: 26px;
+    display: inline-block;
+    background-color: currentColor;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
+
+    &.check-circle {
+      color: $primary-orange;
+      mask-image: url('/mock/check-circle.svg');
+      -webkit-mask-image: url('/mock/check-circle.svg');
+    }
+
+    &.minus-circle {
+      color: $text-sub;
+      mask-image: url('/mock/minus-circle.svg');
+      -webkit-mask-image: url('/mock/minus-circle.svg');
+    }
+  }
+
 }
