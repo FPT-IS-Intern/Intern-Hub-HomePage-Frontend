@@ -1,6 +1,41 @@
 @use 'variables' as *;
 
+@keyframes glass-iridescent {
+
+  0%,
+  100% {
+    background-color: rgba($primary-orange, 0.18);
+  }
+
+  33% {
+    background-color: rgba($accent-orange, 0.15);
+  }
+
+  66% {
+    background-color: rgba($text-time, 0.12);
+  }
+}
+
 .attendance-item {
+  position: relative;
+  transition: all 0.5s ease;
+  overflow: hidden;
+  border-radius: $radius-md;
+
+  &.is-loading {
+    .action {
+      animation: glass-iridescent 1.5s ease-in-out infinite !important;
+      background-blend-mode: overlay;
+    }
+
+    .action>* {
+      filter: blur(4px);
+      opacity: 0.5;
+      pointer-events: none;
+      transition: all 0.5s ease;
+    }
+  }
+
   .attendance-img {
     display: flex;
     flex-direction: column;
@@ -12,8 +47,11 @@
     border-top-right-radius: $radius-md;
     height: 104px;
     width: 162px;
+    transition: background 0.5s ease;
 
-    .attendance-icon {}
+    .attendance-icon {
+      transition: all 0.5s ease;
+    }
   }
 
   .action {
@@ -26,8 +64,13 @@
     padding: 12px 8px;
     border-bottom-left-radius: $radius-sm;
     border-bottom-right-radius: $radius-sm;
+    position: relative;
+    min-height: 80px;
+    transition: background 0.5s ease;
 
     .response-time-wrapper {
+      transition: all 0.5s ease;
+
       p {
         font-weight: $font-weight-medium;
         font-size: $font-size-sm;
@@ -51,7 +94,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background-color 0.3s ease;
+      transition: all 0.5s ease;
 
       &:hover {
         background-color: darken($accent-orange, 8%);
@@ -80,15 +123,13 @@
       flex-direction: row;
       gap: 4px;
       align-items: center;
-
-      .status-icon {}
+      transition: all 0.5s ease;
 
       .status-message {
         display: flex;
         align-items: center;
         text-align: center;
         height: 36px;
-
         font-size: $font-size-2xs;
         font-weight: $font-weight-regular;
         line-height: $line-height-2xs;
