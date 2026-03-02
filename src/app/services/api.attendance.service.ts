@@ -90,8 +90,11 @@ export class AttendanceService {
     );
   }
 
-  postCheckOut(): Observable<ApiResponse<AttendanceResponseData>> {
-    const params = new HttpParams().set('userId', this.USER_ID);
+  postCheckOut(latitude?: number, longitude?: number): Observable<ApiResponse<AttendanceResponseData>> {
+    let params = new HttpParams().set('userId', this.USER_ID);
+    if (latitude != null && longitude != null) {
+      params = params.set('latitude', latitude).set('longitude', longitude);
+    }
     return this.http
       .post<ApiResponse<any>>(`${this.API_BASE_URL}/check-out`, null, { params })
       .pipe(

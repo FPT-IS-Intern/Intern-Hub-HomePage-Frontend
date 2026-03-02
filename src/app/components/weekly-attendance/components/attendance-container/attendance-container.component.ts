@@ -64,53 +64,43 @@ export class AttendanceContainerComponent {
     this.isLoading.set(true);
 
     const executeAttendance = (lat?: number, lon?: number) => {
-      this.service.checkNetwork(lat, lon).subscribe({
-        next: (wifi) => {
-          console.log('Network check result:', wifi);
-          if (!wifi.companyWifi) {
-            this.isLoading.set(false); // Fix: Stop loading before showing popup
+      const apiCall = action === 'IN' ? this.service.postCheckIn(lat, lon) : this.service.postCheckOut(lat, lon);
+
+      apiCall.subscribe({
+        next: (res) => {
+          this.isLoading.set(false);
+          if (action === 'IN') {
+            this.checkIn.set({
+              time: res.data.time,
+              displayMessage: res.data.displayMessage,
+              isCheckTimeValid: res.data.isCheckTimeValid,
+            });
+          } else {
+            this.checkOut.set({
+              time: res.data.time,
+              displayMessage: res.data.displayMessage,
+              isCheckTimeValid: res.data.isCheckTimeValid,
+            });
+          }
+          console.log('Attendance successful:', res);
+        },
+        error: (err) => {
+          this.isLoading.set(false);
+          // Nếu backend trả về lỗi 400 (do sai IP/Location), hiển thị popup tạo phiếu remote
+          if (err.status === 400) {
             this.showPopup.set(true);
             const modalRef = this.modal();
             if (modalRef) {
               this.openConfirmPopupRemote(modalRef);
             }
-            return;
+          } else {
+            console.error('CheckIn/Out failed:', err);
           }
-
-          const apiCall = action === 'IN' ? this.service.postCheckIn(lat, lon) : this.service.postCheckOut();
-
-          apiCall.subscribe({
-            next: (res) => {
-              this.isLoading.set(false);
-              if (action === 'IN') {
-                this.checkIn.set({
-                  time: res.data.time,
-                  displayMessage: res.data.displayMessage,
-                  isCheckTimeValid: res.data.isCheckTimeValid,
-                });
-              } else {
-                this.checkOut.set({
-                  time: res.data.time,
-                  displayMessage: res.data.displayMessage,
-                  isCheckTimeValid: res.data.isCheckTimeValid,
-                });
-              }
-              console.log('Calling API for action:', res);
-            },
-            error: (err) => {
-              console.error('CheckIn/Out success but with error response or HTTP error:', err);
-              this.isLoading.set(false);
-            },
-          });
-        },
-        error: (err) => {
-          console.error('Network check failed:', err);
-          this.isLoading.set(false);
         },
       });
     };
 
-    if (navigator.geolocation && action === 'IN') {
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           executeAttendance(position.coords.latitude, position.coords.longitude);
