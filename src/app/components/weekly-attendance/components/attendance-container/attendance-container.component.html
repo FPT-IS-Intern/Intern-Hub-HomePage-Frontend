@@ -1,12 +1,12 @@
 <div class="attendance-wrapper">
   <app-attendance-item [image]="'assets/img/home/img_checkin.svg'" [label]="checkInLabel()" [time]="checkIn().time"
     [statusMessage]="checkIn().displayMessage" [isCheckTimeValid]="checkIn().isCheckTimeValid"
-    [disabled]="isCheckInDisabled()" (onAction)="processAttendance('IN')">
+    [disabled]="isCheckInDisabled()" [isLoading]="checkInLoading()" (onAction)="processAttendance('IN')">
   </app-attendance-item>
 
   <app-attendance-item [image]="'assets/img/home/img_checkout.svg'" [label]="'Check Out'" [time]="checkOut().time"
     [statusMessage]="checkOut().displayMessage" [isCheckTimeValid]="checkOut().isCheckTimeValid"
-    [disabled]="isCheckOutDisabled()" (onAction)="processAttendance('OUT')">
+    [disabled]="isCheckOutDisabled()" [isLoading]="checkOutLoading()" (onAction)="processAttendance('OUT')">
   </app-attendance-item>
 </div>
 <app-modal #modal />

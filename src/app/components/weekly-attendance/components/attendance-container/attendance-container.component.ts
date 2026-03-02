@@ -21,6 +21,8 @@ export class AttendanceContainerComponent {
   isLoading = signal(false);
   showPopup = signal(false);
   remoteRequestPending = signal(false);
+  checkInLoading = signal(false);
+  checkOutLoading = signal(false);
 
   // Data State
   checkIn = signal<AttendanceResponseData>({
@@ -61,31 +63,36 @@ export class AttendanceContainerComponent {
    * @param action 'IN' | 'OUT'
    */
   processAttendance(action: 'IN' | 'OUT') {
-    this.isLoading.set(true);
+    const isCheckIn = action === 'IN';
+    if (isCheckIn) this.checkInLoading.set(true);
+    else this.checkOutLoading.set(true);
 
     const executeAttendance = (lat?: number, lon?: number) => {
-      const apiCall = action === 'IN' ? this.service.postCheckIn(lat, lon) : this.service.postCheckOut(lat, lon);
+      const apiCall = isCheckIn ? this.service.postCheckIn(lat, lon) : this.service.postCheckOut(lat, lon);
 
       apiCall.subscribe({
         next: (res) => {
-          this.isLoading.set(false);
-          if (action === 'IN') {
+          if (isCheckIn) {
             this.checkIn.set({
               time: res.data.time,
               displayMessage: res.data.displayMessage,
               isCheckTimeValid: res.data.isCheckTimeValid,
             });
+            this.checkInLoading.set(false);
           } else {
             this.checkOut.set({
               time: res.data.time,
               displayMessage: res.data.displayMessage,
               isCheckTimeValid: res.data.isCheckTimeValid,
             });
+            this.checkOutLoading.set(false);
           }
           console.log('Attendance successful:', res);
         },
         error: (err) => {
-          this.isLoading.set(false);
+          if (isCheckIn) this.checkInLoading.set(false);
+          else this.checkOutLoading.set(false);
+
           // Nếu backend trả về lỗi 400 (do sai IP/Location), hiển thị popup tạo phiếu remote
           if (err.status === 400) {
             this.showPopup.set(true);

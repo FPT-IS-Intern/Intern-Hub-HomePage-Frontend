@@ -16,6 +16,7 @@ export class AttendanceItemComponent {
   statusMessage = input<string | null>(null);
   isCheckTimeValid = input<boolean>(false);
   disabled = input<boolean>(false);
+  isLoading = input<boolean>(false);
 
 
   onAction = output<void>();
