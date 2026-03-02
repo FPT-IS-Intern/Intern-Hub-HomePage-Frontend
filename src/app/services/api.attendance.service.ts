@@ -72,7 +72,7 @@ export class AttendanceService {
       params = params.set('latitude', latitude).set('longitude', longitude);
     }
     return this.http.post<ApiResponse<any>>(`${this.API_BASE_URL}/check-in`, null, { params }).pipe(
-      map((res) => {
+      map((res: any) => {
         const data = res.data;
 
         const checkInDate = new Date(data.checkInTime);
@@ -85,7 +85,7 @@ export class AttendanceService {
             displayMessage: data.message,
             isCheckTimeValid: data.checkInValid,
           },
-        };
+        } as ApiResponse<AttendanceResponseData>;
       }),
     );
   }
@@ -98,7 +98,7 @@ export class AttendanceService {
     return this.http
       .post<ApiResponse<any>>(`${this.API_BASE_URL}/check-out`, null, { params })
       .pipe(
-        map((res) => {
+        map((res: any) => {
           const data = res.data;
           const checkOutDate = new Date(data.checkOutTime);
           const timeStr = `${checkOutDate.getHours().toString().padStart(2, '0')}:${checkOutDate.getMinutes().toString().padStart(2, '0')}`;
@@ -110,7 +110,7 @@ export class AttendanceService {
               displayMessage: data.message,
               isCheckTimeValid: data.checkOutValid, // Map from backend field
             },
-          };
+          } as ApiResponse<AttendanceResponseData>;
         }),
       );
   }
