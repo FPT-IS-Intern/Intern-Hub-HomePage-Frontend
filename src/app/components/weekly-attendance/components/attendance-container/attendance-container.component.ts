@@ -86,20 +86,31 @@ export class AttendanceContainerComponent {
             },
             (error) => {
               console.warn('Geolocation failed:', error);
-              this.bridge.show('Không thể lấy vị trí. Bạn có muốn tiếp tục chỉ với WiFi?');
-              // Ask again specifically for fallback
+              let errorMsg = '';
+              let guide = '';
+
+              if (error.code === error.PERMISSION_DENIED) {
+                errorMsg = 'Quyền truy cập vị trí đã bị chặn.';
+                guide = '\n\nHướng dẫn: Hãy nhấn vào biểu tượng [Ổ khóa] cạnh địa chỉ trang web trên trình duyệt, chọn Cài đặt trang web và cho phép "Vị trí" (Location). Sau đó hãy Thử lại.';
+              } else if (error.code === error.POSITION_UNAVAILABLE) {
+                errorMsg = 'GPS trên thiết bị của bạn đang tắt.';
+                guide = '\n\nHướng dẫn: Vui lòng bật "Vị trí" (GPS) trong phần cài đặt nhanh của điện thoại hoặc máy tính. Sau đó hãy Thử lại.';
+              } else if (error.code === error.TIMEOUT) {
+                errorMsg = 'Hết thời gian chờ lấy vị trí.';
+                guide = '\n\nHãy đảm bảo bạn đang ở không gian thoáng và nhấn Thử lại.';
+              }
+
               modalRef.open({
-                message: 'Không thể lấy được vị trí của bạn. Bạn có muốn tiếp tục điểm danh chỉ bằng WiFi không?',
-                confirmText: 'Đồng ý',
-                cancelText: 'Hủy',
-                onConfirm: () => this.executeAttendance(action),
-                onCancel: () => {
-                  if (isCheckIn) this.checkInLoading.set(false);
-                  else this.checkOutLoading.set(false);
-                }
+                message: `${errorMsg}${guide}\n\nBạn có muốn thử lại hay tiếp tục điểm danh chỉ bằng WiFi?`,
+                confirmText: 'Thử lại',
+                cancelText: 'Dùng WiFi',
+                onConfirm: () => {
+                  this.processAttendance(action); // Re-trigger the whole flow
+                },
+                onCancel: () => this.executeAttendance(action),
               });
             },
-            { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+            { enableHighAccuracy: true, timeout: 60000, maximumAge: 0 }
           );
         } else {
           this.executeAttendance(action);
