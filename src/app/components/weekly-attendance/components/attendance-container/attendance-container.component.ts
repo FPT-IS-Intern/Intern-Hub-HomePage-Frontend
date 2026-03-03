@@ -64,63 +64,92 @@ export class AttendanceContainerComponent {
    */
   processAttendance(action: 'IN' | 'OUT') {
     const isCheckIn = action === 'IN';
-    if (isCheckIn) this.checkInLoading.set(true);
-    else this.checkOutLoading.set(true);
+    const modalRef = this.modal();
 
-    const executeAttendance = (lat?: number, lon?: number) => {
-      const apiCall = isCheckIn ? this.service.postCheckIn(lat, lon) : this.service.postCheckOut(lat, lon);
-
-      apiCall.subscribe({
-        next: (res) => {
-          if (isCheckIn) {
-            this.checkIn.set({
-              time: res.data.time,
-              displayMessage: res.data.displayMessage,
-              isCheckTimeValid: res.data.isCheckTimeValid,
-            });
-            this.checkInLoading.set(false);
-          } else {
-            this.checkOut.set({
-              time: res.data.time,
-              displayMessage: res.data.displayMessage,
-              isCheckTimeValid: res.data.isCheckTimeValid,
-            });
-            this.checkOutLoading.set(false);
-          }
-          console.log('Attendance successful:', res);
-        },
-        error: (err) => {
-          if (isCheckIn) this.checkInLoading.set(false);
-          else this.checkOutLoading.set(false);
-
-          // Nếu backend trả về lỗi 400 (do sai IP/Location), hiển thị popup tạo phiếu remote
-          if (err.status === 400) {
-            this.showPopup.set(true);
-            const modalRef = this.modal();
-            if (modalRef) {
-              this.openConfirmPopupRemote(modalRef);
-            }
-          } else {
-            console.error('CheckIn/Out failed:', err);
-          }
-        },
-      });
-    };
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          executeAttendance(position.coords.latitude, position.coords.longitude);
-        },
-        (error) => {
-          console.warn('Geolocation failed or denied, falling back to IP only:', error);
-          executeAttendance(); // proceed without coordinates
-        },
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-      );
-    } else {
-      executeAttendance();
+    if (!modalRef) {
+      console.error('Modal component not found');
+      return;
     }
+
+    modalRef.open({
+      message: 'Bạn có muốn sử dụng vị trí hiện tại của mình để kết quả điểm danh chính xác hơn không?',
+      confirmText: 'Sử dụng vị trí',
+      cancelText: 'Chỉ dùng WiFi',
+      onConfirm: () => {
+        if (isCheckIn) this.checkInLoading.set(true);
+        else this.checkOutLoading.set(true);
+
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              this.executeAttendance(action, position.coords.latitude, position.coords.longitude);
+            },
+            (error) => {
+              console.warn('Geolocation failed:', error);
+              this.bridge.show('Không thể lấy vị trí. Bạn có muốn tiếp tục chỉ với WiFi?');
+              // Ask again specifically for fallback
+              modalRef.open({
+                message: 'Không thể lấy được vị trí của bạn. Bạn có muốn tiếp tục điểm danh chỉ bằng WiFi không?',
+                confirmText: 'Đồng ý',
+                cancelText: 'Hủy',
+                onConfirm: () => this.executeAttendance(action),
+                onCancel: () => {
+                  if (isCheckIn) this.checkInLoading.set(false);
+                  else this.checkOutLoading.set(false);
+                }
+              });
+            },
+            { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+          );
+        } else {
+          this.executeAttendance(action);
+        }
+      },
+      onCancel: () => {
+        // Fallback to WiFi only immediately if they choose so
+        if (isCheckIn) this.checkInLoading.set(true);
+        else this.checkOutLoading.set(true);
+        this.executeAttendance(action);
+      }
+    });
+  }
+
+  private executeAttendance(action: 'IN' | 'OUT', lat?: number, lon?: number) {
+    const isCheckIn = action === 'IN';
+    const apiCall = isCheckIn ? this.service.postCheckIn(lat, lon) : this.service.postCheckOut(lat, lon);
+
+    apiCall.subscribe({
+      next: (res) => {
+        if (isCheckIn) {
+          this.checkIn.set({
+            time: res.data.time,
+            displayMessage: res.data.displayMessage,
+            isCheckTimeValid: res.data.isCheckTimeValid,
+          });
+          this.checkInLoading.set(false);
+        } else {
+          this.checkOut.set({
+            time: res.data.time,
+            displayMessage: res.data.displayMessage,
+            isCheckTimeValid: res.data.isCheckTimeValid,
+          });
+          this.checkOutLoading.set(false);
+        }
+      },
+      error: (err) => {
+        if (isCheckIn) this.checkInLoading.set(false);
+        else this.checkOutLoading.set(false);
+
+        if (err.status === 400) {
+          this.showPopup.set(true);
+          const modalRef = this.modal();
+          if (modalRef) this.openConfirmPopupRemote(modalRef);
+        } else {
+          console.error('CheckIn/Out failed:', err);
+          this.bridge.show('Có lỗi xảy ra khi điểm danh. Vui lòng thử lại sau.');
+        }
+      },
+    });
   }
 
   createRemoteRequest() {
