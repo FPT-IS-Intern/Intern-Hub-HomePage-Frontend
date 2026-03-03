@@ -33,7 +33,7 @@
     "@angular/router": "21.1.0",
     "@goat-bravos/intern-hub-layout": "3.0.8",
     "@softarc/native-federation-node": "3.3.4",
-    "dynamic-ds": "1.0.12",
+    "dynamic-ds": "1.0.5",
     "es-module-shims": "^1.5.12",
     "oxc-parser": "^0.110.0",
     "rxjs": "~7.8.0",
