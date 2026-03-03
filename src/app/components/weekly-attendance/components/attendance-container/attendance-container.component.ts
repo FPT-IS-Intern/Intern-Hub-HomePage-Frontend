@@ -75,6 +75,7 @@ export class AttendanceContainerComponent {
       message: 'Bạn có muốn sử dụng vị trí hiện tại của mình để kết quả điểm danh chính xác hơn không?',
       confirmText: 'Sử dụng vị trí',
       cancelText: 'Chỉ dùng WiFi',
+      closeOnBackdropClick: true,
       onConfirm: () => {
         if (isCheckIn) this.checkInLoading.set(true);
         else this.checkOutLoading.set(true);
