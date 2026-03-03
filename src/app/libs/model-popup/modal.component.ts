@@ -44,7 +44,7 @@ export class ModalComponent {
 
     onBackdropClick(event: MouseEvent) {
         if ((event.target as HTMLElement).classList.contains('overlay') && this._config()?.closeOnBackdropClick) {
-            this.cancel();
+            this.close(); // Chỉ đóng popup (Abort), không trigger onCancel
         }
     }
 
