@@ -1,5 +1,5 @@
 @if (visible() && vm(); as c) {
-<div class="overlay">
+<div class="overlay" (click)="onBackdropClick($event)">
     <div class="modal" [class]="c.panelClass || ''">
 
 

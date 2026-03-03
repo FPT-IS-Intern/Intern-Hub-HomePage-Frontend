@@ -41,5 +41,12 @@ export class ModalComponent {
         this.close();
     }
 
+
+    onBackdropClick(event: MouseEvent) {
+        if ((event.target as HTMLElement).classList.contains('overlay') && this._config()?.closeOnBackdropClick) {
+            this.cancel();
+        }
+    }
+
     vm = this._config.asReadonly();
 }

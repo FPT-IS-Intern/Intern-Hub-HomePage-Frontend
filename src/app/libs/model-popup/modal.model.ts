@@ -1,9 +1,10 @@
 export interface ModalConfig {
-message: string;
-cancelText?: string;
-confirmText?: string;
-panelClass?: string;
+    message: string;
+    cancelText?: string;
+    confirmText?: string;
+    panelClass?: string;
+    closeOnBackdropClick?: boolean;
 
-onCancel?: () => void;
-onConfirm?: () => void;
+    onCancel?: () => void;
+    onConfirm?: () => void;
 }
