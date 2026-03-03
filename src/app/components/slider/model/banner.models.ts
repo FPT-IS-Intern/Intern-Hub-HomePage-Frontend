@@ -34,53 +34,56 @@ export interface BannerSlide {
   description?: string;
 }
 
-/**
- * Resolve base path cho static assets của HomePage micro-frontend.
- * Khi chạy trong Shell App, `import.meta.url` trỏ về origin của HomePage remote
- * (ví dụ: http://localhost:4207/chunk-XXX.js), nên resolve '/mock' từ đó sẽ đúng.
- * Khi chạy standalone cũng hoạt động bình thường.
- */
-const MOCK_BANNER_BASE_PATH = new URL('/mock', import.meta.url).href;
+import { getFileBaseUrl } from '../../../core/config/app-config';
 
-// Định nghĩa dữ liệu Mock để test
-export const MOCK_BANNER_DATA: BannerApiResponse = {
-  status: 'success',
-  data: [
-    {
-      id: '550e8400-e29b-411d-a716-446655440000',
-      title: '',
-      description: 'Giảm giá lên đến 50% cho tất cả các mặt hàng điện tử.',
-      images: {
-        desktop: `${MOCK_BANNER_BASE_PATH}/BG.png`,
-        mobile: `${MOCK_BANNER_BASE_PATH}/BG.png`,
-        alt: 'Banner khuyến mãi mùa hè',
+/**
+ * Lấy danh sách banner mock, sử dụng URL S3 thực tế từ biến môi trường của Shell App
+ */
+export const getMockBanners = (): BannerApiResponse => {
+  const base = getFileBaseUrl();
+  const fileBase = base.endsWith('/') ? base : `${base}/`;
+
+  return {
+    status: 'success',
+    data: [
+      {
+        id: '550e8400-e29b-411d-a716-446655440001',
+        title: '',
+        description: 'Giảm giá lên đến 50% cho tất cả các mặt hàng điện tử.',
+        images: {
+          desktop: `${fileBase}banner/bg1.png`,
+          mobile: `${fileBase}banner/bg1.png`,
+          alt: 'Banner khuyến mãi mùa hè',
+        },
+        action: { type: 'LINK', target: '/news', openInNewTab: true },
+        displayOrder: 1,
       },
-      action: { type: 'LINK', target: '/news', openInNewTab: true },
-      displayOrder: 1,
-    },
-    {
-      id: '550e8400-e29b-411d-a716-446655440000',
-      title: '',
-      description: 'Giảm giá lên đến 50% cho tất cả các mặt hàng điện tử.',
-      images: {
-        desktop: `${MOCK_BANNER_BASE_PATH}/BG1.png`,
-        mobile: `${MOCK_BANNER_BASE_PATH}/BG1.png`,
-        alt: 'Banner khuyến mãi mùa hè',
+      {
+        id: '550e8400-e29b-411d-a716-446655440002',
+        title: '',
+        description: 'Giảm giá lên đến 50% cho tất cả các mặt hàng điện tử.',
+        images: {
+          desktop: `${fileBase}banner/bg2.png`,
+          mobile: `${fileBase}banner/bg2.png`,
+          alt: 'Banner khuyến mãi mùa hè',
+        },
+        action: { type: 'LINK', target: '/news', openInNewTab: true },
+        displayOrder: 2,
       },
-      action: { type: 'LINK', target: '/news', openInNewTab: true },
-      displayOrder: 2,
-    },
-    {
-      id: '550e8400-e29b-411d-a716-446655440000',
-      title: '',
-      description: 'Giảm giá lên đến 50% cho tất cả các mặt hàng điện tử.',
-      images: {
-        desktop: `${MOCK_BANNER_BASE_PATH}/BG2.png`,
-        mobile: `${MOCK_BANNER_BASE_PATH}/BG2.png`,
-        alt: 'Banner khuyến mãi mùa hè',
+      {
+        id: '550e8400-e29b-411d-a716-446655440003',
+        title: '',
+        description: 'Giảm giá lên đến 50% cho tất cả các mặt hàng điện tử.',
+        images: {
+          desktop: `${fileBase}banner/bg3.jpg`,
+          mobile: `${fileBase}banner/bg3.jpg`,
+          alt: 'Banner khuyến mãi mùa hè',
+        },
+        action: { type: 'LINK', target: '/news', openInNewTab: true },
+        displayOrder: 3,
       },
-      action: { type: 'LINK', target: '/news', openInNewTab: true },
-      displayOrder: 3,
-    },
-  ],
+    ],
+  };
 };
+
+export const MOCK_BANNER_DATA: BannerApiResponse = getMockBanners();
