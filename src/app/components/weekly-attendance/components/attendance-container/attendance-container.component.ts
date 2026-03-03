@@ -105,6 +105,7 @@ export class AttendanceContainerComponent {
                 message: `${errorMsg}${guide}\n\nBạn có muốn thử lại hay tiếp tục điểm danh chỉ bằng WiFi?`,
                 confirmText: 'Thử lại',
                 cancelText: 'Dùng WiFi',
+                closeOnBackdropClick: true,
                 onConfirm: () => {
                   this.processAttendance(action); // Re-trigger the whole flow
                 },
@@ -185,6 +186,7 @@ export class AttendanceContainerComponent {
       cancelText: 'Hủy',
       confirmText: 'Tạo phiếu',
       panelClass: 'my-custom-modal',
+      closeOnBackdropClick: true,
       onConfirm: () => this.createRemoteRequest(),
       onCancel: () => this.showPopup.set(false),
     });
