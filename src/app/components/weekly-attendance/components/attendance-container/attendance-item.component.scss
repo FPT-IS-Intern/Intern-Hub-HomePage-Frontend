@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'variables' as *;
 
 @keyframes glass-iridescent {
@@ -97,7 +98,7 @@
       transition: all 0.5s ease;
 
       &:hover {
-        background-color: darken($accent-orange, 8%);
+        background-color: color.adjust($accent-orange, $lightness: -8%);
       }
 
       .button-text {
