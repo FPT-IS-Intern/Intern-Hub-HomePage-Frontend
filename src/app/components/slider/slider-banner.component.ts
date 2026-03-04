@@ -39,7 +39,7 @@ export class HomePageBannerSliderComponent implements OnInit {
       link: '/news-slide',
     },
     loop: true,
-    speed: 600,
+    speed: 1500,
     effect: 'fade',
   };
 
