@@ -60,7 +60,7 @@ export class BannerSliderNavigationComponent {
   @Input() customNextClass: string = '';
   @Input() prevIconTemplate: TemplateRef<any> | null = null;
   @Input() nextIconTemplate: TemplateRef<any> | null = null;
-  
+
   @Output() prevClick = new EventEmitter<void>();
   @Output() nextClick = new EventEmitter<void>();
 
