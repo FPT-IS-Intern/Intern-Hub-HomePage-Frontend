@@ -64,10 +64,32 @@ export class AttendanceContainerComponent implements OnInit {
   refreshStatus() {
     this.isLoading.set(true);
 
-    this.service.checkNetwork().subscribe({
-      next: (wifi) => this.currentBranchId.set(wifi.branchId),
-      error: (err) => console.error('Check Network Fail', err)
-    });
+    if (navigator.permissions) {
+      navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+        if (result.state === 'granted') {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => this.service.checkNetwork(pos.coords.latitude, pos.coords.longitude).subscribe({
+              next: (wifi) => this.currentBranchId.set(wifi.branchId),
+              error: (err) => console.error('Check Network Fail', err)
+            }),
+            () => this.service.checkNetwork().subscribe({
+              next: (wifi) => this.currentBranchId.set(wifi.branchId)
+            }),
+            { timeout: 5000 }
+          );
+        } else {
+          this.service.checkNetwork().subscribe({
+            next: (wifi) => this.currentBranchId.set(wifi.branchId),
+            error: (err) => console.error('Check Network Fail', err)
+          });
+        }
+      });
+    } else {
+      this.service.checkNetwork().subscribe({
+        next: (wifi) => this.currentBranchId.set(wifi.branchId),
+        error: (err) => console.error('Check Network Fail', err)
+      });
+    }
 
     this.service.getAttendanceStatus().subscribe({
       next: (res) => {
