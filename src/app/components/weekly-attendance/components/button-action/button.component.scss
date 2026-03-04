@@ -15,6 +15,10 @@
     transition: color 0.3s ease !important;
 }
 
+:host ::ng-deep .button-container:first-of-type {
+    border: 1px solid $primary-orange;
+}
+
 :host ::ng-deep .button-container:hover {
     background-color: $primary-orange !important;
 }
