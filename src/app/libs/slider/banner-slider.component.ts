@@ -42,7 +42,7 @@ import { BannerSliderViewAllButtonComponent } from './banner-slider-view-all-but
   ],
   templateUrl: './banner-slider.component.html',
   styleUrls: ['./banner-slider.component.css'],
-  encapsulation: ViewEncapsulation.ShadowDom,
+  encapsulation: ViewEncapsulation.None,
 })
 export class BannerSliderComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
 

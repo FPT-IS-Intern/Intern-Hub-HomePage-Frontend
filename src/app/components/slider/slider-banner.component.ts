@@ -14,7 +14,7 @@ import { BannerService } from '../../services/api.slider-banner.service';
   imports: [CommonModule, BannerSliderComponent],
   templateUrl: './slider-banner.component.html',
   styleUrls: ['./slider-banner.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.ShadowDom,
 })
 export class HomePageBannerSliderComponent implements OnInit {
   private bannerService = inject(BannerService);
