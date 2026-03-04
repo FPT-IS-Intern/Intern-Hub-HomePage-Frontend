@@ -1,12 +1,15 @@
 <div class="attendance-wrapper">
-  <app-attendance-item [image]="'assets/img/home/img_checkin.svg'" [label]="checkInLabel()" [time]="checkIn().time"
-    [statusMessage]="checkIn().displayMessage" [isCheckTimeValid]="checkIn().isCheckTimeValid"
-    [disabled]="isCheckInDisabled()" [isLoading]="checkInLoading()" (onAction)="processAttendance('IN')">
+  <app-attendance-item [image]="'assets/img/home/img_checkin.svg'" [label]="checkInLabel()"
+    [time]="status().checkInTime"
+    [statusMessage]="isDifferentBranch() ? status().statusMessage : status().checkInMessage"
+    [isCheckTimeValid]="status().isCheckInValid" [disabled]="isCheckInDisabled()" [isLoading]="checkInLoading()"
+    (onAction)="processAttendance('IN')">
   </app-attendance-item>
 
-  <app-attendance-item [image]="'assets/img/home/img_checkout.svg'" [label]="'Check Out'" [time]="checkOut().time"
-    [statusMessage]="checkOut().displayMessage" [isCheckTimeValid]="checkOut().isCheckTimeValid"
-    [disabled]="isCheckOutDisabled()" [isLoading]="checkOutLoading()" (onAction)="processAttendance('OUT')">
+  <app-attendance-item [image]="'assets/img/home/img_checkout.svg'" [label]="'Check Out'" [time]="status().checkOutTime"
+    [statusMessage]="isDifferentBranch() ? status().statusMessage : status().checkOutMessage"
+    [isCheckTimeValid]="status().isCheckOutValid" [disabled]="isCheckOutDisabled()" [isLoading]="checkOutLoading()"
+    (onAction)="processAttendance('OUT')">
   </app-attendance-item>
 </div>
 <app-modal #modal />

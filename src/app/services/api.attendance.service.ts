@@ -4,6 +4,7 @@ import { Observable, map } from 'rxjs';
 import {
   ApiResponse,
   AttendanceResponseData,
+  AttendanceStatusData,
   AttendanceStatusSummary,
   WiFiInfo,
 } from '../components/weekly-attendance/models/attendance.model';
@@ -29,90 +30,38 @@ export class AttendanceService {
         return {
           wifiName: res.data?.wifiName || 'Unknown',
           companyWifi: res.data?.companyWifi || false,
+          branchId: res.data?.branchId || null,
         };
       }),
     );
   }
 
-  getAttendanceStatus(): Observable<ApiResponse<AttendanceStatusSummary>> {
+  getAttendanceStatus(): Observable<ApiResponse<AttendanceStatusData>> {
     const params = new HttpParams().set('userId', this.USER_ID);
-    return this.http.get<ApiResponse<any>>(`${this.API_BASE_URL}/status`, { params }).pipe(
+    return this.http.get<ApiResponse<AttendanceStatusData>>(`${this.API_BASE_URL}/status`, { params }).pipe(
       map((res) => {
-        const data = res.data;
-
-        // Map flat backend response to nested frontend model
-        const summary: AttendanceStatusSummary = {
-          checkIn: {
-            time: data.checkInTime ? data.checkInTime.substring(0, 5) : null, // HH:mm:ss -> HH:mm
-            displayMessage: data.checkInMessage,
-            isCheckTimeValid: data.checkInValid,
-          },
-          checkOut: {
-            time: data.checkOutTime ? data.checkOutTime.substring(0, 5) : null,
-            displayMessage: data.checkOutMessage,
-            isCheckTimeValid: data.checkOutValid,
-          },
-        };
-
-        if (data.isCheckInValid !== undefined)
-          summary.checkIn.isCheckTimeValid = data.isCheckInValid;
-        if (data.isCheckOutValid !== undefined)
-          summary.checkOut.isCheckTimeValid = data.isCheckOutValid;
-
-        return {
-          ...res,
-          data: summary,
-        };
-      }),
+        if (res.data) {
+          if (res.data.checkInTime) res.data.checkInTime = res.data.checkInTime.substring(0, 5);
+          if (res.data.checkOutTime) res.data.checkOutTime = res.data.checkOutTime.substring(0, 5);
+        }
+        return res;
+      })
     );
   }
 
-  postCheckIn(latitude?: number, longitude?: number): Observable<ApiResponse<AttendanceResponseData>> {
+  postCheckIn(latitude?: number, longitude?: number): Observable<ApiResponse<any>> {
     let params = new HttpParams().set('userId', this.USER_ID);
     if (latitude != null && longitude != null) {
       params = params.set('latitude', latitude).set('longitude', longitude);
     }
-    return this.http.post<ApiResponse<any>>(`${this.API_BASE_URL}/check-in`, null, { params }).pipe(
-      map((res: any) => {
-        const data = res.data;
-
-        const checkInDate = new Date(data.checkInTime);
-        const timeStr = `${checkInDate.getHours().toString().padStart(2, '0')}:${checkInDate.getMinutes().toString().padStart(2, '0')}`;
-
-        return {
-          ...res,
-          data: {
-            time: timeStr,
-            displayMessage: data.message,
-            isCheckTimeValid: data.checkInValid,
-          },
-        } as ApiResponse<AttendanceResponseData>;
-      }),
-    );
+    return this.http.post<ApiResponse<any>>(`${this.API_BASE_URL}/check-in`, null, { params });
   }
 
-  postCheckOut(latitude?: number, longitude?: number): Observable<ApiResponse<AttendanceResponseData>> {
+  postCheckOut(latitude?: number, longitude?: number): Observable<ApiResponse<any>> {
     let params = new HttpParams().set('userId', this.USER_ID);
     if (latitude != null && longitude != null) {
       params = params.set('latitude', latitude).set('longitude', longitude);
     }
-    return this.http
-      .post<ApiResponse<any>>(`${this.API_BASE_URL}/check-out`, null, { params })
-      .pipe(
-        map((res: any) => {
-          const data = res.data;
-          const checkOutDate = new Date(data.checkOutTime);
-          const timeStr = `${checkOutDate.getHours().toString().padStart(2, '0')}:${checkOutDate.getMinutes().toString().padStart(2, '0')}`;
-
-          return {
-            ...res,
-            data: {
-              time: timeStr,
-              displayMessage: data.message,
-              isCheckTimeValid: data.checkOutValid,
-            },
-          } as ApiResponse<AttendanceResponseData>;
-        }),
-      );
+    return this.http.post<ApiResponse<any>>(`${this.API_BASE_URL}/check-out`, null, { params });
   }
 }

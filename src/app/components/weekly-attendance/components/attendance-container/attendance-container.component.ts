@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal, computed, viewChild } from '@angular/core';
 import { AttendanceService } from '../../../../services/api.attendance.service';
-import { AttendanceResponseData } from '../../models/attendance.model';
+import { AttendanceStatusData } from '../../models/attendance.model';
 import { AttendanceItemComponent } from './attendance-item.component';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../../../../libs/model-popup/modal.component';
@@ -13,10 +13,11 @@ import { NotificationService } from '../../../../libs/notification-text/notifica
   templateUrl: './attendance-container.component.html',
   styleUrls: ['./attendance-container.component.scss'],
 })
-export class AttendanceContainerComponent {
+export class AttendanceContainerComponent implements OnInit {
   private service = inject(AttendanceService);
   private bridge = inject(NotificationService);
   modal = viewChild<ModalComponent>('modal');
+
   // UI State
   isLoading = signal(false);
   showPopup = signal(false);
@@ -24,33 +25,55 @@ export class AttendanceContainerComponent {
   checkInLoading = signal(false);
   checkOutLoading = signal(false);
 
-  // Data State
-  checkIn = signal<AttendanceResponseData>({
-    time: null,
-    displayMessage: null,
-    isCheckTimeValid: false,
+  // Data State - Single source of truth from backend
+  status = signal<AttendanceStatusData>({
+    checkInTime: null,
+    checkOutTime: null,
+    checkInMessage: null,
+    checkOutMessage: null,
+    isCheckInValid: false,
+    isCheckOutValid: false,
+    canCheckIn: false,
+    canCheckOut: false,
+    sessionOpen: false,
+    openSessionBranchId: null,
+    statusMessage: null,
   });
-  checkOut = signal<AttendanceResponseData>({
-    time: null,
-    displayMessage: null,
-    isCheckTimeValid: false,
+  currentBranchId = signal<string | null>(null);
+
+  isDifferentBranch = computed(() => {
+    const sessionBranch = this.status().openSessionBranchId;
+    const currentBranch = this.currentBranchId();
+    return !!sessionBranch && !!currentBranch && sessionBranch !== currentBranch;
   });
 
   checkInLabel = computed(() => (this.remoteRequestPending() ? 'chờ ghi nhận...' : 'Check In'));
+
   isCheckInDisabled = computed(
-    () => this.showPopup() || this.remoteRequestPending() || !!this.checkIn().time,
+    () => this.showPopup() || this.remoteRequestPending() || !this.status().canCheckIn
   );
+
   isCheckOutDisabled = computed(
-    () => !this.checkIn().time || this.remoteRequestPending() || !!this.checkOut().time,
+    () => this.showPopup() || this.remoteRequestPending() || !this.status().canCheckOut
   );
 
   ngOnInit() {
+    this.refreshStatus();
+  }
+
+  refreshStatus() {
     this.isLoading.set(true);
+
+    // Fetch network info to get current branch ID
+    this.service.checkNetwork().subscribe({
+      next: (wifi) => this.currentBranchId.set(wifi.branchId),
+      error: (err) => console.error('Check Network Fail', err)
+    });
+
     this.service.getAttendanceStatus().subscribe({
       next: (res) => {
         if (res.data) {
-          this.checkIn.set(res.data.checkIn);
-          this.checkOut.set(res.data.checkOut);
+          this.status.set(res.data);
         }
       },
       error: (err) => console.error('API Fail', err),
@@ -133,34 +156,27 @@ export class AttendanceContainerComponent {
 
     apiCall.subscribe({
       next: (res) => {
-        if (isCheckIn) {
-          this.checkIn.set({
-            time: res.data.time,
-            displayMessage: res.data.displayMessage,
-            isCheckTimeValid: res.data.isCheckTimeValid,
-          });
-          this.checkInLoading.set(false);
-        } else {
-          this.checkOut.set({
-            time: res.data.time,
-            displayMessage: res.data.displayMessage,
-            isCheckTimeValid: res.data.isCheckTimeValid,
-          });
-          this.checkOutLoading.set(false);
-        }
+        if (isCheckIn) this.checkInLoading.set(false);
+        else this.checkOutLoading.set(false);
+
+        this.bridge.show(res.message || 'Thành công');
+        this.refreshStatus(); // Single source of truth update
       },
       error: (err) => {
         if (isCheckIn) this.checkInLoading.set(false);
         else this.checkOutLoading.set(false);
 
         if (err.status === 400) {
+          // Backend might return specific error message for 400
+          const errorMsg = err.error?.message || 'Sai vị trí hoặc chưa có phiếu làm Remote.';
           this.showPopup.set(true);
           const modalRef = this.modal();
-          if (modalRef) this.openConfirmPopupRemote(modalRef);
+          if (modalRef) this.openConfirmPopupRemote(modalRef, errorMsg);
         } else {
           console.error('CheckIn/Out failed:', err);
-          this.bridge.show('Có lỗi xảy ra khi điểm danh. Vui lòng thử lại sau.');
+          this.bridge.show(err.error?.message || 'Có lỗi xảy ra khi điểm danh. Vui lòng thử lại sau.');
         }
+        this.refreshStatus(); // Always sync status if possible
       },
     });
   }
@@ -179,10 +195,9 @@ export class AttendanceContainerComponent {
     }, 2000);
   }
 
-  openConfirmPopupRemote(modal?: ModalComponent) {
+  openConfirmPopupRemote(modal?: ModalComponent, message?: string) {
     modal?.open({
-      message:
-        'Hệ thống đang ghi nhận vị trí của bạn sai (hoặc ngoài bán kính cho phép) hoặc chưa có phiếu làm Remote. Vui lòng tạo phiếu',
+      message: message || 'Hệ thống đang ghi nhận vị trí của bạn sai (hoặc ngoài bán kính cho phép) hoặc chưa có phiếu làm Remote. Vui lòng tạo phiếu',
       cancelText: 'Hủy',
       confirmText: 'Tạo phiếu',
       panelClass: 'my-custom-modal',
