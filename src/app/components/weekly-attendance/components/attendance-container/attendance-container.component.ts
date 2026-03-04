@@ -93,42 +93,100 @@ export class AttendanceContainerComponent implements OnInit {
       return;
     }
 
-    this.showPopup.set(true);
-    modalRef.open({
-      message: 'Bạn có muốn sử dụng vị trí hiện tại của mình để kết quả điểm danh chính xác hơn không?',
-      confirmText: 'Sử dụng vị trí',
-      cancelText: 'Chỉ dùng WiFi',
-      closeOnBackdropClick: true,
-      onConfirm: () => {
-        this.showPopup.set(false);
-        if (isCheckIn) this.checkInLoading.set(true);
-        else this.checkOutLoading.set(true);
+    const proceedWithGPS = () => {
+      if (isCheckIn) this.checkInLoading.set(true);
+      else this.checkOutLoading.set(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.executeAttendance(action, position.coords.latitude, position.coords.longitude);
+        },
+        (error) => {
+          console.warn('Geolocation failed:', error);
+          if (isCheckIn) this.checkInLoading.set(false);
+          else this.checkOutLoading.set(false);
+        },
+        { enableHighAccuracy: true, timeout: 60000, maximumAge: 0 }
+      );
+    };
 
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              this.executeAttendance(action, position.coords.latitude, position.coords.longitude);
-            },
-            (error) => {
-              console.warn('Geolocation failed:', error);
-              // Stop loading and DO NOT call API if location is denied/fails
-              if (isCheckIn) this.checkInLoading.set(false);
-              else this.checkOutLoading.set(false);
-            },
-            { enableHighAccuracy: true, timeout: 60000, maximumAge: 0 }
-          );
+    if (navigator.permissions) {
+      navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+        if (result.state === 'granted') {
+          // Location đang bật → bỏ popup, lấy GPS thẳng
+          proceedWithGPS();
         } else {
+          // Location tắt hoặc chưa cấp quyền → hiện popup hỏi
+          this.showPopup.set(true);
+          modalRef.open({
+            message: 'Bạn có muốn sử dụng vị trí hiện tại của mình để kết quả điểm danh chính xác hơn không?',
+            confirmText: 'Sử dụng vị trí',
+            cancelText: 'Chỉ dùng WiFi',
+            closeOnBackdropClick: true,
+            onConfirm: () => {
+              this.showPopup.set(false);
+              if (isCheckIn) this.checkInLoading.set(true);
+              else this.checkOutLoading.set(true);
+              if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                  (position) => {
+                    this.executeAttendance(action, position.coords.latitude, position.coords.longitude);
+                  },
+                  (error) => {
+                    console.warn('Geolocation failed:', error);
+                    if (isCheckIn) this.checkInLoading.set(false);
+                    else this.checkOutLoading.set(false);
+                  },
+                  { enableHighAccuracy: true, timeout: 60000, maximumAge: 0 }
+                );
+              } else {
+                this.executeAttendance(action);
+              }
+            },
+            onCancel: () => {
+              this.showPopup.set(false);
+              if (isCheckIn) this.checkInLoading.set(true);
+              else this.checkOutLoading.set(true);
+              this.executeAttendance(action);
+            }
+          });
+        }
+      });
+    } else {
+      // Permissions API not supported → show popup
+      this.showPopup.set(true);
+      modalRef.open({
+        message: 'Bạn có muốn sử dụng vị trí hiện tại của mình để kết quả điểm danh chính xác hơn không?',
+        confirmText: 'Sử dụng vị trí',
+        cancelText: 'Chỉ dùng WiFi',
+        closeOnBackdropClick: true,
+        onConfirm: () => {
+          this.showPopup.set(false);
+          if (isCheckIn) this.checkInLoading.set(true);
+          else this.checkOutLoading.set(true);
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                this.executeAttendance(action, position.coords.latitude, position.coords.longitude);
+              },
+              (error) => {
+                console.warn('Geolocation failed:', error);
+                if (isCheckIn) this.checkInLoading.set(false);
+                else this.checkOutLoading.set(false);
+              },
+              { enableHighAccuracy: true, timeout: 60000, maximumAge: 0 }
+            );
+          } else {
+            this.executeAttendance(action);
+          }
+        },
+        onCancel: () => {
+          this.showPopup.set(false);
+          if (isCheckIn) this.checkInLoading.set(true);
+          else this.checkOutLoading.set(true);
           this.executeAttendance(action);
         }
-      },
-      onCancel: () => {
-        this.showPopup.set(false);
-        // Fallback to WiFi only immediately if they choose so
-        if (isCheckIn) this.checkInLoading.set(true);
-        else this.checkOutLoading.set(true);
-        this.executeAttendance(action);
-      }
-    });
+      });
+    }
   }
 
   private executeAttendance(action: 'IN' | 'OUT', lat?: number, lon?: number) {
