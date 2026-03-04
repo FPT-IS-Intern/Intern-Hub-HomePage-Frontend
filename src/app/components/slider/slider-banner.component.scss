@@ -54,6 +54,10 @@ app-banner-slider-view-all-button {
       -webkit-backdrop-filter: blur(1px);
       box-shadow: $shadow-primary-dark !important;
 
+      &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+      }
+
       span {
         font-weight: $font-weight-bold;
         font-size: $font-size-sm;
