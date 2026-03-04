@@ -125,12 +125,13 @@
       gap: 4px;
       align-items: center;
       transition: all 0.5s ease;
+      height: 36px;
+      width: 146px;
 
       .status-message {
         display: flex;
         align-items: center;
         text-align: center;
-        height: 36px;
         font-size: $font-size-2xs;
         font-weight: $font-weight-regular;
         line-height: $line-height-2xs;
