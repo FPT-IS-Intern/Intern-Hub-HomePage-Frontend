@@ -7,9 +7,8 @@
   </app-attendance-item>
 
   <app-attendance-item [image]="'assets/img/home/img_checkout.svg'" [label]="'Check Out'" [time]="status().checkOutTime"
-    [statusMessage]="isDifferentBranch() ? status().statusMessage : status().checkOutMessage"
-    [isCheckTimeValid]="status().isCheckOutValid" [disabled]="isCheckOutDisabled()" [isLoading]="checkOutLoading()"
-    (onAction)="processAttendance('OUT')">
+    [statusMessage]="status().checkOutMessage" [isCheckTimeValid]="status().isCheckOutValid"
+    [disabled]="isCheckOutDisabled()" [isLoading]="checkOutLoading()" (onAction)="processAttendance('OUT')">
   </app-attendance-item>
 </div>
-<app-modal #modal />
+<app-modal #modal (closed)="showPopup.set(false)" />

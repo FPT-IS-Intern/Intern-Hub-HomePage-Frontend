@@ -64,7 +64,6 @@ export class AttendanceContainerComponent implements OnInit {
   refreshStatus() {
     this.isLoading.set(true);
 
-    // Fetch network info to get current branch ID
     this.service.checkNetwork().subscribe({
       next: (wifi) => this.currentBranchId.set(wifi.branchId),
       error: (err) => console.error('Check Network Fail', err)
@@ -94,12 +93,14 @@ export class AttendanceContainerComponent implements OnInit {
       return;
     }
 
+    this.showPopup.set(true);
     modalRef.open({
       message: 'Bạn có muốn sử dụng vị trí hiện tại của mình để kết quả điểm danh chính xác hơn không?',
       confirmText: 'Sử dụng vị trí',
       cancelText: 'Chỉ dùng WiFi',
       closeOnBackdropClick: true,
       onConfirm: () => {
+        this.showPopup.set(false);
         if (isCheckIn) this.checkInLoading.set(true);
         else this.checkOutLoading.set(true);
 
@@ -110,30 +111,9 @@ export class AttendanceContainerComponent implements OnInit {
             },
             (error) => {
               console.warn('Geolocation failed:', error);
-              let errorMsg = '';
-              let guide = '';
-
-              if (error.code === error.PERMISSION_DENIED) {
-                errorMsg = 'Quyền truy cập vị trí đã bị chặn.';
-                guide = '\n\nHướng dẫn: Hãy nhấn vào biểu tượng [Ổ khóa] cạnh địa chỉ trang web trên trình duyệt, chọn Cài đặt trang web và cho phép "Vị trí" (Location). Sau đó hãy Thử lại.';
-              } else if (error.code === error.POSITION_UNAVAILABLE) {
-                errorMsg = 'GPS trên thiết bị của bạn đang tắt.';
-                guide = '\n\nHướng dẫn: Vui lòng bật "Vị trí" (GPS) trong phần cài đặt nhanh của điện thoại hoặc máy tính. Sau đó hãy Thử lại.';
-              } else if (error.code === error.TIMEOUT) {
-                errorMsg = 'Hết thời gian chờ lấy vị trí.';
-                guide = '\n\nHãy đảm bảo bạn đang ở không gian thoáng và nhấn Thử lại.';
-              }
-
-              modalRef.open({
-                message: `${errorMsg}${guide}\n\nBạn có muốn thử lại hay tiếp tục điểm danh chỉ bằng WiFi?`,
-                confirmText: 'Thử lại',
-                cancelText: 'Dùng WiFi',
-                closeOnBackdropClick: true,
-                onConfirm: () => {
-                  this.processAttendance(action); // Re-trigger the whole flow
-                },
-                onCancel: () => this.executeAttendance(action),
-              });
+              // Stop loading and DO NOT call API if location is denied/fails
+              if (isCheckIn) this.checkInLoading.set(false);
+              else this.checkOutLoading.set(false);
             },
             { enableHighAccuracy: true, timeout: 60000, maximumAge: 0 }
           );
@@ -142,6 +122,7 @@ export class AttendanceContainerComponent implements OnInit {
         }
       },
       onCancel: () => {
+        this.showPopup.set(false);
         // Fallback to WiFi only immediately if they choose so
         if (isCheckIn) this.checkInLoading.set(true);
         else this.checkOutLoading.set(true);
@@ -158,8 +139,6 @@ export class AttendanceContainerComponent implements OnInit {
       next: (res) => {
         if (isCheckIn) this.checkInLoading.set(false);
         else this.checkOutLoading.set(false);
-
-        this.bridge.show(res.message || 'Thành công');
         this.refreshStatus(); // Single source of truth update
       },
       error: (err) => {
