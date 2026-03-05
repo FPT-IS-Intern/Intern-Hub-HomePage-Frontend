@@ -22,8 +22,14 @@
       gap: 4px;
 
       .icon {
-        width: 24px;
-        height: 24px;
+        width: 24px !important;
+        height: 24px !important;
+        color: $primary-orange;
+      }
+
+      .dsi-wifi-line {
+        width: 22px;
+        height: 15px;
       }
 
       span {

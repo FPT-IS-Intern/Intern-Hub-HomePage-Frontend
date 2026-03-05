@@ -28,17 +28,10 @@
     mask-size: contain;
     mask-position: center;
 
-    &.check-circle {
+    &.dsi-check-circle-line {
       color: $primary-orange;
-      mask-image: url('/mock/check-circle.svg');
-      -webkit-mask-image: url('/mock/check-circle.svg');
     }
 
-    &.minus-circle {
-      color: $text-sub;
-      mask-image: url('/mock/minus-circle.svg');
-      -webkit-mask-image: url('/mock/minus-circle.svg');
-    }
   }
 
 }

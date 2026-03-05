@@ -14,7 +14,7 @@
     </button>
     } @else {
     <div class="status-container">
-      <i [class]="statusIcon()" alt="status_icon" class="status-icon"></i>
+      <i [class]="statusIcon()" alt="status_icon" class="status-icon dsi"></i>
       <span class="status-message" [class.text-error]="isError()" [class.text-success]="!isError()">
         {{ statusMessage() }}
       </span>
