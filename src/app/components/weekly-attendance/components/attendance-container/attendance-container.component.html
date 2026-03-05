@@ -1,13 +1,13 @@
 <div class="attendance-wrapper">
   <app-attendance-item [image]="'assets/img/home/img_checkin.svg'" [label]="checkInLabel()"
-    [time]="status().checkInTime"
-    [statusMessage]="networkChecked() ? (isDifferentBranch() ? status().statusMessage : status().checkInMessage) : null"
+    [time]="checkInDisplayTime()"
+    [statusMessage]="checkInDisplayMessage()"
     [isCheckTimeValid]="status().isCheckInValid" [disabled]="isCheckInDisabled()" [isLoading]="checkInLoading()"
     (onAction)="processAttendance('IN')">
   </app-attendance-item>
 
-  <app-attendance-item [image]="'assets/img/home/img_checkout.svg'" [label]="'Check Out'" [time]="status().checkOutTime"
-    [statusMessage]="status().checkOutMessage" [isCheckTimeValid]="status().isCheckOutValid"
+  <app-attendance-item [image]="'assets/img/home/img_checkout.svg'" [label]="'Check Out'" [time]="checkOutDisplayTime()"
+    [statusMessage]="checkOutDisplayMessage()" [isCheckTimeValid]="status().isCheckOutValid"
     [disabled]="isCheckOutDisabled()" [isLoading]="checkOutLoading()" (onAction)="processAttendance('OUT')">
   </app-attendance-item>
 </div>

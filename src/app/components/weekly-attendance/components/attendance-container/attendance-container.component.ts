@@ -24,6 +24,7 @@ export class AttendanceContainerComponent implements OnInit {
   remoteRequestPending = signal(false);
   checkInLoading = signal(false);
   checkOutLoading = signal(false);
+  forceInitAfterCrossBranchCheckout = signal(false);
 
   // Data State - Single source of truth from backend
   status = signal<AttendanceStatusData>({
@@ -48,14 +49,41 @@ export class AttendanceContainerComponent implements OnInit {
     return !!sessionBranch && !!currentBranch && sessionBranch !== currentBranch;
   });
 
+  showCrossBranchWarning = computed(() => this.status().sessionOpen && this.isDifferentBranch());
+
   checkInLabel = computed(() => (this.remoteRequestPending() ? 'chờ ghi nhận...' : 'Check In'));
 
-  isCheckInDisabled = computed(
-    () => this.showPopup() || this.remoteRequestPending() || !this.status().canCheckIn
+  checkInDisplayTime = computed(() =>
+    this.forceInitAfterCrossBranchCheckout() ? null : this.status().checkInTime
+  );
+  checkOutDisplayTime = computed(() =>
+    this.showCrossBranchWarning() || this.forceInitAfterCrossBranchCheckout()
+      ? null
+      : this.status().checkOutTime
   );
 
-  isCheckOutDisabled = computed(
-    () => this.showPopup() || this.remoteRequestPending() || !this.status().canCheckOut
+  checkInDisplayMessage = computed(() => {
+    if (!this.networkChecked()) return null;
+    if (this.forceInitAfterCrossBranchCheckout()) return null;
+    return this.showCrossBranchWarning() ? this.status().statusMessage : this.status().checkInMessage;
+  });
+
+  checkOutDisplayMessage = computed(() =>
+    this.showCrossBranchWarning() || this.forceInitAfterCrossBranchCheckout()
+      ? null
+      : this.status().checkOutMessage
+  );
+
+  isCheckInDisabled = computed(() =>
+    this.showPopup() ||
+    this.remoteRequestPending() ||
+    (this.forceInitAfterCrossBranchCheckout() ? false : !this.status().canCheckIn)
+  );
+
+  isCheckOutDisabled = computed(() =>
+    this.showPopup() ||
+    this.remoteRequestPending() ||
+    (this.forceInitAfterCrossBranchCheckout() ? true : !this.status().canCheckOut)
   );
 
   ngOnInit() {
@@ -64,6 +92,8 @@ export class AttendanceContainerComponent implements OnInit {
 
   refreshStatus() {
     this.isLoading.set(true);
+    this.networkChecked.set(false);
+    this.currentBranchId.set(null);
 
     if (navigator.permissions) {
       navigator.permissions.query({ name: 'geolocation' }).then((result) => {
@@ -97,6 +127,9 @@ export class AttendanceContainerComponent implements OnInit {
       next: (res) => {
         if (res.data) {
           this.status.set(res.data);
+          if (res.data.sessionOpen) {
+            this.forceInitAfterCrossBranchCheckout.set(false);
+          }
         }
       },
       error: (err) => console.error('API Fail', err),
@@ -215,29 +248,51 @@ export class AttendanceContainerComponent implements OnInit {
 
   private executeAttendance(action: 'IN' | 'OUT', lat?: number, lon?: number) {
     const isCheckIn = action === 'IN';
+    const wasCrossBranchWarning = this.showCrossBranchWarning();
+    const crossBranchStatusMessage = !isCheckIn && wasCrossBranchWarning ? this.status().statusMessage : null;
     const apiCall = isCheckIn ? this.service.postCheckIn(lat, lon) : this.service.postCheckOut(lat, lon);
 
     apiCall.subscribe({
       next: (res) => {
         if (isCheckIn) this.checkInLoading.set(false);
         else this.checkOutLoading.set(false);
-        this.refreshStatus(); // Single source of truth update
+        this.showPopup.set(false);
+        if (!isCheckIn && wasCrossBranchWarning) {
+          this.forceInitAfterCrossBranchCheckout.set(true);
+        } else if (isCheckIn) {
+          this.forceInitAfterCrossBranchCheckout.set(false);
+        }
+        this.refreshStatus();
       },
       error: (err) => {
         if (isCheckIn) this.checkInLoading.set(false);
         else this.checkOutLoading.set(false);
 
+        const errorMsg = err?.error?.message || 'Co loi xay ra khi diem danh. Vui long thu lai sau.';
+
         if (err.status === 400) {
-          // Backend might return specific error message for 400
-          const errorMsg = err.error?.message || 'Sai vị trí hoặc chưa có phiếu làm Remote.';
-          this.showPopup.set(true);
-          const modalRef = this.modal();
-          if (modalRef) this.openConfirmPopupRemote(modalRef, errorMsg);
+          const normalized = String(errorMsg).toLowerCase();
+          const isLocationError =
+            normalized.includes('wifi') ||
+            normalized.includes('location') ||
+            normalized.includes('gps') ||
+            normalized.includes('onsite') ||
+            normalized.includes('remote');
+
+          if (isLocationError) {
+            this.showPopup.set(true);
+            const modalRef = this.modal();
+            if (modalRef) this.openConfirmPopupRemote(modalRef, errorMsg);
+          } else {
+            this.showPopup.set(false);
+            this.bridge.show(errorMsg);
+          }
         } else {
+          this.showPopup.set(false);
           console.error('CheckIn/Out failed:', err);
-          this.bridge.show(err.error?.message || 'Có lỗi xảy ra khi điểm danh. Vui lòng thử lại sau.');
+          this.bridge.show(errorMsg);
         }
-        this.refreshStatus(); // Always sync status if possible
+        this.refreshStatus();
       },
     });
   }
