@@ -1,7 +1,7 @@
 <div class="attendance-wrapper">
   <app-attendance-item [image]="'assets/img/home/img_checkin.svg'" [label]="checkInLabel()"
     [time]="status().checkInTime"
-    [statusMessage]="isDifferentBranch() ? status().statusMessage : status().checkInMessage"
+    [statusMessage]="networkChecked() ? (isDifferentBranch() ? status().statusMessage : status().checkInMessage) : null"
     [isCheckTimeValid]="status().isCheckInValid" [disabled]="isCheckInDisabled()" [isLoading]="checkInLoading()"
     (onAction)="processAttendance('IN')">
   </app-attendance-item>

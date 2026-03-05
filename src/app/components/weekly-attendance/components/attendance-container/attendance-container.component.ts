@@ -40,6 +40,7 @@ export class AttendanceContainerComponent implements OnInit {
     statusMessage: null,
   });
   currentBranchId = signal<string | null>(null);
+  networkChecked = signal(false);
 
   isDifferentBranch = computed(() => {
     const sessionBranch = this.status().openSessionBranchId;
@@ -69,25 +70,26 @@ export class AttendanceContainerComponent implements OnInit {
         if (result.state === 'granted') {
           navigator.geolocation.getCurrentPosition(
             (pos) => this.service.checkNetwork(pos.coords.latitude, pos.coords.longitude).subscribe({
-              next: (wifi) => this.currentBranchId.set(wifi.branchId),
-              error: (err) => console.error('Check Network Fail', err)
+              next: (wifi) => { this.currentBranchId.set(wifi.branchId); this.networkChecked.set(true); },
+              error: () => this.networkChecked.set(true)
             }),
             () => this.service.checkNetwork().subscribe({
-              next: (wifi) => this.currentBranchId.set(wifi.branchId)
+              next: (wifi) => { this.currentBranchId.set(wifi.branchId); this.networkChecked.set(true); },
+              error: () => this.networkChecked.set(true)
             }),
             { timeout: 5000 }
           );
         } else {
           this.service.checkNetwork().subscribe({
-            next: (wifi) => this.currentBranchId.set(wifi.branchId),
-            error: (err) => console.error('Check Network Fail', err)
+            next: (wifi) => { this.currentBranchId.set(wifi.branchId); this.networkChecked.set(true); },
+            error: () => this.networkChecked.set(true)
           });
         }
       });
     } else {
       this.service.checkNetwork().subscribe({
-        next: (wifi) => this.currentBranchId.set(wifi.branchId),
-        error: (err) => console.error('Check Network Fail', err)
+        next: (wifi) => { this.currentBranchId.set(wifi.branchId); this.networkChecked.set(true); },
+        error: () => this.networkChecked.set(true)
       });
     }
 
