@@ -259,6 +259,9 @@ export class AttendanceContainerComponent implements OnInit {
         this.showPopup.set(false);
         if (!isCheckIn && wasCrossBranchWarning) {
           this.forceInitAfterCrossBranchCheckout.set(true);
+          if (crossBranchStatusMessage) {
+            this.openInfoPopup(crossBranchStatusMessage);
+          }
         } else if (isCheckIn) {
           this.forceInitAfterCrossBranchCheckout.set(false);
         }
@@ -322,4 +325,21 @@ export class AttendanceContainerComponent implements OnInit {
       onCancel: () => this.showPopup.set(false),
     });
   }
+
+  private openInfoPopup(message: string) {
+    const modalRef = this.modal();
+    if (!modalRef) {
+      this.bridge.show(message);
+      return;
+    }
+    this.showPopup.set(true);
+    modalRef.open({
+      message,
+      confirmText: 'Xác nhận',
+      closeOnBackdropClick: true,
+      onCancel: () => this.showPopup.set(false),
+      onConfirm: () => this.showPopup.set(false),
+    });
+  }
 }
+
