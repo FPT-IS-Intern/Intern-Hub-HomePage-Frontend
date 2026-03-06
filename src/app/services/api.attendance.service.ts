@@ -15,11 +15,10 @@ import { getBaseUrl } from '../core/config/app-config';
 export class AttendanceService {
   private http = inject(HttpClient);
   // Adjust this if your backend runs on a different port/path
-  private readonly API_BASE_URL = `http://localhost:8080/hrm/attendance`;
-  // private get USER_ID(): string {
-  //   return localStorage.getItem('userId') ?? '';
-  // }
-  private readonly USER_ID = 9155938493849600;
+  private readonly API_BASE_URL = `${getBaseUrl()}/hrm/attendance`;
+  private get USER_ID(): string {
+    return localStorage.getItem('userId') ?? '';
+  }
 
   checkNetwork(latitude?: number, longitude?: number): Observable<WiFiInfo> {
     let params = new HttpParams();
