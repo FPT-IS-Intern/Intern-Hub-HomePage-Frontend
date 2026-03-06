@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-attendance-item',
   standalone: true,
   imports: [CommonModule],
-  encapsulation: ViewEncapsulation.ShadowDom,
+  encapsulation: ViewEncapsulation.None,
   templateUrl: './attendance-item.component.html',
   styleUrls: ['./attendance-item.component.scss']
 })
