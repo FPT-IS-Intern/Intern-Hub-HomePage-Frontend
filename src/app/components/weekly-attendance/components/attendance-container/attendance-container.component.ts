@@ -271,16 +271,16 @@ export class AttendanceContainerComponent implements OnInit {
         if (isCheckIn) this.checkInLoading.set(false);
         else this.checkOutLoading.set(false);
 
-        const errorMsg = err?.error?.message || 'Co loi xay ra khi diem danh. Vui long thu lai sau.';
+        const errorCode = String(err?.error?.status?.code || err?.error?.code || '').toUpperCase();
+        const errorMsg =
+          err?.error?.status?.message ||
+          err?.error?.message ||
+          'Co loi xay ra khi diem danh. Vui long thu lai sau.';
 
         if (err.status === 400) {
           const normalized = String(errorMsg).toLowerCase();
           const isLocationError =
-            normalized.includes('wifi') ||
-            normalized.includes('location') ||
-            normalized.includes('gps') ||
-            normalized.includes('onsite') ||
-            normalized.includes('remote');
+            errorCode === 'OUT_OF_RANGE';
 
           if (isLocationError) {
             this.showPopup.set(true);
@@ -342,4 +342,3 @@ export class AttendanceContainerComponent implements OnInit {
     });
   }
 }
-
