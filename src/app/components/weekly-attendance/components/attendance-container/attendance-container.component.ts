@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed, viewChild } from '@angular/core';
+﻿import { Component, OnInit, inject, signal, computed, viewChild } from '@angular/core';
 import { AttendanceService } from '../../../../services/api.attendance.service';
 import { AttendanceStatusData } from '../../models/attendance.model';
 import { AttendanceItemComponent } from './attendance-item.component';
@@ -17,6 +17,8 @@ export class AttendanceContainerComponent implements OnInit {
   private service = inject(AttendanceService);
   private bridge = inject(NotificationService);
   modal = viewChild<ModalComponent>('modal');
+  private locationPromptTimer: ReturnType<typeof setTimeout> | null = null;
+  private locationPromptShownThisSession = false;
 
   // UI State
   isLoading = signal(false);
@@ -53,7 +55,7 @@ export class AttendanceContainerComponent implements OnInit {
 
   showCrossBranchWarning = computed(() => this.status().sessionOpen && this.isDifferentBranch());
 
-  checkInLabel = computed(() => (this.remoteRequestPending() ? 'chờ ghi nhận...' : 'Check In'));
+  checkInLabel = computed(() => (this.remoteRequestPending() ? 'chá» ghi nháº­n...' : 'Check In'));
 
   checkInDisplayTime = computed(() =>
     this.forceInitAfterCrossBranchCheckout() ? null : this.status().checkInTime
@@ -93,10 +95,15 @@ export class AttendanceContainerComponent implements OnInit {
     this.refreshStatus();
   }
 
-  refreshStatus() {
+  refreshStatus(latitude?: number, longitude?: number) {
     this.isLoading.set(true);
     this.networkChecked.set(false);
     this.currentBranchId.set(null);
+    if (this.locationPromptTimer) {
+      clearTimeout(this.locationPromptTimer);
+      this.locationPromptTimer = null;
+    }
+
     const fetchStatus = (latitude?: number, longitude?: number) => {
       this.service.getAttendanceStatus(latitude, longitude).subscribe({
         next: (res) => {
@@ -119,6 +126,7 @@ export class AttendanceContainerComponent implements OnInit {
             if (res.data.sessionOpen) {
               this.forceInitAfterCrossBranchCheckout.set(false);
             }
+            this.maybeScheduleLocationPrompt();
           }
         },
         error: (err) => console.error('API Fail', err),
@@ -131,39 +139,104 @@ export class AttendanceContainerComponent implements OnInit {
         next: (wifi) => {
           this.currentBranchId.set(wifi.branchId);
           this.networkChecked.set(true);
+          this.maybeScheduleLocationPrompt();
         },
-        error: () => this.networkChecked.set(true)
+        error: () => {
+          this.networkChecked.set(true);
+          this.maybeScheduleLocationPrompt();
+        }
       });
       fetchStatus(latitude, longitude);
     };
 
+    if (latitude != null && longitude != null) {
+      fetchNetworkAndStatus(latitude, longitude);
+      return;
+    }
+
     if (navigator.permissions) {
       navigator.permissions.query({ name: 'geolocation' }).then((result) => {
-        if (result.state !== 'denied') {
+        if (result.state === 'granted' && navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
-            (pos) => fetchNetworkAndStatus(pos.coords.latitude, pos.coords.longitude),
+            (position) => fetchNetworkAndStatus(position.coords.latitude, position.coords.longitude),
             () => fetchNetworkAndStatus(),
             { timeout: 5000 }
           );
         } else {
+          // Location chua duoc cap quyen: chi kiem tra qua WiFi/IP
           fetchNetworkAndStatus();
         }
       });
     } else {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => fetchNetworkAndStatus(pos.coords.latitude, pos.coords.longitude),
-          () => fetchNetworkAndStatus(),
-          { timeout: 5000 }
-        );
-      } else {
-        fetchNetworkAndStatus();
-      }
+      // Khong auto-goi geolocation neu khong kiem tra duoc permission state
+      fetchNetworkAndStatus();
     }
   }
 
+  private hasCompletedAttendanceToday(): boolean {
+    const currentStatus = this.status();
+    return !!currentStatus.checkInTime && !!currentStatus.checkOutTime && !currentStatus.sessionOpen;
+  }
+
+  private shouldPromptLocationForOnsite(): boolean {
+    return (
+      this.hasCompletedAttendanceToday() &&
+      !this.status().canCheckIn &&
+      this.networkChecked() &&
+      !this.currentBranchId()
+    );
+  }
+
+  private async getLocationPermissionState(): Promise<PermissionState | 'unsupported'> {
+    if (!navigator.permissions) return 'unsupported';
+    try {
+      const permission = await navigator.permissions.query({ name: 'geolocation' });
+      return permission.state;
+    } catch {
+      return 'unsupported';
+    }
+  }
+
+  private maybeScheduleLocationPrompt() {
+    if (this.locationPromptShownThisSession || this.locationPromptTimer) return;
+    if (!this.shouldPromptLocationForOnsite()) return;
+
+    this.getLocationPermissionState().then((state) => {
+      if (state === 'granted') return;
+      this.locationPromptTimer = setTimeout(() => {
+        this.locationPromptTimer = null;
+        if (this.locationPromptShownThisSession || !this.shouldPromptLocationForOnsite()) return;
+        this.openLocationRequiredPopup();
+      }, 4000);
+    });
+  }
+
+  private openLocationRequiredPopup() {
+    const modalRef = this.modal();
+    if (!modalRef) return;
+
+    this.locationPromptShownThisSession = true;
+    this.showPopup.set(true);
+    modalRef.open({
+      message: 'Domain cần sử dụng vị trí của bạn để kiểm tra Onsite.',
+      confirmText: 'Bật vị trí',
+      cancelText: 'Để sau',
+      closeOnBackdropClick: true,
+      onConfirm: () => {
+        this.showPopup.set(false);
+        if (!navigator.geolocation) return;
+        navigator.geolocation.getCurrentPosition(
+          (position) => this.refreshStatus(position.coords.latitude, position.coords.longitude),
+          () => undefined,
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+      },
+      onCancel: () => this.showPopup.set(false),
+    });
+  }
+
   /**
-   * Logic xử lý chung cho cả Checkin và Checkout
+   * Logic xá»­ lÃ½ chung cho cáº£ Checkin vÃ  Checkout
    * @param action 'IN' | 'OUT'
    */
   processAttendance(action: 'IN' | 'OUT') {
@@ -194,15 +267,15 @@ export class AttendanceContainerComponent implements OnInit {
     if (navigator.permissions) {
       navigator.permissions.query({ name: 'geolocation' }).then((result) => {
         if (result.state === 'granted') {
-          // Location đang bật → bỏ popup, lấy GPS thẳng
+          // Location Ä‘ang báº­t â†’ bá» popup, láº¥y GPS tháº³ng
           proceedWithGPS();
         } else {
-          // Location tắt hoặc chưa cấp quyền → hiện popup hỏi
+          // Location táº¯t hoáº·c chÆ°a cáº¥p quyá»n â†’ hiá»‡n popup há»i
           this.showPopup.set(true);
           modalRef.open({
-            message: 'Bạn có muốn sử dụng vị trí hiện tại của mình để kết quả điểm danh chính xác hơn không?',
-            confirmText: 'Sử dụng vị trí',
-            cancelText: 'Chỉ dùng WiFi',
+            message: 'Báº¡n cÃ³ muá»‘n sá»­ dá»¥ng vá»‹ trÃ­ hiá»‡n táº¡i cá»§a mÃ¬nh Ä‘á»ƒ káº¿t quáº£ Ä‘iá»ƒm danh chÃ­nh xÃ¡c hÆ¡n khÃ´ng?',
+            confirmText: 'Su dung vi tri',
+            cancelText: 'Chi dung WiFi',
             closeOnBackdropClick: true,
             onConfirm: () => {
               this.showPopup.set(false);
@@ -234,12 +307,12 @@ export class AttendanceContainerComponent implements OnInit {
         }
       });
     } else {
-      // Permissions API not supported → show popup
+      // Permissions API not supported â†’ show popup
       this.showPopup.set(true);
       modalRef.open({
-        message: 'Bạn có muốn sử dụng vị trí hiện tại của mình để kết quả điểm danh chính xác hơn không?',
-        confirmText: 'Sử dụng vị trí',
-        cancelText: 'Chỉ dùng WiFi',
+        message: 'Báº¡n cÃ³ muá»‘n sá»­ dá»¥ng vá»‹ trÃ­ hiá»‡n táº¡i cá»§a mÃ¬nh Ä‘á»ƒ káº¿t quáº£ Ä‘iá»ƒm danh chÃ­nh xÃ¡c hÆ¡n khÃ´ng?',
+        confirmText: 'Su dung vi tri',
+        cancelText: 'Chi dung WiFi',
         closeOnBackdropClick: true,
         onConfirm: () => {
           this.showPopup.set(false);
@@ -329,10 +402,10 @@ export class AttendanceContainerComponent implements OnInit {
     this.showPopup.set(false);
     // redirect to create remote request page
 
-    this.bridge.show('Check in của bạn sẽ được ghi nhận sau khi phiếu yêu cầu  được duyệt.');
+    this.bridge.show('Check in cá»§a báº¡n sáº½ Ä‘Æ°á»£c ghi nháº­n sau khi phiáº¿u yÃªu cáº§u  Ä‘Æ°á»£c duyá»‡t.');
     this.remoteRequestPending.set(true);
 
-    // giả lập yêu cầu được phê duyệt sao n(s)
+    // giáº£ láº­p yÃªu cáº§u Ä‘Æ°á»£c phÃª duyá»‡t sao n(s)
     setTimeout(() => {
       this.remoteRequestPending.set(false);
       this.bridge.clear();
@@ -341,9 +414,9 @@ export class AttendanceContainerComponent implements OnInit {
 
   openConfirmPopupRemote(modal?: ModalComponent, message?: string) {
     modal?.open({
-      message: message || 'Hệ thống đang ghi nhận vị trí của bạn sai (hoặc ngoài bán kính cho phép) hoặc chưa có phiếu làm Remote. Vui lòng tạo phiếu',
-      cancelText: 'Hủy',
-      confirmText: 'Tạo phiếu',
+      message: message || 'Há»‡ thá»‘ng Ä‘ang ghi nháº­n vá»‹ trÃ­ cá»§a báº¡n sai (hoáº·c ngoÃ i bÃ¡n kÃ­nh cho phÃ©p) hoáº·c chÆ°a cÃ³ phiáº¿u lÃ m Remote. Vui lÃ²ng táº¡o phiáº¿u',
+      cancelText: 'Há»§y',
+      confirmText: 'Táº¡o phiáº¿u',
       panelClass: 'my-custom-modal',
       closeOnBackdropClick: true,
       onConfirm: () => this.createRemoteRequest(),
@@ -360,10 +433,11 @@ export class AttendanceContainerComponent implements OnInit {
     this.showPopup.set(true);
     modalRef.open({
       message,
-      confirmText: 'Xác nhận',
+      confirmText: 'XÃ¡c nháº­n',
       closeOnBackdropClick: true,
       onCancel: () => this.showPopup.set(false),
       onConfirm: () => this.showPopup.set(false),
     });
   }
 }
+

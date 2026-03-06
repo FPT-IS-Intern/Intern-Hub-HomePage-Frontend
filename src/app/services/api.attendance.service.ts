@@ -35,9 +35,7 @@ export class AttendanceService {
   }
 
   getAttendanceStatus(latitude?: number, longitude?: number): Observable<ApiResponse<AttendanceStatusData>> {
-    let params = new HttpParams();
-    if (latitude != null) params = params.set('latitude', latitude.toString());
-    if (longitude != null) params = params.set('longitude', longitude.toString());
+    const params = this.buildParams(latitude, longitude);
 
     return this.http.get<ApiResponse<AttendanceStatusData>>(`${this.API_BASE_URL}/status`, { params }).pipe(
       map((res) => {
@@ -51,22 +49,19 @@ export class AttendanceService {
   }
 
   postCheckIn(latitude?: number, longitude?: number): Observable<ApiResponse<any>> {
-    let params = new HttpParams();
-    if (latitude != null) params = params.set('latitude', latitude.toString());
-    if (longitude != null) params = params.set('longitude', longitude.toString());
+    const params = this.buildParams(latitude, longitude);
     return this.http.post<ApiResponse<any>>(`${this.API_BASE_URL}/check-in`, null, { params });
   }
 
   postCheckOut(latitude?: number, longitude?: number): Observable<ApiResponse<any>> {
-    let params = new HttpParams();
-    if (latitude != null) params = params.set('latitude', latitude.toString());
-    if (longitude != null) params = params.set('longitude', longitude.toString());
+    const params = this.buildParams(latitude, longitude);
     return this.http.post<ApiResponse<any>>(`${this.API_BASE_URL}/check-out`, null, { params });
   }
 
   getAttendanceInWeek(): Observable<string[]> {
+    const params = this.buildParams();
     return this.http
-      .get<ApiResponse<WeeklyAttendanceItem[]>>(`${this.API_BASE_URL}/attendance-in-week`)
+      .get<ApiResponse<WeeklyAttendanceItem[]>>(`${this.API_BASE_URL}/attendance-in-week`, { params })
       .pipe(
         map((res) =>
           (res.data || [])
@@ -92,5 +87,12 @@ export class AttendanceService {
     if (!normalized) return '';
     if (normalized.length >= 3) return normalized.slice(0, 3);
     return normalized;
+  }
+
+  private buildParams(latitude?: number, longitude?: number): HttpParams {
+    let params = new HttpParams();
+    if (latitude != null) params = params.set('latitude', latitude.toString());
+    if (longitude != null) params = params.set('longitude', longitude.toString());
+    return params;
   }
 }
