@@ -16,9 +16,6 @@ export class AttendanceService {
   private http = inject(HttpClient);
   // Adjust this if your backend runs on a different port/path
   private readonly API_BASE_URL = `${getBaseUrl()}/hrm/attendance`;
-  private get USER_ID(): string {
-    return localStorage.getItem('userId') ?? '';
-  }
 
   checkNetwork(latitude?: number, longitude?: number): Observable<WiFiInfo> {
     let params = new HttpParams();
@@ -38,8 +35,7 @@ export class AttendanceService {
   }
 
   getAttendanceStatus(): Observable<ApiResponse<AttendanceStatusData>> {
-    const params = new HttpParams().set('userId', this.USER_ID);
-    return this.http.get<ApiResponse<AttendanceStatusData>>(`${this.API_BASE_URL}/status`, { params }).pipe(
+    return this.http.get<ApiResponse<AttendanceStatusData>>(`${this.API_BASE_URL}/status`).pipe(
       map((res) => {
         if (res.data) {
           if (res.data.checkInTime) res.data.checkInTime = res.data.checkInTime.substring(0, 5);
@@ -51,23 +47,22 @@ export class AttendanceService {
   }
 
   postCheckIn(latitude?: number, longitude?: number): Observable<ApiResponse<any>> {
-    let params = new HttpParams().set('userId', this.USER_ID.toString());
+    let params = new HttpParams();
     if (latitude != null) params = params.set('latitude', latitude.toString());
     if (longitude != null) params = params.set('longitude', longitude.toString());
     return this.http.post<ApiResponse<any>>(`${this.API_BASE_URL}/check-in`, null, { params });
   }
 
   postCheckOut(latitude?: number, longitude?: number): Observable<ApiResponse<any>> {
-    let params = new HttpParams().set('userId', this.USER_ID.toString());
+    let params = new HttpParams();
     if (latitude != null) params = params.set('latitude', latitude.toString());
     if (longitude != null) params = params.set('longitude', longitude.toString());
     return this.http.post<ApiResponse<any>>(`${this.API_BASE_URL}/check-out`, null, { params });
   }
 
   getAttendanceInWeek(): Observable<string[]> {
-    const params = new HttpParams().set('userId', this.USER_ID.toString());
     return this.http
-      .get<ApiResponse<WeeklyAttendanceItem[]>>(`${this.API_BASE_URL}/attendance-in-week`, { params })
+      .get<ApiResponse<WeeklyAttendanceItem[]>>(`${this.API_BASE_URL}/attendance-in-week`)
       .pipe(
         map((res) =>
           (res.data || [])
