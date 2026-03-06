@@ -33,3 +33,8 @@ export interface WiFiInfo {
 }
 
 export interface AttendanceStatusSummary extends AttendanceStatusData { }
+
+export interface WeeklyAttendanceItem {
+  dayOfWeek: string;
+  status: string;
+}

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { WeekdaySelectorComponent } from './weekday-selector.component';
 import { Weekday } from '../../models/weekday.model';
-import { ScheduleApiService } from '../../../../services/api.schedule.service';
+import { AttendanceService } from '../../../../services/api.attendance.service';
 
 @Component({
   selector: 'app-weekday-container',
@@ -11,7 +11,7 @@ import { ScheduleApiService } from '../../../../services/api.schedule.service';
   styleUrls: ['./weekday-container.component.scss'],
 })
 export class WeekdayContainerComponent implements OnInit {
-  private api = inject(ScheduleApiService);
+  private api = inject(AttendanceService);
 
   weekdays: Weekday[] = [
     { name: 'MON', checked: false },
@@ -22,15 +22,17 @@ export class WeekdayContainerComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.api.getCheckedDays().subscribe({
+    this.api.getAttendanceInWeek().subscribe({
       next: (daysFromApi) => this.updateCheckedState(daysFromApi),
       error: (err) => console.error('Lỗi khi tải dữ liệu:', err),
     });
   }
 
   private updateCheckedState(apiDays: string[]): void {
-    this.weekdays.forEach((day) => {
-      day.checked = apiDays.includes(day.name);
-    });
+    const checkedDaySet = new Set(apiDays.map((d) => String(d || '').trim().toUpperCase()));
+    this.weekdays = this.weekdays.map((day) => ({
+      ...day,
+      checked: checkedDaySet.has(day.name),
+    }));
   }
 }
