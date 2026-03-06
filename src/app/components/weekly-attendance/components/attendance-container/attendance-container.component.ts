@@ -38,6 +38,8 @@ export class AttendanceContainerComponent implements OnInit {
     canCheckOut: false,
     sessionOpen: false,
     openSessionBranchId: null,
+    currentBranchId: null,
+    canResetByBranchChange: false,
     statusMessage: null,
   });
   currentBranchId = signal<string | null>(null);
@@ -65,14 +67,15 @@ export class AttendanceContainerComponent implements OnInit {
   checkInDisplayMessage = computed(() => {
     if (!this.networkChecked()) return null;
     if (this.forceInitAfterCrossBranchCheckout()) return null;
+    if (!this.status().sessionOpen && this.status().canResetByBranchChange) return null;
     return this.showCrossBranchWarning() ? this.status().statusMessage : this.status().checkInMessage;
   });
 
-  checkOutDisplayMessage = computed(() =>
-    this.showCrossBranchWarning() || this.forceInitAfterCrossBranchCheckout()
-      ? null
-      : this.status().checkOutMessage
-  );
+  checkOutDisplayMessage = computed(() => {
+    if (this.showCrossBranchWarning() || this.forceInitAfterCrossBranchCheckout()) return null;
+    if (!this.status().sessionOpen && this.status().canResetByBranchChange) return null;
+    return this.status().checkOutMessage;
+  });
 
   isCheckInDisabled = computed(() =>
     this.showPopup() ||
@@ -94,47 +97,69 @@ export class AttendanceContainerComponent implements OnInit {
     this.isLoading.set(true);
     this.networkChecked.set(false);
     this.currentBranchId.set(null);
+    const fetchStatus = (latitude?: number, longitude?: number) => {
+      this.service.getAttendanceStatus(latitude, longitude).subscribe({
+        next: (res) => {
+          if (res.data) {
+            const shouldResetUiStatus = !res.data.sessionOpen && res.data.canResetByBranchChange;
+            this.status.set(
+              shouldResetUiStatus
+                ? {
+                    ...res.data,
+                    checkInTime: null,
+                    checkOutTime: null,
+                    checkInMessage: null,
+                    checkOutMessage: null,
+                    isCheckInValid: false,
+                    isCheckOutValid: false,
+                    statusMessage: null,
+                  }
+                : res.data
+            );
+            if (res.data.sessionOpen) {
+              this.forceInitAfterCrossBranchCheckout.set(false);
+            }
+          }
+        },
+        error: (err) => console.error('API Fail', err),
+        complete: () => this.isLoading.set(false),
+      });
+    };
+
+    const fetchNetworkAndStatus = (latitude?: number, longitude?: number) => {
+      this.service.checkNetwork(latitude, longitude).subscribe({
+        next: (wifi) => {
+          this.currentBranchId.set(wifi.branchId);
+          this.networkChecked.set(true);
+        },
+        error: () => this.networkChecked.set(true)
+      });
+      fetchStatus(latitude, longitude);
+    };
 
     if (navigator.permissions) {
       navigator.permissions.query({ name: 'geolocation' }).then((result) => {
-        if (result.state === 'granted') {
+        if (result.state !== 'denied') {
           navigator.geolocation.getCurrentPosition(
-            (pos) => this.service.checkNetwork(pos.coords.latitude, pos.coords.longitude).subscribe({
-              next: (wifi) => { this.currentBranchId.set(wifi.branchId); this.networkChecked.set(true); },
-              error: () => this.networkChecked.set(true)
-            }),
-            () => this.service.checkNetwork().subscribe({
-              next: (wifi) => { this.currentBranchId.set(wifi.branchId); this.networkChecked.set(true); },
-              error: () => this.networkChecked.set(true)
-            }),
+            (pos) => fetchNetworkAndStatus(pos.coords.latitude, pos.coords.longitude),
+            () => fetchNetworkAndStatus(),
             { timeout: 5000 }
           );
         } else {
-          this.service.checkNetwork().subscribe({
-            next: (wifi) => { this.currentBranchId.set(wifi.branchId); this.networkChecked.set(true); },
-            error: () => this.networkChecked.set(true)
-          });
+          fetchNetworkAndStatus();
         }
       });
     } else {
-      this.service.checkNetwork().subscribe({
-        next: (wifi) => { this.currentBranchId.set(wifi.branchId); this.networkChecked.set(true); },
-        error: () => this.networkChecked.set(true)
-      });
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => fetchNetworkAndStatus(pos.coords.latitude, pos.coords.longitude),
+          () => fetchNetworkAndStatus(),
+          { timeout: 5000 }
+        );
+      } else {
+        fetchNetworkAndStatus();
+      }
     }
-
-    this.service.getAttendanceStatus().subscribe({
-      next: (res) => {
-        if (res.data) {
-          this.status.set(res.data);
-          if (res.data.sessionOpen) {
-            this.forceInitAfterCrossBranchCheckout.set(false);
-          }
-        }
-      },
-      error: (err) => console.error('API Fail', err),
-      complete: () => this.isLoading.set(false),
-    });
   }
 
   /**

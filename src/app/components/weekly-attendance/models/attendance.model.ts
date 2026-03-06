@@ -9,6 +9,8 @@ export interface AttendanceStatusData {
   canCheckOut: boolean;
   sessionOpen: boolean;
   openSessionBranchId: string | null;
+  currentBranchId: string | null;
+  canResetByBranchChange: boolean;
   statusMessage: string | null;
 }
 

@@ -21,7 +21,7 @@ export class AttendanceService {
     let params = new HttpParams();
     if (latitude != null) params = params.set('latitude', latitude.toString());
     if (longitude != null) params = params.set('longitude', longitude.toString());
-
+    console.log('Checking network with params:', { latitude, longitude });
     return this.http.get<ApiResponse<WiFiInfo>>(`${this.API_BASE_URL}/check-point`, { params }).pipe(
       map((res) => {
         console.log('Raw network check response:', res);
@@ -34,8 +34,12 @@ export class AttendanceService {
     );
   }
 
-  getAttendanceStatus(): Observable<ApiResponse<AttendanceStatusData>> {
-    return this.http.get<ApiResponse<AttendanceStatusData>>(`${this.API_BASE_URL}/status`).pipe(
+  getAttendanceStatus(latitude?: number, longitude?: number): Observable<ApiResponse<AttendanceStatusData>> {
+    let params = new HttpParams();
+    if (latitude != null) params = params.set('latitude', latitude.toString());
+    if (longitude != null) params = params.set('longitude', longitude.toString());
+
+    return this.http.get<ApiResponse<AttendanceStatusData>>(`${this.API_BASE_URL}/status`, { params }).pipe(
       map((res) => {
         if (res.data) {
           if (res.data.checkInTime) res.data.checkInTime = res.data.checkInTime.substring(0, 5);
