@@ -218,7 +218,7 @@ export class AttendanceContainerComponent implements OnInit {
     this.popupShownInSession = true;
     modalRef.open({
       message:
-        'Bạn đã hoàn thành phiên điểm danh? Để tự động mở lại nút Check-In cho chi nhánh mới, trình duyệt cần được cấp quyền truy cập vị trí (GPS) để xác minh bạn đã đổi địa điểm. Vui lòng bật và cho phép truy cập vị trí nhé!',
+        'Bật vị trí (GPS) để hệ thống tự động mở lại nút điểm danh khi bạn Onsite.',
       confirmText: 'Sử dụng vị trí',
       cancelText: 'Bỏ qua',
       closeOnBackdropClick: true,
