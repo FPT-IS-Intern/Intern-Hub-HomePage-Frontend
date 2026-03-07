@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed, viewChild } from '@angular/core';
+﻿import { Component, OnInit, inject, signal, computed, viewChild } from '@angular/core';
 import { AttendanceService } from '../../../../services/api.attendance.service';
 import { AttendanceStatusData } from '../../models/attendance.model';
 import { AttendanceItemComponent } from './attendance-item.component';
@@ -18,15 +18,15 @@ export class AttendanceContainerComponent implements OnInit {
   private bridge = inject(NotificationService);
   modal = viewChild<ModalComponent>('modal');
 
-  // UI State
-  isLoading = signal(false);
-  showPopup = signal(false);
-  remoteRequestPending = signal(false);
-  checkInLoading = signal(false);
-  checkOutLoading = signal(false);
-  forceInitAfterCrossBranchCheckout = signal(false);
+  // Trạng thái giao diện (UI State)
+  isLoading = signal(false); // Đang tải dữ liệu tổng thể
+  showPopup = signal(false); // Đang hiển thị modal popup
+  remoteRequestPending = signal(false); // Đang chờ xử lý yêu cầu Remote
+  checkInLoading = signal(false); // Đang thực hiện call API Check-in
+  checkOutLoading = signal(false); // Đang thực hiện call API Check-out
+  forceInitAfterCrossBranchCheckout = signal(false); // Flag để reset UI sau khi đổi chi nhánh thành công
 
-  // Data State - Single source of truth from backend
+  // Dữ liệu từ Backend (Data State)
   status = signal<AttendanceStatusData>({
     checkInTime: null,
     checkOutTime: null,
@@ -42,19 +42,27 @@ export class AttendanceContainerComponent implements OnInit {
     canResetByBranchChange: false,
     statusMessage: null,
   });
-  currentBranchId = signal<string | null>(null);
-  networkChecked = signal(false);
+  currentBranchId = signal<string | null>(null); // ID chi nhánh hiện tại (từ checkNetwork)
+  networkChecked = signal(false); // Đã hoàn thành kiểm tra mạng/vị trí
+  private popupShownInSession = false; // Cờ theo dõi việc hiện popup trong một phiên (reload trang)
 
+  /**
+   * Kiểm tra xem vị trí hiện tại có khác chi nhánh của phiên đang mở không
+   */
   isDifferentBranch = computed(() => {
     const sessionBranch = this.status().openSessionBranchId;
     const currentBranch = this.currentBranchId();
     return !!sessionBranch && !!currentBranch && sessionBranch !== currentBranch;
   });
 
+  /**
+   * Hiển thị cảnh báo nếu đang ở chi nhánh khác khi phiên vẫn đang mở
+   */
   showCrossBranchWarning = computed(() => this.status().sessionOpen && this.isDifferentBranch());
 
   checkInLabel = computed(() => (this.remoteRequestPending() ? 'chờ ghi nhận...' : 'Check In'));
 
+  // Logic hiển thị giờ Check-in/out (ẩn đi nếu đang trong trạng thái reset hoặc cảnh báo)
   checkInDisplayTime = computed(() =>
     this.forceInitAfterCrossBranchCheckout() ? null : this.status().checkInTime
   );
@@ -64,6 +72,7 @@ export class AttendanceContainerComponent implements OnInit {
       : this.status().checkOutTime
   );
 
+  // Logic hiển thị tin nhắn trạng thái
   checkInDisplayMessage = computed(() => {
     if (!this.networkChecked()) return null;
     if (this.forceInitAfterCrossBranchCheckout()) return null;
@@ -77,6 +86,7 @@ export class AttendanceContainerComponent implements OnInit {
     return this.status().checkOutMessage;
   });
 
+  // Logic vô hiệu hóa nút bấm
   isCheckInDisabled = computed(() =>
     this.showPopup() ||
     this.remoteRequestPending() ||
@@ -93,27 +103,35 @@ export class AttendanceContainerComponent implements OnInit {
     this.refreshStatus();
   }
 
+  /**
+   * Làm mới trạng thái điểm danh và kiểm tra mạng/vị trí
+   */
   refreshStatus() {
     this.isLoading.set(true);
     this.networkChecked.set(false);
     this.currentBranchId.set(null);
+
+    /**
+     * Lấy dữ liệu trạng thái điểm danh từ Server
+     */
     const fetchStatus = (latitude?: number, longitude?: number) => {
       this.service.getAttendanceStatus(latitude, longitude).subscribe({
         next: (res) => {
           if (res.data) {
+            // Kiểm tra xem có cần reset UI (giờ giấc) về mặc định không (áp dụng khi đã Checkout và đổi chi nhánh)
             const shouldResetUiStatus = !res.data.sessionOpen && res.data.canResetByBranchChange;
             this.status.set(
               shouldResetUiStatus
                 ? {
-                    ...res.data,
-                    checkInTime: null,
-                    checkOutTime: null,
-                    checkInMessage: null,
-                    checkOutMessage: null,
-                    isCheckInValid: false,
-                    isCheckOutValid: false,
-                    statusMessage: null,
-                  }
+                  ...res.data,
+                  checkInTime: null,
+                  checkOutTime: null,
+                  checkInMessage: null,
+                  checkOutMessage: null,
+                  isCheckInValid: false,
+                  isCheckOutValid: false,
+                  statusMessage: null,
+                }
                 : res.data
             );
             if (res.data.sessionOpen) {
@@ -126,40 +144,97 @@ export class AttendanceContainerComponent implements OnInit {
       });
     };
 
+    /**
+     * Vừa kiểm tra chi nhánh qua mạng, vừa lấy trạng thái điểm danh
+     */
     const fetchNetworkAndStatus = (latitude?: number, longitude?: number) => {
       this.service.checkNetwork(latitude, longitude).subscribe({
         next: (wifi) => {
           this.currentBranchId.set(wifi.branchId);
           this.networkChecked.set(true);
         },
-        error: () => this.networkChecked.set(true)
+        error: () => this.networkChecked.set(true),
       });
       fetchStatus(latitude, longitude);
     };
 
+    // Luồng khởi tạo: Kiểm tra quyền GPS trước để quyết định cách gọi API
     if (navigator.permissions) {
       navigator.permissions.query({ name: 'geolocation' }).then((result) => {
-        if (result.state !== 'denied') {
+        if (result.state === 'granted') {
+          // Chỉ tự động gọi GPS nếu đã được cấp quyền trước đó (tránh hiện popup trình duyệt ngay khi load trang)
           navigator.geolocation.getCurrentPosition(
             (pos) => fetchNetworkAndStatus(pos.coords.latitude, pos.coords.longitude),
-            () => fetchNetworkAndStatus(),
+            () => fetchNetworkAndStatus(), // Fallback nếu có lỗi lấy tọa độ (ví dụ: timeout)
             { timeout: 5000 }
           );
         } else {
+          // Với trạng thái 'prompt' hoặc 'denied': Không gọi GPS ngay mà chỉ check qua IP/WiFi để tránh làm phiền
           fetchNetworkAndStatus();
         }
       });
     } else {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => fetchNetworkAndStatus(pos.coords.latitude, pos.coords.longitude),
-          () => fetchNetworkAndStatus(),
-          { timeout: 5000 }
-        );
-      } else {
-        fetchNetworkAndStatus();
-      }
+      // Fallback cho trình duyệt cũ: Chỉ check qua IP/WiFi để an toàn
+      fetchNetworkAndStatus();
     }
+
+    // Delayed check for location help popup (3s)
+    setTimeout(() => {
+      // Chỉ hiện 1 lần duy nhất trong 1 lần load trang
+      if (this.popupShownInSession) return;
+
+      const s = this.status();
+
+      // Điều kiện hiện popup trợ giúp của riêng mình:
+      // 1. Đã hoàn thành cả Check-In và Check-Out
+      const hasCompletedToday = s.checkInTime && s.checkOutTime;
+      // 2. Nút Check-In vẫn đang bị khóa (chưa được reset)
+      const notReset = !s.canCheckIn;
+
+      if (hasCompletedToday && notReset) {
+        if (navigator.permissions) {
+          navigator.permissions.query({ name: 'geolocation' }).then((p) => {
+            // 3. Nếu quyền vị trí chưa được cấp (prompt) hoặc bị chặn (denied)
+            // Hiện popup trợ giúp của mình trước khi gọi yêu cầu của trình duyệt
+            if (p.state !== 'granted') {
+              this.showLocationPermissionPopup();
+            }
+          });
+        } else {
+          this.showLocationPermissionPopup();
+        }
+      }
+    }, 3000);
+  }
+
+  /**
+   * Hiển thị popup giải thích lý do cần vị trí để giúp người dùng reset nút điểm danh
+   */
+  private showLocationPermissionPopup() {
+    const modalRef = this.modal();
+    if (!modalRef) return;
+
+    this.showPopup.set(true);
+    this.popupShownInSession = true;
+    modalRef.open({
+      message:
+        'Bạn đã hoàn thành phiên điểm danh? Để tự động mở lại nút Check-In cho chi nhánh mới, trình duyệt cần được cấp quyền truy cập vị trí (GPS) để xác minh bạn đã đổi địa điểm. Vui lòng bật và cho phép truy cập vị trí nhé!',
+      confirmText: 'Sử dụng vị trí',
+      cancelText: 'Bỏ qua',
+      closeOnBackdropClick: true,
+      onConfirm: () => {
+        this.showPopup.set(false);
+        if (navigator.geolocation) {
+          // Gọi lấy GPS - Lúc này trình duyệt sẽ hiện popup mặc định của nó
+          navigator.geolocation.getCurrentPosition(
+            () => this.refreshStatus(),
+            () => this.refreshStatus(),
+            { timeout: 10000 }
+          );
+        }
+      },
+      onCancel: () => this.showPopup.set(false),
+    });
   }
 
   /**
