@@ -25,6 +25,7 @@
   top: 0;
   left: 0;
   transform-origin: top left;
+  padding: 0 7px;
 }
 
 .main-wrapper {
@@ -49,6 +50,7 @@
 
     .banner {
       // Styles cho banner nếu cần
+      overflow: visible;
     }
 
     .menu-list {

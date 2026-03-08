@@ -101,7 +101,7 @@
 }
 
 .banner-slider__button:hover:not(:disabled) {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 1px 10.8px 0px rgba(0, 0, 0, 0.2) !important;
 }
 
 .banner-slider__button:disabled {

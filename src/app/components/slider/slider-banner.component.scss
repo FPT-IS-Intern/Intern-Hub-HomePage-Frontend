@@ -1,6 +1,7 @@
 @use 'variables' as *;
 
 app-banner-slider {
+
   .banner-slider {
     border-radius: $radius-lg;
 
@@ -18,18 +19,21 @@ app-banner-slider {
       }
 
       &--prev {
-        left: -10px;
+        // left: -10px;
+        left: 0;
       }
 
       &--next {
-        right: -10px;
+        //right: -10px;
+         right: 0;
       }
     }
   }
 
   .banner-container {
-    max-width: 848px;
-    min-width: 680px;
+    padding: 0 12px;
+    //max-width: 848px;
+    //min-width: 680px;
   }
 
   .banner-slider-container {
