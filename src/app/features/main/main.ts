@@ -55,7 +55,7 @@ export class Main implements OnInit, AfterViewInit, OnDestroy {
     const contentHeight = Math.max(this.scaleContent.nativeElement.scrollHeight, 760);
     const widthRatio = window.innerWidth / this.designWidth;
     const heightRatio = window.innerHeight / contentHeight;
-    const nextScale = Math.min(widthRatio, heightRatio, 1);
+    const nextScale = Math.min(widthRatio, heightRatio);
 
     this.canvasHeight.set(contentHeight);
     this.viewportScale.set(nextScale > 0 ? nextScale : 1);
