@@ -18,6 +18,7 @@ export class Main implements OnInit, AfterViewInit, OnDestroy {
   protected readonly canvasHeight = signal(760);
 
   @ViewChild('scaleContent') private scaleContent?: ElementRef<HTMLElement>;
+  @ViewChild('scaleShell') private scaleShell?: ElementRef<HTMLElement>;
   private resizeObserver?: ResizeObserver;
 
   ngOnInit() {
@@ -39,22 +40,25 @@ export class Main implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private observeContentHeight(): void {
-    if (!this.scaleContent) {
+    if (!this.scaleContent || !this.scaleShell) {
       return;
     }
 
     this.resizeObserver = new ResizeObserver(() => this.updateScale());
     this.resizeObserver.observe(this.scaleContent.nativeElement);
+    this.resizeObserver.observe(this.scaleShell.nativeElement);
   }
 
   private updateScale(): void {
-    if (!this.scaleContent || typeof window === 'undefined') {
+    if (!this.scaleContent) {
       return;
     }
 
     const contentHeight = Math.max(this.scaleContent.nativeElement.scrollHeight, 760);
-    const widthRatio = window.innerWidth / this.designWidth;
-    const heightRatio = window.innerHeight / contentHeight;
+    const availableWidth = this.scaleShell?.nativeElement.clientWidth ?? window.innerWidth;
+    const availableHeight = this.scaleShell?.nativeElement.clientHeight ?? window.innerHeight;
+    const widthRatio = availableWidth / this.designWidth;
+    const heightRatio = availableHeight / contentHeight;
     const nextScale = Math.min(widthRatio, heightRatio);
 
     this.canvasHeight.set(contentHeight);
