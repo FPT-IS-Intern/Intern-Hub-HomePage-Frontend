@@ -56,10 +56,9 @@ export class Main implements OnInit, AfterViewInit, OnDestroy {
 
     const contentHeight = Math.max(this.scaleContent.nativeElement.scrollHeight, 760);
     const availableWidth = this.scaleShell?.nativeElement.clientWidth ?? window.innerWidth;
-    const availableHeight = this.scaleShell?.nativeElement.clientHeight ?? window.innerHeight;
     const widthRatio = availableWidth / this.designWidth;
-    const heightRatio = availableHeight / contentHeight;
-    const nextScale = Math.min(widthRatio, heightRatio);
+    // Prioritize filling horizontal space; vertical overflow is clipped by shell.
+    const nextScale = widthRatio;
 
     this.canvasHeight.set(contentHeight);
     this.viewportScale.set(nextScale > 0 ? nextScale : 1);
