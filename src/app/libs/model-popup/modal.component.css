@@ -74,3 +74,37 @@
     background: #ff8a00;
     color: #fff;
 }
+
+.my-custom-modal {
+    padding: 16px;
+    width: 288px;
+}
+
+.my-custom-modal .message {
+    margin: 0;
+    padding-bottom: 18.4px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.my-custom-modal .actions {
+    height: 36px;
+    margin-top: 16px;
+    gap: 8px;
+}
+
+.my-custom-modal .actions .btn {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.my-custom-modal .actions .btn>span {
+    margin: 0 8px;
+}
+
+.my-custom-modal .actions .btn.cancel {
+    border: 1px #ff8a00 solid !important;
+    background: none;
+    color: #ff8a00;
+}
