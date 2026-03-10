@@ -416,7 +416,8 @@ export class AttendanceContainerComponent implements OnInit {
 
   openConfirmPopupRemote(modal?: ModalComponent, message?: string) {
     modal?.open({
-      message: message || 'Hệ thống đang ghi nhận vị trí của bạn sai (hoặc ngoài bán kính cho phép) hoặc chưa có phiếu làm Remote. Vui lòng tạo phiếu',
+      // message: message || 'Hệ thống đang ghi nhận vị trí của bạn sai (hoặc ngoài bán kính cho phép) hoặc chưa có phiếu làm Remote. Vui lòng tạo phiếu',
+      message: 'Vui lòng đến địa điểm làm việc để checkin',
       cancelText: 'Hủy',
       confirmText: 'Tạo phiếu',
       panelClass: 'my-custom-modal',
