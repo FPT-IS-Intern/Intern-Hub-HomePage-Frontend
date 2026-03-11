@@ -39,18 +39,11 @@
     margin-right: 1rem;
     gap: 2.25rem;
     /* 36px */
-    width: 100%;
     flex: 1;
-    min-width: 60vw;
-    max-width: 60vw;
+    min-width: 0;
 
     .banner {
-      // Styles cho banner nếu cần
       overflow: visible;
-    }
-
-    .menu-list {
-      // Styles cho menu-list nếu cần
     }
   }
 
