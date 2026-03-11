@@ -133,11 +133,11 @@
         height: 16px;
 
         &.dsi-check-circle-line {
-          color: $text-success !important;
+          color: var(--success-500) !important;
         }
 
         &.dsi-x-circle-line {
-          color: $text-error !important;
+          color: var(--utility-600) !important;
         }
       }
 
@@ -149,14 +149,14 @@
         font-weight: $font-weight-regular;
         line-height: $line-height-2xs;
         letter-spacing: $letter-spacing-normal;
-        color: $text-success;
+        color: var(--success-500);
 
         &.text-error {
-          color: $text-error !important;
+          color: var(--utility-600) !important;
         }
 
         &.text-success {
-          color: $text-success !important;
+          color: var(--success-500) !important;
         }
       }
     }
