@@ -6,7 +6,7 @@ export function getBaseUrl(serviceName?: string): string {
   // }
 
   console.error('Shell environment not found! Application must be run within the Shell App.');
-  return 'http://localhost:8080';
+  return '';
 }
 
 export function getFileBaseUrl(): string {
