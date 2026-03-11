@@ -131,6 +131,7 @@
       box-sizing: border-box;
 
       .button-content {
+        color: $text-muted;
         font-size: $font-size-sm !important;
         line-height: $line-height-sm;
       }
@@ -140,8 +141,8 @@
   /* --- New Wrapper Styles --- */
   .card-list-wrapper {
     position: relative;
-    height: 100%;
-    min-height: 250px;
+    // height: 100%;
+    // min-height: 250px;
     background-color: $color-white;
     border-radius: 16px;
     // border: 1px solid $color-underline; /* Hoặc #e8e8e8 tùy theo variable */
@@ -151,16 +152,12 @@
   }
 
   .empty-state-overlay {
-    position: absolute;
-    top: 3.75rem;
-    /* Chiều cao header */
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 10;
     background-color: $color-white;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: 1;
+    border-top: 1px rgba(2, 48, 94, 0.08) solid;
+    /* Dự phòng nếu thẻ cha không áp đặt chiều cao tối đa */
   }
 }

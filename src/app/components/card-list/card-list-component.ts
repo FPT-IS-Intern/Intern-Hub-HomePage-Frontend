@@ -33,8 +33,6 @@ export class CardListComponent {
     const template = this.actionsTemplate();
     return this.rawData().map(item => ({
       ...item,
-      textLeftTitle: item.name || item.textLeftTitle,
-      textLeftSub: item.date || item.textLeftSub,
       rightTemplate: template,
       rightContext: { row: item }
     }));

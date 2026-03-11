@@ -3,20 +3,16 @@
   </app-approval-list>
 
   @if (formattedItems().length === 0) {
-    <div class="empty-state-overlay">
-      <app-empty-state text="Không tìm thấy dữ liệu"></app-empty-state>
-    </div>
+  <div class="empty-state-overlay">
+    <app-empty-state text="Không tìm thấy dữ liệu"></app-empty-state>
+  </div>
   }
 
 </div>
 
-
-
-
-
 <ng-template #actionsTemplate let-row="row">
   <div class="action-buttons" style="display: flex; gap: 8px;">
-    <app-button-container content="Xem chi tiết" colorDefault="rgb(238, 142, 27)" size="xs"
+    <app-button-container content="Xem chi tiết" color="rgb(238, 142, 27)" size="xs"
       (buttonClick)="onApprove.emit(row)">
     </app-button-container>
   </div>

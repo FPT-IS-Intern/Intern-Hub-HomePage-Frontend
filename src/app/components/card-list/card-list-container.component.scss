@@ -1,3 +1,5 @@
+@use 'variables' as *;
+
 .container-layout {
     display: flex;
     flex-direction: row;
@@ -6,4 +8,6 @@
 
 app-card-list {
     flex-basis: 50%;
+    background-color: $color-white;
+    border-radius: 16px;
 }
