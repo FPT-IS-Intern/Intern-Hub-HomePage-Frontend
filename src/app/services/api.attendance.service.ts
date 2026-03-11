@@ -14,15 +14,17 @@ import { getBaseUrl } from '../core/config/app-config';
 @Injectable({ providedIn: 'root' })
 export class AttendanceService {
   private http = inject(HttpClient);
-  // Adjust this if your backend runs on a different port/path
-  private readonly API_BASE_URL = `${getBaseUrl()}/hrm/attendance`;
+  // Compute lazily so it picks up window.__env even if it is set after service init.
+  private get apiBaseUrl(): string {
+    return `${getBaseUrl()}/hrm/attendance`;
+  }
 
   checkNetwork(latitude?: number, longitude?: number): Observable<WiFiInfo> {
     let params = new HttpParams();
     if (latitude != null) params = params.set('latitude', latitude.toString());
     if (longitude != null) params = params.set('longitude', longitude.toString());
     console.log('Checking network with params:', { latitude, longitude });
-    return this.http.get<ApiResponse<WiFiInfo>>(`${this.API_BASE_URL}/check-point`, { params }).pipe(
+    return this.http.get<ApiResponse<WiFiInfo>>(`${this.apiBaseUrl}/check-point`, { params }).pipe(
       map((res) => {
         console.log('Raw network check response:', res);
         return {
@@ -37,7 +39,7 @@ export class AttendanceService {
   getAttendanceStatus(latitude?: number, longitude?: number): Observable<ApiResponse<AttendanceStatusData>> {
     const params = this.buildParams(latitude, longitude);
 
-    return this.http.get<ApiResponse<AttendanceStatusData>>(`${this.API_BASE_URL}/status`, { params }).pipe(
+    return this.http.get<ApiResponse<AttendanceStatusData>>(`${this.apiBaseUrl}/status`, { params }).pipe(
       map((res) => {
         if (res.data) {
           if (res.data.checkInTime) res.data.checkInTime = res.data.checkInTime.substring(0, 5);
@@ -50,18 +52,18 @@ export class AttendanceService {
 
   postCheckIn(latitude?: number, longitude?: number): Observable<ApiResponse<any>> {
     const params = this.buildParams(latitude, longitude);
-    return this.http.post<ApiResponse<any>>(`${this.API_BASE_URL}/check-in`, null, { params });
+    return this.http.post<ApiResponse<any>>(`${this.apiBaseUrl}/check-in`, null, { params });
   }
 
   postCheckOut(latitude?: number, longitude?: number): Observable<ApiResponse<any>> {
     const params = this.buildParams(latitude, longitude);
-    return this.http.post<ApiResponse<any>>(`${this.API_BASE_URL}/check-out`, null, { params });
+    return this.http.post<ApiResponse<any>>(`${this.apiBaseUrl}/check-out`, null, { params });
   }
 
   getAttendanceInWeek(): Observable<string[]> {
     const params = this.buildParams();
     return this.http
-      .get<ApiResponse<WeeklyAttendanceItem[]>>(`${this.API_BASE_URL}/attendance-in-week`, { params })
+      .get<ApiResponse<WeeklyAttendanceItem[]>>(`${this.apiBaseUrl}/attendance-in-week`, { params })
       .pipe(
         map((res) =>
           (res.data || [])
