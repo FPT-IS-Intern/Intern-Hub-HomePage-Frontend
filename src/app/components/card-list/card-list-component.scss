@@ -144,7 +144,7 @@
     min-height: 250px;
     background-color: $color-white;
     border-radius: 16px;
-    border: 1px solid $color-underline; /* Hoặc #e8e8e8 tùy theo variable */
+    // border: 1px solid $color-underline; /* Hoặc #e8e8e8 tùy theo variable */
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -152,7 +152,8 @@
 
   .empty-state-overlay {
     position: absolute;
-    top: 3.75rem; /* Chiều cao header */
+    top: 3.75rem;
+    /* Chiều cao header */
     left: 0;
     right: 0;
     bottom: 0;
@@ -163,4 +164,3 @@
     justify-content: center;
   }
 }
-
