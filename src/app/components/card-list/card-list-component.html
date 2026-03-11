@@ -1,16 +1,19 @@
-<app-approval-list 
-      [rows]="formattedItems()" 
-      [headerContentLeft]="headerTitle()" 
-      headerContentRight="Xem tất cả">
-    </app-approval-list>
+<div style="position: relative; height: 100%; background-color: #fff; border-radius: 8px; border: 1px solid #e8e8e8; overflow: hidden; display: flex; flex-direction: column;">
+  <app-approval-list [rows]="formattedItems()" [headerContentLeft]="headerTitle()" headerContentRight="Xem tất cả">
+  </app-approval-list>
 
-    <ng-template #actionsTemplate let-row="row">
-      <div class="action-buttons" style="display: flex; gap: 8px;">
-        <app-button-container 
-          content="Xem chi tiết" 
-          colorDefault="rgb(238, 142, 27)" 
-          size="xs" 
-          (buttonClick)="onApprove.emit(row)">
-        </app-button-container>
-      </div>
-    </ng-template>    
+  <div *ngIf="formattedItems().length === 0"
+    style="position: absolute; top: 3.75rem; left: 0; right: 0; bottom: 0; z-index: 10; background-color: #fff;">
+    <app-empty-state text="Không tìm thấy dữ liệu" style="display: block; height: 100%;"></app-empty-state>
+  </div>
+</div>
+
+
+
+<ng-template #actionsTemplate let-row="row">
+  <div class="action-buttons" style="display: flex; gap: 8px;">
+    <app-button-container content="Xem chi tiết" colorDefault="rgb(238, 142, 27)" size="xs"
+      (buttonClick)="onApprove.emit(row)">
+    </app-button-container>
+  </div>
+</ng-template>

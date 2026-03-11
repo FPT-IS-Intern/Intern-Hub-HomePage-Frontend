@@ -5,6 +5,7 @@ import {
   ApprovalListItemInterface,
   ButtonContainerComponent
 } from "@goat-bravos/intern-hub-layout";
+import { EmptyStateComponent } from '../empty-state/empty-state.component';
 
 @Component({
   selector: 'app-card-list',
@@ -12,7 +13,8 @@ import {
   imports: [
     CommonModule,
     ApprovalListComponent,
-    ButtonContainerComponent
+    ButtonContainerComponent,
+    EmptyStateComponent
   ],
   templateUrl: './card-list-component.html',
   styleUrls: ['./card-list-component.scss']
