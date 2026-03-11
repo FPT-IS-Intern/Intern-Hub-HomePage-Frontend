@@ -41,7 +41,8 @@
     /* 36px */
     width: 100%;
     flex: 1;
-    min-width: 0;
+    min-width: 60vw;
+    max-width: 60vw;
 
     .banner {
       // Styles cho banner nếu cần
