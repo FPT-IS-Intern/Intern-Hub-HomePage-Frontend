@@ -5,33 +5,42 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 1.25rem;
+  /* 20px */
 }
 
 :host ::ng-deep .my-custom-modal {
-  padding: 16px;
-  width: 288px;
+  padding: 1rem;
+  /* 16px */
+  width: 18rem;
+  /* 288px */
 
   .message {
     margin: 0;
-    padding-bottom: 18.4px;
+    padding-bottom: 1.15rem;
+    /* 18.4px */
     font-size: $font-size-xs;
     font-weight: $font-weight-regular;
     line-height: $line-height-xs;
   }
 
   .actions {
-    height: 36px;
-    margin-top: 16px;
-    gap: 8px;
+    height: 2.25rem;
+    /* 36px */
+    margin-top: 1rem;
+    /* 16px */
+    gap: 0.5rem;
+    /* 8px */
 
     .btn {
-      padding: 8px 12px;
+      padding: 0.5rem 0.75rem;
+      /* 8px 12px */
       font-size: $font-size-sm;
     }
 
     .btn>span {
-      margin: 0 8px;
+      margin: 0 0.5rem;
+      /* 8px */
     }
 
     .btn.cancel {

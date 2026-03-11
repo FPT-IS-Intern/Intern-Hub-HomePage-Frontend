@@ -6,7 +6,8 @@ app-banner-slider {
     border-radius: $radius-lg;
 
     &__slide-image {
-      height: 345px;
+      height: 21.5625rem;
+      /* 345px */
     }
 
     &__button {
@@ -25,13 +26,14 @@ app-banner-slider {
 
       &--next {
         //right: -10px;
-         right: 0;
+        right: 0;
       }
     }
   }
 
   .banner-container {
-    padding: 0 12px;
+    padding: 0 0.75rem;
+    /* 12px */
     //max-width: 848px;
     //min-width: 680px;
   }
@@ -44,13 +46,16 @@ app-banner-slider {
 app-banner-slider-view-all-button {
   .banner-slider {
     &__view-all {
-      bottom: -17px;
+      bottom: -1.0625rem;
+      /* -17px */
     }
 
     &__view-all-button {
       border-radius: $radius-lg;
-      padding: 0 20px;
-      height: 49px;
+      padding: 0 1.25rem;
+      /* 20px */
+      height: 3.0625rem;
+      /* 49px */
       background: linear-gradient(to bottom,
           $color-white 0%,
           rgba($light-orange, 0.8) 100%);

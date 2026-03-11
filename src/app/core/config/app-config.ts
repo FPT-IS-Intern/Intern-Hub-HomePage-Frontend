@@ -1,12 +1,12 @@
 export function getBaseUrl(serviceName?: string): string {
   const shellEnv = (window as any).__env;
 
-  if (shellEnv && shellEnv.apiUrl) {
-    return shellEnv.apiUrl;
-  }
+  // if (shellEnv && shellEnv.apiUrl) {
+  //   return shellEnv.apiUrl;
+  // }
 
   console.error('Shell environment not found! Application must be run within the Shell App.');
-  return '';
+  return 'http://localhost:8080';
 }
 
 export function getFileBaseUrl(): string {

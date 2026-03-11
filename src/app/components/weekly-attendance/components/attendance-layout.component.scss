@@ -5,10 +5,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 16px;
-    width: 383px;
+    gap: 1rem;
+    /* 16px */
+    width: 23.9375rem;
+    /* 383px */
     height: 100%;
-    padding: 24px;
+    padding: 1.5rem;
+    /* 24px */
     background: $color-white;
     border-radius: $radius-md;
 
@@ -16,36 +19,42 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: 20px;
+        gap: 1.25rem;
+        /* 20px */
     }
 
     .btn-group-ticket {
         display: flex;
         flex-direction: row;
-        gap: 12px;
+        gap: 0.75rem;
+        /* 12px */
 
         ::ng-deep {
             app-button-container button {
-                width: 165.5px !important;
+                width: 10.34375rem !important;
+                /* 165.5px */
             }
 
             app-create-ticket-btn button {
-                padding: 0 2.75px !important;
+                padding: 0 0.171875rem !important;
+                /* 2.75px */
             }
         }
     }
 
     ::ng-deep .simple-text-box {
         display: block;
-        border: 1px solid  rgb(218, 132, 26);
+        border: 1px solid rgb(218, 132, 26);
         box-shadow:
             0px 3px 6px -2px rgba(2, 48, 94, 0.087),
             0px 12px 16px -8px rgba(2, 48, 94, 0.087);
         border-radius: 8px;
         background-color: var(--brand-50);
         color: rgb(78, 31, 0);
-        padding: 12px 10px;
-        font-size: 12px;
+        padding: 0.75rem 0.625rem;
+        /* 12px 10px */
+        font-size: 0.75rem;
+        /* 12px */
         font-weight: 400;
     }
 }

@@ -46,8 +46,10 @@
     background-color: $bg-checkin-top;
     border-top-left-radius: $radius-md;
     border-top-right-radius: $radius-md;
-    height: 104px;
-    width: 162px;
+    height: 6.5rem;
+    /* 104px */
+    width: 10.125rem;
+    /* 162px */
     transition: background 0.5s ease;
 
     .attendance-icon {
@@ -60,13 +62,16 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 0.375rem;
+    /* 6px */
     background: $bg-checkin-btm;
-    padding: 12px 8px;
+    padding: 0.75rem 0.5rem;
+    /* 12px 8px */
     border-bottom-left-radius: $radius-sm;
     border-bottom-right-radius: $radius-sm;
     position: relative;
-    min-height: 80px;
+    min-height: 5rem;
+    /* 80px */
     transition: background 0.5s ease;
 
     .response-time-wrapper {
@@ -86,8 +91,10 @@
     }
 
     .action-button {
-      width: 146px;
-      height: 36px;
+      width: 9.125rem;
+      /* 146px */
+      height: 2.25rem;
+      /* 36px */
       background-color: $accent-orange;
       border-radius: $radius-xs;
       border: none;
@@ -122,15 +129,20 @@
     .status-container {
       display: flex;
       flex-direction: row;
-      gap: 4px;
+      gap: 0.25rem;
+      /* 4px */
       align-items: center;
       transition: all 0.5s ease;
-      height: 36px;
-      width: 146px;
+      height: 2.25rem;
+      /* 36px */
+      width: 9.125rem;
+      /* 146px */
 
       .status-icon {
-        width: 16px;
-        height: 16px;
+        width: 1rem;
+        /* 16px */
+        height: 1rem;
+        /* 16px */
 
         &.dsi-check-circle-line {
           color: var(--success-500) !important;

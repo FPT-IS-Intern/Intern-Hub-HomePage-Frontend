@@ -1,5 +1,10 @@
 @use 'dynamic-ds/src/lib/styles/system-design';
 
+html {
+  /* Giới hạn font-size nhỏ nhất ở mức tương đương viewport 1071px để không vỡ layout */
+  font-size: clamp(13.83px, (100vw / 1239) * 16, 20px);
+}
+
 html,
 body {
   width: 100%;

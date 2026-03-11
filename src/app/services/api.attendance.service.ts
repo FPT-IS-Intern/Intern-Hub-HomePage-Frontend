@@ -16,6 +16,8 @@ export class AttendanceService {
   private http = inject(HttpClient);
   // Adjust this if your backend runs on a different port/path
   private readonly API_BASE_URL = `${getBaseUrl()}/hrm/attendance`;
+  private readonly USE_TEST_USER_ID = true;
+  private readonly TEST_USER_ID = '9155938493849600';
 
   checkNetwork(latitude?: number, longitude?: number): Observable<WiFiInfo> {
     let params = new HttpParams();
@@ -91,6 +93,7 @@ export class AttendanceService {
 
   private buildParams(latitude?: number, longitude?: number): HttpParams {
     let params = new HttpParams();
+    if (this.USE_TEST_USER_ID) params = params.set('userId', this.TEST_USER_ID);
     if (latitude != null) params = params.set('latitude', latitude.toString());
     if (longitude != null) params = params.set('longitude', longitude.toString());
     return params;

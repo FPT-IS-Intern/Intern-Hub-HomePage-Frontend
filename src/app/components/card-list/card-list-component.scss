@@ -14,7 +14,8 @@
     .approval-item {
       padding: 0 !important;
       display: flex;
-      min-width: 328px;
+      min-width: 20.5rem;
+      /* 328px */
     }
 
     &-header {
@@ -26,21 +27,26 @@
 
       .approval-list-header-left {
         display: inline-block;
-        padding: 12px 12px 11.2px;
+        padding: 0.75rem 0.75rem 0.7rem;
+        /* 12px 12px 11.2px */
         line-height: $line-height-md;
-        height: 60px;
+        height: 3.75rem;
+        /* 60px */
         box-sizing: border-box;
       }
 
       >div {
         text-align: end;
-        padding: 16px 12px 15.2px;
-        height: 60px;
+        padding: 1rem 0.75rem 0.95rem;
+        /* 16px 12px 15.2px */
+        height: 3.75rem;
+        /* 60px */
         box-sizing: border-box;
 
         p {
           margin: 0;
-          padding: 4px 0;
+          padding: 0.25rem 0;
+          /* 4px 0 */
           color: $text-success;
           font-weight: $font-weight-bold;
           line-height: $line-height-sm;
@@ -58,10 +64,13 @@
         }
 
         &-left {
-          gap: 2px;
-          padding: 12px 12px 11.2px;
+          gap: 0.125rem;
+          /* 2px */
+          padding: 0.75rem 0.75rem 0.7rem;
+          /* 12px 12px 11.2px */
           border-top: $border-light;
-          height: 70px;
+          height: 4.375rem;
+          /* 70px */
           box-sizing: border-box;
           white-space: nowrap;
           overflow: hidden;
@@ -70,7 +79,8 @@
             display: block;
             font-weight: $font-weight-bold;
             line-height: $line-height-sm;
-            padding-top: 4px;
+            padding-top: 0.25rem;
+            /* 4px */
 
             overflow: hidden;
             text-overflow: ellipsis;
@@ -82,7 +92,8 @@
             font-size: $font-size-xs;
             font-weight: $font-weight-bold;
             line-height: $line-height-xs;
-            padding-bottom: 4px;
+            padding-bottom: 0.25rem;
+            /* 4px */
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -100,8 +111,10 @@
           .action-buttons {
             display: flex;
             justify-content: flex-end;
-            padding: 21px 12px 20.2px;
-            height: 70px;
+            padding: 1.3125rem 0.75rem 1.2625rem;
+            /* 21px 12px 20.2px */
+            height: 4.375rem;
+            /* 70px */
             box-sizing: border-box;
           }
         }
@@ -113,7 +126,8 @@
     .button-container {
       background-color: $color-white;
       height: auto !important;
-      padding: 4px 0;
+      padding: 0.25rem 0;
+      /* 4px 0 */
       box-sizing: border-box;
 
       .button-content {

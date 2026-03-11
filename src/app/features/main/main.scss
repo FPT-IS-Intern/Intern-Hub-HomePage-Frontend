@@ -3,47 +3,41 @@
   width: 100%;
   height: 100%;
   min-height: 0;
-  overflow: hidden;
+  overflow: auto;
 }
 
-.scale-shell {
+.main-container {
   width: 100%;
   height: 100%;
-  min-height: 0;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  overflow: hidden;
-}
-
-.scale-stage {
-  position: relative;
-}
-
-.scale-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform-origin: top left;
-  padding: 0 7px;
+  padding: 0 0.4375rem;
+  /* 7px */
 }
 
 .main-wrapper {
   display: flex;
   justify-content: center;
+  width: 100%;
 }
 
 .main {
   display: flex;
   flex-direction: row;
-  gap: 16px;
-  min-width: 1071px;
-  max-width: 1239px;
+  gap: 1rem;
+  /* 16px */
+  max-width: 77.4375rem;
+  /* 1239px */
+  min-width: 66.9375rem;
+  /* 1071px */
+  width: 100%;
 
   .main-right {
     display: flex;
     flex-direction: column;
-    gap: 36px;
+    gap: 2.25rem;
+    /* 36px */
     width: 100%;
     flex: 1;
     min-width: 0;
