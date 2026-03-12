@@ -13,15 +13,15 @@ export class ApprovalService {
     {
       title: 'Dự Án',
       items: [
-        { id: 1, name: 'EximBank', date: '2024-01-15', type: 'leave' },
-        { id: 2, name: 'Intern Hub', date: '2024-01-14', type: 'expense' },
+        // { id: 1, name: 'EximBank', date: '2024-01-15', type: 'leave' },
+        // { id: 2, name: 'Intern Hub', date: '2024-01-14', type: 'expense' },
       ],
     },
     {
       title: 'Task',
       items: [
-        { id: 1, name: 'Log 60 bug', date: '2024-02-01', type: 'mission' },
-        { id: 2, name: 'Design Bacground UIUX', date: '2024-02-05', type: 'security' },
+        // { id: 1, name: 'Log 60 bug', date: '2024-02-01', type: 'mission' },
+        // { id: 2, name: 'Design Bacground UIUX', date: '2024-02-05', type: 'security' },
       ],
     },
   ];
