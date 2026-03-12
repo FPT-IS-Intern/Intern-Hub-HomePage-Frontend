@@ -22,7 +22,7 @@ export class AttendanceItemComponent {
 
   onAction = output<void>();
 
-  isError = computed(() => this.isCheckTimeValid());
+  isError = computed(() => !this.isCheckTimeValid());
 
   statusIcon = computed(() => this.isError()
     ? 'dsi-x-circle-line'

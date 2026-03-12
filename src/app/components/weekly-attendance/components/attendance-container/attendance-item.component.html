@@ -7,7 +7,7 @@
       <p [class.time]="time()">{{ time() ?? '--:--' }}</p>
     </div>
 
-    @if (!statusMessage()) {
+    @if (statusMessage()) {
     <button class="action-button" [disabled]="disabled()" [class.button-disabled]="disabled()"
       (click)="onAction.emit()">
       <span class="button-text">{{ label() }}</span>
@@ -16,7 +16,7 @@
     <div class="status-container">
       <i [class]="statusIcon()" alt="status_icon" class="status-icon dsi"></i>
       <span class="status-message" [class.text-error]="isError()" [class.text-success]="!isError()">
-        {{ statusMessage() }}
+        {{ statusMessage() }}abd
       </span>
     </div>
     }
