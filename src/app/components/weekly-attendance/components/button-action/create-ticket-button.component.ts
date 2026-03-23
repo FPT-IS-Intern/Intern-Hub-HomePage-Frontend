@@ -13,6 +13,6 @@ export class TicketActionButtonComponent {
     private router = inject(Router);
 
     goToPage() {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/create-ticket']);
     }
 }
