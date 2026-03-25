@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 export class TicketActionButtonComponent {
     private router = inject(Router);
 
+    
     goToPage() {
         this.router.navigate(['/ticket/create-ticket']);
     }
