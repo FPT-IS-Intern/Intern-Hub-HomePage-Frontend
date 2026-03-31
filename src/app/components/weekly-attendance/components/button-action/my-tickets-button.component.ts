@@ -13,6 +13,6 @@ export class MyTicketButtonComponent {
   private router = inject(Router);
 
   goToPage() {
-    this.router.navigate(['/ticket/my-tickets']);
+    this.router.navigate(['/my-tickets']);
   }
 }
