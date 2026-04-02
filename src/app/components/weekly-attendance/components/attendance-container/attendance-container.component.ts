@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit, inject, signal, computed, viewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { AttendanceService } from '../../../../services/api.attendance.service';
 import { AttendanceStatusData } from '../../models/attendance.model';
 import { AttendanceItemComponent } from './attendance-item.component';
@@ -16,6 +17,7 @@ import { NotificationService } from '../../../../libs/notification-text/notifica
 export class AttendanceContainerComponent implements OnInit {
   private service = inject(AttendanceService);
   private bridge = inject(NotificationService);
+  private router = inject(Router);
   modal = viewChild<ModalComponent>('modal');
 
   // Trạng thái giao diện (UI State)
@@ -399,19 +401,9 @@ export class AttendanceContainerComponent implements OnInit {
       },
     });
   }
-
   createRemoteRequest() {
     this.showPopup.set(false);
-    // redirect to create remote request page
-
-    this.bridge.show('Check in của bạn sẽ được ghi nhận sau khi phiếu yêu cầu  được duyệt.');
-    this.remoteRequestPending.set(true);
-
-    // giả lập yêu cầu được phê duyệt sao n(s)
-    setTimeout(() => {
-      this.remoteRequestPending.set(false);
-      this.bridge.clear();
-    }, 2000);
+    this.router.navigate(['/ticket/create-ticket']);
   }
 
   openConfirmPopupRemote(modal?: ModalComponent, message?: string) {
@@ -443,3 +435,4 @@ export class AttendanceContainerComponent implements OnInit {
     });
   }
 }
+
