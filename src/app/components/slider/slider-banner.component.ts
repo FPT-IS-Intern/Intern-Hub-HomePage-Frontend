@@ -36,7 +36,7 @@ export class HomePageBannerSliderComponent implements OnInit {
     viewAllButton: {
       enabled: true,
       text: 'Xem tất cả',
-      link: '/news-slide',
+      link: '/news',
     },
     loop: true,
     speed: 1500,
