@@ -34,8 +34,10 @@ app-banner-slider {
   .banner-container {
     padding: 0 0.75rem;
     /* 12px */
-    //max-width: 848px;
-    min-width: 680px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .banner-slider-container {

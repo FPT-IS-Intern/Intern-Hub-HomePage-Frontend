@@ -13,7 +13,6 @@
   align-items: stretch;
   justify-content: center;
   padding: 0 0.4375rem;
-  /* 7px */
   overflow: hidden;
 }
 
@@ -26,8 +25,7 @@
 .main {
   display: flex;
   flex-direction: row;
-  // gap: 1rem;
-  /* 16px */
+  gap: 20px;
   width: 100%;
   max-width: 100%;
   min-width: auto;
@@ -36,26 +34,22 @@
   .main-right {
     display: flex;
     flex-direction: column;
-    margin-right: 1rem;
+    margin-right: 0;
     gap: 2.25rem;
-    /* 36px */
-    flex: 1;
+    flex: 1 1 auto;
     min-width: 0;
 
     .banner {
       overflow: visible;
+      width: 100%;
     }
   }
 
   .weekday-attendance-wrapper {
-    flex-shrink: 0;
-    width: 100%;
-    max-width: 23.9375rem;
+    flex: 0 0 35%;
+    width: 35%;
+    max-width: 35%;
     min-height: 100vh;
-    transform: scale(1.15);
-    /* Scale tỉ lệ 115% */
-    transform-origin: top right;
-    /* Đảm bảo scale không tràn xuống dưới hoặc qua trái */
     display: flex;
     align-items: stretch;
     justify-content: center;
