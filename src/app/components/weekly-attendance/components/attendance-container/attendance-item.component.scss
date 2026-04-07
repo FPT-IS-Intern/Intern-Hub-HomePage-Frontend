@@ -22,9 +22,9 @@
   transition: all 0.5s ease;
   overflow: hidden;
   border-radius: $radius-md;
-  width: 100%;
-  min-width: 120px;
-  max-width: 175px;
+  flex: 1 1 140px;
+  min-width: 140px;
+  width: 170px;
 
   &.is-loading {
     .action {
@@ -50,7 +50,7 @@
     border-top-left-radius: $radius-md;
     border-top-right-radius: $radius-md;
     height: auto;
-    aspect-ratio: 1.5;
+    aspect-ratio: 1.6;
     width: 100%;
     transition: background 0.5s ease;
 

@@ -1,9 +1,14 @@
 @use 'variables' as *;
 
+:host {
+  display: block;
+  flex: 1 1 0px;
+  max-width: 100px;
+}
+
 .weekday {
   width: 100%;
-  min-width: 40px;
-  max-width: 60px;
+  min-width: 45px;
   aspect-ratio: 1;
   height: auto;
   border-radius: $radius-sm;
