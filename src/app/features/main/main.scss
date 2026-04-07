@@ -30,7 +30,7 @@
   /* 16px */
   width: 100%;
   max-width: 100%;
-  min-width: 1090px;
+  min-width: auto;
   min-height: 100vh;
 
   .main-right {
@@ -51,10 +51,13 @@
     flex-shrink: 0;
     width: 100%;
     max-width: 23.9375rem;
-    height: auto;
+    min-height: 100vh;
+    transform: scale(1.15);
+    /* Scale tỉ lệ 115% */
+    transform-origin: top right;
+    /* Đảm bảo scale không tràn xuống dưới hoặc qua trái */
     display: flex;
-    align-items: flex-start;
-    /* Căn trên, không kéo giãn ra full chiều cao */
+    align-items: stretch;
     justify-content: center;
   }
 }
