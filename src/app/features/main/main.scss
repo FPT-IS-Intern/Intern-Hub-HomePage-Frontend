@@ -46,12 +46,17 @@
   }
 
   .weekday-attendance-wrapper {
-    flex: 0 0 35%;
-    width: 35%;
-    max-width: 35%;
+    flex: 0 0 28.9375rem;
+    width: 28.9375rem;
+    max-width: 28.9375rem;
     min-height: 100vh;
     display: flex;
     align-items: stretch;
-    justify-content: center;
+    justify-content: stretch;
+
+    >app-attendance-layout {
+      display: block;
+      width: 100%;
+    }
   }
 }

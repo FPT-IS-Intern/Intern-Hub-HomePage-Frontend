@@ -1,8 +1,11 @@
 @use 'variables' as *;
 
 .time-card-container {
-  width: 327px;
-  height: 92px;
+  width: 100%;
+  min-width: 260px;
+  max-width: 360px;
+  height: auto;
+  min-height: 92px;
   padding: 20px;
   display: flex;
   flex-direction: row;

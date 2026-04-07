@@ -1,14 +1,18 @@
 @use 'variables' as *;
 
 .weekday {
-  height: 60px;
-  width: 60px;
+  width: 100%;
+  min-width: 40px;
+  max-width: 60px;
+  aspect-ratio: 1;
+  height: auto;
   border-radius: $radius-sm;
   padding: 8px 0;
   background: $bg-weekday;
   display: flex;
   align-items: center;
   flex-direction: column;
+  justify-content: center;
   gap: 2px;
 
   span {

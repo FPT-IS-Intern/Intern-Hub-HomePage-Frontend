@@ -8,9 +8,9 @@
     gap: 1rem;
     /* 16px */
     width: 100%;
-    max-width: 23.9375rem;
-    /* 383px */
-    min-width: 23.9375rem;
+    align-self: stretch;
+    min-width: 280px;
+    max-width: 400px;
     height: auto;
     min-height: 0;
     padding: 1.5rem;
@@ -35,16 +35,24 @@
         flex-direction: row;
         gap: 0.75rem;
         /* 12px */
+        width: 100%;
+
+        app-my-tickets-btn,
+        app-create-ticket-btn {
+            flex: 1;
+            min-width: 120px;
+            max-width: 200px;
+        }
 
         ::ng-deep {
             app-button-container button {
-                width: 10.34375rem !important;
-                /* 165.5px */
+                width: 100% !important;
+                min-width: 0 !important;
             }
 
             app-create-ticket-btn button {
                 padding: 0 0.171875rem !important;
-                /* 2.75px */
+            /* 2.75px */
             }
         }
     }
