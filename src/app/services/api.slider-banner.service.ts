@@ -1,6 +1,6 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { of, Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 import {
   BannerApiResponse,
@@ -13,33 +13,39 @@ import { getBaseUrl } from '../core/config/app-config';
 @Injectable({ providedIn: 'root' })
 export class BannerService {
   private http = inject(HttpClient);
-  private readonly API_BASE_URL = `/banner/admin/banners`;
+  private readonly API_BASE_URL = `${getBaseUrl()}/news/banners`;
   private bannerRawState = signal<BannerRawData[]>([]);
 
   public readonly slides = computed<BannerSlide[]>(() => {
     const rawData = this.bannerRawState();
 
     return [...rawData]
-      .sort((a, b) => a.displayOrder - b.displayOrder)
+      .sort((a, b) => Number(a.displayOrder || 0) - Number(b.displayOrder || 0))
       .map((item) => ({
         id: item.id,
-        imageUrl: item.images.desktop,
-        alt: item.images.alt,
-        link: item.action.target,
+        imageUrl: item.desktopImageUrl || item.images?.desktop || '',
+        alt: item.imageAltText || item.images?.alt || item.title || 'Banner',
+        link: item.actionTarget || item.action?.target,
         title: item.title,
         description: item.description,
       }));
   });
 
-  fetchBanners(): Observable<BannerApiResponse> {
-    // return this.http.get<BannerApiResponse>(...)
-    return of(MOCK_BANNER_DATA).pipe(
+  fetchBanners(total = 5): Observable<BannerApiResponse> {
+    const params = new HttpParams().set('total', String(total));
+
+    return this.http.get<BannerApiResponse>(this.API_BASE_URL, { params }).pipe(
+      map((res) => ({
+        ...res,
+        data: Array.isArray(res?.data) ? res.data : [],
+      })),
       tap((res) => {
-        if (res.status === 'success') {
-          this.bannerRawState.set(res.data);
-        }
+        this.bannerRawState.set(res.data);
       }),
-      catchError(() => of({ status: 'error', data: [] })),
+      catchError(() => {
+        this.bannerRawState.set(MOCK_BANNER_DATA.data);
+        return of({ status: 'error', data: MOCK_BANNER_DATA.data });
+      }),
     );
   }
 }
