@@ -6,7 +6,6 @@ import {
   BannerApiResponse,
   BannerRawData,
   BannerSlide,
-  MOCK_BANNER_DATA,
 } from '../components/slider/model/banner.models';
 import { getBaseUrl } from '../core/config/app-config';
 
@@ -43,8 +42,8 @@ export class BannerService {
         this.bannerRawState.set(res.data);
       }),
       catchError(() => {
-        this.bannerRawState.set(MOCK_BANNER_DATA.data);
-        return of({ status: 'error', data: MOCK_BANNER_DATA.data });
+        this.bannerRawState.set([]);
+        return of({ status: 'error', data: [] });
       }),
     );
   }

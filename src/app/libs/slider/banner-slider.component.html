@@ -26,9 +26,8 @@
           <img [src]="slide.imageUrl" [alt]="slide.alt || slide.title" class="banner-slider__slide-image"
             loading="lazy" />
 
-          @if (slide.title || slide.subtitle) {
+          @if (slide.subtitle) {
           <div class="banner-slider__slide-content">
-            @if (slide.title) { <h3 class="banner-slider__slide-title">{{ slide.title }}</h3> }
             @if (slide.subtitle) { <p class="banner-slider__slide-subtitle">{{ slide.subtitle }}</p> }
           </div>
           }
@@ -37,9 +36,8 @@
         <img [src]="slide.imageUrl" [alt]="slide.alt || slide.title" class="banner-slider__slide-image"
           loading="lazy" />
 
-        @if (slide.title || slide.subtitle) {
+        @if (slide.subtitle) {
         <div class="banner-slider__slide-content">
-          @if (slide.title) { <h3 class="banner-slider__slide-title">{{ slide.title }}</h3> }
           @if (slide.subtitle) { <p class="banner-slider__slide-subtitle">{{ slide.subtitle }}</p> }
         </div>
         }
