@@ -1,7 +1,17 @@
 <div class="app-container">
   <div class="slider-container">
+    @if (isLoading()) {
+      <div class="banner-skeleton" aria-hidden="true">
+        <div class="banner-skeleton__media"></div>
+        <div class="banner-skeleton__title"></div>
+        <div class="banner-skeleton__button"></div>
+      </div>
+    } @else if (slides().length > 0) {
     <app-banner-slider [slides]="slides()" [config]="sliderConfigWithNav" [navPrevIconTemplate]="customPrevIcon"
       [navNextIconTemplate]="customNextIcon"></app-banner-slider>
+    } @else {
+      <div class="banner-empty">Khong co banner</div>
+    }
 
     <ng-template #customPrevIcon>
       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" viewBox="0 0 12 20" fill="none">

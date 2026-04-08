@@ -19,6 +19,7 @@ import { BannerService } from '../../services/api.slider-banner.service';
 export class HomePageBannerSliderComponent implements OnInit {
   private bannerService = inject(BannerService);
   protected slides = this.bannerService.slides;
+  protected isLoading = this.bannerService.isLoading;
 
   readonly sliderConfigWithNav: BannerSliderConfig = {
     navigation: {

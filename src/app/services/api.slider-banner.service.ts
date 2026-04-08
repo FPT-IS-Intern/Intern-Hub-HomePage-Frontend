@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map, tap, catchError } from 'rxjs/operators';
+import { map, tap, catchError, finalize } from 'rxjs/operators';
 import {
   BannerApiResponse,
   BannerRawData,
@@ -14,6 +14,9 @@ export class BannerService {
   private http = inject(HttpClient);
   private readonly API_BASE_URL = `${getBaseUrl()}/news/banners`;
   private bannerRawState = signal<BannerRawData[]>([]);
+  private readonly loadingState = signal<boolean>(false);
+
+  public readonly isLoading = this.loadingState.asReadonly();
 
   public readonly slides = computed<BannerSlide[]>(() => {
     const rawData = this.bannerRawState();
@@ -32,6 +35,7 @@ export class BannerService {
 
   fetchBanners(total = 5): Observable<BannerApiResponse> {
     const params = new HttpParams().set('total', String(total));
+    this.loadingState.set(true);
 
     return this.http.get<BannerApiResponse>(this.API_BASE_URL, { params }).pipe(
       map((res) => ({
@@ -44,6 +48,9 @@ export class BannerService {
       catchError(() => {
         this.bannerRawState.set([]);
         return of({ status: 'error', data: [] });
+      }),
+      finalize(() => {
+        this.loadingState.set(false);
       }),
     );
   }
