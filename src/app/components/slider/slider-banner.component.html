@@ -3,8 +3,6 @@
     @if (isLoading()) {
       <div class="banner-skeleton" aria-hidden="true">
         <div class="banner-skeleton__media"></div>
-        <div class="banner-skeleton__title"></div>
-        <div class="banner-skeleton__button"></div>
       </div>
     } @else if (slides().length > 0) {
     <app-banner-slider [slides]="slides()" [config]="sliderConfigWithNav" [navPrevIconTemplate]="customPrevIcon"
