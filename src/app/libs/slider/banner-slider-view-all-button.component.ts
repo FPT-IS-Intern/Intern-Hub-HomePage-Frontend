@@ -1,16 +1,17 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { BannerSliderConfig } from './banner-slider.models';
 
 @Component({
     selector: 'app-banner-slider-view-all-button',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, RouterLink],
     template: `
         @if (config && showButton) {
         <div class="banner-slider__view-all">
             <a
-            [href]="viewAllLink"
+            [routerLink]="viewAllLink"
             class="banner-slider__view-all-button"
             aria-label="View all"
             >
