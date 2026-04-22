@@ -10,7 +10,7 @@ RUN npm run build
 
 FROM nginx:stable-alpine
 
-COPY --from=build-stage /app/dist/intern-hub-homepage-frontend/browser /usr/share/nginx/html
+COPY --from=build-stage /app/dist/intern-hub-home-page-frontend/browser /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Runtime environment configuration
